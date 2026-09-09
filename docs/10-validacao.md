@@ -23,3 +23,11 @@ Não realizados: integração de banco, concorrência transacional real, autenti
 - Calendário usa vizinhos imediatos por motorista e veículo, evitando bloquear por uma rota histórica irrelevante.
 - Rejeitadas datas normalizadas indevidamente e hora 24:00 em vez de adivinhar a data seguinte.
 - Hipóteses de aprovação, tolerância adicional e proteção de janela após reagendamento mantidas visíveis.
+
+## Atualização 0.1.1 — 2026-09-09
+
+Aprovação e tolerância foram entretanto confirmadas pelo utilizador; proteção de janela após reagendamento continua hipótese. Acrescentados defaults aprovados e cálculo de antecedência: 120 min normal e 2880 min tours, prevalecendo exigências maiores dos recursos.
+
+`npm run check`: **37 testes aprovados**, zero falhas; **33 documentos, 85 ligações locais e 44 tarefas** validados, sem ciclos de dependência. Seis novos cenários verificam 2h/48h exatas, menos 1ms, herança e mudança de hora. BAS-02 está em curso, Supabase selecionado; prova transacional ainda não implementada.
+
+Pesquisa de viabilidade é documental, com fontes em 11-viabilidade-custos-rotas.md. Não foi feita chamada autenticada de routing, criado projeto Supabase ou realizado deploy. O changelog Supabase em Markdown não esteve acessível; a página HTML foi consultada como alternativa. Nenhuma funcionalidade remota Supabase foi implementada nesta atualização.

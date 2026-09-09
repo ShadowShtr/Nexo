@@ -39,7 +39,7 @@ Módulos não escrevem diretamente nas tabelas financeiras de outros módulos. `
 
 ## Persistência e crescimento
 
-Banco relacional com transações reais, restrições únicas e controlo de concorrência obrigatório. A escolha de fornecedor/motor será registada em BAS-02 antes de gerar migrações; o modelo lógico em 06-dados não presume um banco já contratado. A futura hospedagem web seguirá a skill Sites e capacidades disponíveis, sem forçar a tecnologia do banco pelo desenho da UI.
+Banco relacional com transações reais, restrições únicas e controlo de concorrência obrigatório. Supabase/Postgres foi escolhido pelo utilizador. BAS-02 deve agora provar os contratos/transações antes das migrações; nenhum projeto remoto foi criado. O utilizador escolheu Vercel para o app, substituindo a preferência inicial de Sites. Vercel Hobby exclui uso comercial: resolver plano pago versus alternativa antes de publicar. A aplicação deve manter regras de negócio portáveis e chamadas sensíveis no servidor.
 
 Todos os dados operacionais levam `organizationId`. Só há uma organização na primeira versão; não existe adesão pública de novas empresas. Esta chave facilita uma evolução sem misturar dados. IDs opacos, createdAt/updatedAt, versão de concorrência e autor de alterações.
 
@@ -74,7 +74,7 @@ Ocultar um botão não é segurança. Todas as consultas filtram organização e
 - ADR-003 aceito: UTC persistido e Europe/Lisbon apresentado.
 - ADR-004 aceito: preços e regras fotografados por reserva.
 - ADR-005 proposto: aplicação web responsiva antes de app nativo.
-- ADR-006 pendente: banco e hospedagem após prova de concorrência/persistência.
+- ADR-006 atualizado: Supabase/Postgres escolhido; prova de concorrência/persistência pendente. Vercel preferido, custo/alternativa em análise.
 - ADR-007 pendente: prestador de pagamentos com beneficiários separados.
 
 Cada alteração significativa cria um ADR com contexto, escolha, alternativas relevantes, consequência, migração e data. Não reescrever ADR antigo para esconder mudança.

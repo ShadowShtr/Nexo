@@ -72,7 +72,9 @@ Elegível se antecedenciaMs >= 86.400.000 (24 horas exatas). 24h exatas: sim; 23
 
 Cancelamento elegível devolve o sinal efetivamente recebido ainda não devolvido. Não elegível retém o sinal. Não aplicar esta retenção ao saldo pago antecipadamente: PEN-05 exige decisão. Registar cancelamento mesmo se a devolução falhar; devolução fica pendente com alerta e tentativas controladas.
 
-Reagendamento cria uma proposta/revisão; reserva original permanece válida até confirmação atómica da nova alocação. Novo horário deve respeitar capacidade, antecedência, recursos e preço. Em falha/expiração, libertar só a proposta. Hipótese antiabuso: limite calculado pela mais cedo entre data original e atual; não se renova a janela ao adiar. Essa hipótese está isolada no parâmetro originalStart e carece de confirmação comercial.
+Reagendamento cria uma proposta/revisão; reserva original permanece válida até confirmação atómica da nova alocação. Novo horário deve respeitar capacidade, antecedência, recursos e preço. DEC-27 aprovada: emitir nova cotação, creditar valores já recebidos e cobrar/devolver diferença; não cobrar um novo sinal como se o anterior não existisse. Em falha/expiração, libertar só a proposta. Hipótese antiabuso: limite calculado pela mais cedo entre data original e atual; não se renova a janela ao adiar. Essa hipótese está isolada no parâmetro originalStart e carece de confirmação comercial.
+
+Cancelamento pelo motorista: cliente escolhe aceitar substituto ou devolução integral do que pagou (DEC-25), independentemente da fronteira de 24h aplicável ao cancelamento pelo cliente.
 
 Troca de motorista após sinal não é uma simples edição de ID: muda beneficiário. Na primeira versão, abrir ocorrência para proprietário e impedir transferência automática. Exigir tratamento do dinheiro já recebido e aceite do cliente antes da substituição.
 
@@ -84,7 +86,7 @@ Por serviço: preço do passageiro P, valor fixo acordado com proprietário X, r
 
 Exemplo: viagem 200 EUR, X=20 EUR. Motorista recebe 50 EUR sinal +150 EUR saldo. Deve 20 EUR ao proprietário; após registo do acerto de 20, pendente=0. Isso não é uma transferência executada pelo sistema.
 
-Serviços próprios: X=0. Proposta: dívida nasce na conclusão de serviço de parceiro; X deve estar acordado antes de aceitar. Política de comissão em cancelamento, não comparência e extras é pendente; não gerar automaticamente dívida nesses casos. Liquidação pode cobrir vários serviços, com alocações parciais e sem exceder o devido. Correções geram movimentos inversos auditados.
+Serviços próprios: X=0. X fixo definido pelo proprietário e aceite pelo parceiro está aprovado (DEC-28). Proposta ainda não fechada: dívida nasce na conclusão de serviço de parceiro. Política de comissão em cancelamento, não comparência e extras é pendente; não gerar automaticamente dívida nesses casos. Liquidação pode cobrir vários serviços, com alocações parciais e sem exceder o devido. Correções geram movimentos inversos auditados.
 
 ## REG-08 — Versões e precedência
 

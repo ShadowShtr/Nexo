@@ -24,7 +24,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Regras:** REG-08; G5
 
-**Implementação:** Preparar migrações, backup/restauração, segredos de produção, monitorização, rollback compatível, changelog e versão; seguir Sites para publicação do app validado.
+**Implementação:** Preparar migrações, backup/restauração, segredos de produção, monitorização, rollback compatível, changelog e versão; publicar no host/plano confirmado, validando compatibilidade com uso comercial e limites de custo.
 
 **Aceitação:** Build/checks passam, restauração demonstrada, URL e versão verificadas após deploy, piloto aprovado e runbook de incidentes disponível.
 

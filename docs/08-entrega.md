@@ -47,7 +47,7 @@ G3 percurso público: idioma → perfil → carro → disponibilidade → orçam
 
 G4 financeiro: MB WAY por motorista e reembolsos comprovados em sandbox, ledger idempotente, conciliação e exceções.
 
-G5 lançamento: pendências comerciais resolvidas, conteúdo bilingue real, acesso e dados revistos, backup/restauração testados, fluxos E2E e operação piloto aprovados. Publicação segue Sites apenas nesta etapa apropriada; não publicar uma base documental como se fosse o app pronto.
+G5 lançamento: pendências comerciais resolvidas, conteúdo bilingue real, acesso e dados revistos, backup/restauração testados, fluxos E2E e operação piloto aprovados. Publicação segue a hospedagem escolhida pelo utilizador (Vercel preferido, plano comercial/alternativa pendente) apenas nesta etapa apropriada; não publicar uma base documental como se fosse o app pronto.
 
 ## Observabilidade e recuperação
 

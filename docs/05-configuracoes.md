@@ -13,18 +13,18 @@ CFG-R01: só owner edita; backend verifica papel/organização. Mostrar valor at
 | business.languages | pt-PT, en fixos | Textos e tours completos nos dois idiomas. |
 | business.name/contact | obrigatório para lançamento | Nome público, email e telefone; nunca inventar. |
 | calendar.minimumGapMinutes | 60 min | Inteiro >=0; mostrar aviso e impacto ao reduzir a margem aprovada de uma hora. |
-| calendar.delayAllowanceMinutes | proposta 15 min | Inteiro >=0; composição max(mínimo, deslocação+tolerância). |
+| calendar.delayAllowanceMinutes | aprovado 15 min | Inteiro >=0; composição max(mínimo, deslocação+tolerância). |
 | calendar.slotStepMinutes | proposta 30 min | Opções 15/30/60; independente da grelha visual e da margem. |
 | calendar.gridStepMinutes | 60 min visual | Não afeta cálculos. |
-| calendar.globalLeadMinutes | proposta 120 min | Inteiro >=0; antecipação mínima global. |
+| calendar.globalLeadMinutes | aprovado 120 min | Inteiro >=0; antecipação mínima global. |
 | calendar.bookingHorizonDays | proposta 180 dias | Inteiro 1–730; gerar slots apenas nesse horizonte. |
 | calendar.workWindows | obrigatório por motorista | Dias/intervalos locais; sem janelas sobrepostas; permite folgas e exceções por data. |
 | calendar.boardingMinutes | proposta 10 min | Inteiro >=0; soma à duração do transfer. |
 | calendar.alightingMinutes | proposta 5 min | Inteiro >=0; não duplicar se tour já inclui. |
 | calendar.originBase | por motorista, pendente | Coordenadas e regra de deslocação na primeira/última viagem. |
-| booking.acceptanceTtlMinutes | proposta 30 min | Inteiro >0; não ultrapassar início viável do serviço. |
-| booking.paymentTtlMinutes | proposta 30 min | Inteiro >0; capar à antecedência operacional e validade do orçamento. |
-| booking.confirmationMode | proposta driver_acceptance | Alternativa automática só após validar operação e regras. |
+| booking.acceptanceTtlMinutes | aprovado 30 min | Inteiro >0; não ultrapassar início viável do serviço. |
+| booking.paymentTtlMinutes | aprovado 30 min | Inteiro >0; limitar ao início operacional viável e validade do orçamento, sem reaplicar a antecedência mínima ao pagamento. |
+| booking.confirmationMode | aprovado driver_acceptance | Alternativa automática só após validar operação e regras. |
 | pricing.baseCents | obrigatório para transfer | Inteiro >=0; por motorista/veículo conforme herança. |
 | pricing.centsPerKm | obrigatório para transfer | Inteiro >=0; distância em metros, nunca linha reta. |
 | pricing.nightEnabled | proposta false | Exige faixa e taxa quando ativo. |
@@ -43,11 +43,11 @@ CFG-R01: só owner edita; backend verifica papel/organização. Mostrar valor at
 | tour.extraPassengerCents | obrigatório por pacote | Inteiro >=0 por pessoa acima de duas. |
 | tour.durationMinutes | obrigatório | Inteiro >0; inclui roteiro e visitas. |
 | tour.maxPassengers | obrigatório | Não exceder capacidade do carro selecionado. |
-| tour.minimumLeadMinutes | obrigatório | Combina com outras antecedências pelo máximo. |
+| tour.minimumLeadMinutes | aprovado 2880 min (48h) | Combina com outras antecedências pelo máximo. |
 | payments.depositBps | 2500 fixo | Decisão aprovada; não editável como tarifa comum. |
 | policy.cancelCutoffHours | 24 fixo | Comparação exata >=24h; regra publicada ao cliente. |
 | policy.rescheduleCutoffHours | 24 fixo | Mesma fronteira; validade do pedido baseada na hora do servidor. |
-| partner.ownerFeeCents | acordo por serviço | Não inferir percentagem; campo ausente não significa zero. |
+| partner.ownerFeeCents | X fixo por serviço, aceite pelo parceiro | Não inferir percentagem; campo ausente não significa zero. |
 | notifications.reminders | proposta futuro | Horários/canais só ativados após integração; não exibir sucesso fictício. |
 
 ## CFG-R02 — Herança

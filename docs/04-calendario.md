@@ -18,7 +18,7 @@ Pickup/endpoints devem ser coordenadas validadas, com endereço legível. Guarda
 
 ## CAL-R03 — Margem entre A e B
 
-Hipótese explícita DEC-21:
+Regra aprovada DEC-21:
 
 `margemObrigatoria(A,B) = max(margemMinima, deslocacao(fimA,recolhaB) + toleranciaAtraso)`
 
@@ -48,7 +48,7 @@ O core atual valida conflitos por motorista/veículo com uma lista de alocaçõe
 
 1. Resolver timezone e data local; rejeitar hora inexistente e desambiguar hora repetida na mudança de hora.
 2. Validar motorista ativo, carro associado, capacidade, pacote e zona de recolha.
-3. Resolver antecedência: máximo entre global, motorista, veículo e pacote. Para o próprio dia, não ignorar antecedência.
+3. Resolver antecedência: normal 120 min, tours 2880 min (48h), usando máximo entre global, motorista, veículo e pacote. Para o próprio dia, não ignorar antecedência.
 4. Gerar candidatos dentro do horário de trabalho no passo configurado.
 5. Obter rota, duração e deslocações relevantes. Sem estimativa suficiente, não vender como disponibilidade confirmada.
 6. Calcular fim de serviço e validar indisponibilidades, limites de jornada, conflitos e margens antes/depois.
@@ -57,7 +57,7 @@ O core atual valida conflitos por motorista/veículo com uma lista de alocaçõe
 9. Aceitação prolonga/substitui o bloqueio dentro do prazo de pagamento; não criar duplicação de recurso.
 10. Pagamento confirmado converte bloqueio em reserva definitiva numa transação, ou abre exceção se já expirou.
 
-Alterar passageiros, carro, percurso, data ou extras de duração invalida a disponibilidade anterior.
+Alterar passageiros, carro, percurso, data ou extras de duração invalida a disponibilidade anterior. Antecedência mínima é verificada no envio do pedido ou da proposta para o novo slot; não é reiniciada na aceitação e no pagamento de um pedido válido. Caso contrário, um pedido criado exatamente 2h antes ficaria impossível de confirmar. Os prazos 30+30 min não podem ultrapassar o início operacional viável; definir esse limite em CAL-03.
 
 ## CAL-R06 — Concorrência e expiração
 

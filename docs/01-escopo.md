@@ -1,6 +1,6 @@
 # 01 — Escopo e decisões
 
-Versão 0.1.0. Fonte: decisões da conversa até 09/09/2026. C = confirmado; H = hipótese de implementação; P = pendente. Hipóteses permitem preparar código e testes, mas não são regras comerciais aprovadas para lançamento.
+Versão 0.1.1. Fonte: decisões da conversa até 09/09/2026. C = confirmado; H = hipótese de implementação; P = pendente. Hipóteses permitem preparar código e testes, mas não são regras comerciais aprovadas para lançamento.
 
 ## Produto
 
@@ -29,24 +29,28 @@ Uma operação privada, gerida por um proprietário que também pode conduzir. P
 | DEC-17 | C | Proprietário lança reservas recebidas por WhatsApp/telefone. |
 | DEC-18 | C | Agenda, CRM, financeiro, ficha de serviço com rota/Waze, observações e estados. |
 | DEC-19 | C | Calendário com intervalos de uma hora para deslocação/atrasos e aba de configurações. |
-| DEC-20 | H | Interpretar uma hora como margem mínima entre serviços, não como duração de cada serviço nem frequência obrigatória de horários. |
-| DEC-21 | H | Margem efetiva = max(60 min, deslocação estimada + 15 min de tolerância); valores configuráveis. |
-| DEC-22 | H | Aceitação do motorista antes do pagamento; pedido expira em 30 min e pagamento em 30 min após aceitação. |
+| DEC-20 | C | Interpretar uma hora como margem mínima entre serviços, não como duração de cada serviço nem frequência obrigatória de horários. |
+| DEC-21 | C | Margem efetiva = max(60 min, deslocação estimada + 15 min de tolerância); valores configuráveis. |
+| DEC-22 | C | Aceitação do motorista antes do pagamento; pedido expira em 30 min e pagamento em 30 min após aceitação. |
 | DEC-23 | H | A janela de cancelamento/reagendamento usa a mais cedo entre data original e atual, evitando ampliar a janela artificialmente. |
 | DEC-24 | H | Proprietário determina preço e disponibilidade; parceiro só comunica disponibilidade própria e executa serviços. |
-| DEC-25 | H | Cancelamento pelo prestador propõe devolução integral do recebido; confirmar política antes de lançar. |
+| DEC-25 | C | Se motorista cancelar, cliente escolhe aceitar substituto ou receber devolução integral do recebido. |
+| DEC-26 | C | Antecedência normal 2h; tours 2 dias, interpretados operacionalmente como 48h decorridas; recursos podem exigir mais. |
+| DEC-27 | C | Reagendamento gera nova cotação, credita recebido e cobra/devolve diferença. |
+| DEC-28 | C | X fixo por serviço, definido pelo proprietário e aceite pelo parceiro antes da viagem. |
+| DEC-29 | C | Supabase para banco/autenticação; Vercel como preferência para app. Objetivo de custo base zero; conflito do Vercel Hobby comercial documentado. |
 
 ## Pendências que bloqueiam apenas os módulos correspondentes
 
 | ID | Decisão | Impacto / condição de avanço |
 |---|---|---|
 | PEN-01 | Nome, logótipo e identidade comercial | Usar nome técnico provisório; não inventar marca definitiva. |
-| PEN-02 | Aprovação ou confirmação automática; tempos de expiração | Motor de estados segue H; validar antes da reserva pública. |
+| PEN-02 | RESOLVIDA | Aceitação do motorista; 30 min para aceitar e 30 min para pagar. |
 | PEN-03 | Prestador MB WAY com recebimento por cada motorista | Investigar contas beneficiárias, onboarding, webhooks, reembolsos e custos. Sem cobrança real até demonstrar o fluxo. |
-| PEN-04 | Valor X fixo por serviço; regras em cancelamento e extras | Campo explícito acordado; não presumir percentagem nem comissão automática. Bloquear liquidação se valor não definido. |
-| PEN-05 | Cancelamento pelo motorista, não comparência e reembolsos de saldo antecipado | Não aplicar retenção do sinal a dinheiro que não é sinal; revisão do proprietário até política definida. |
-| PEN-06 | Diferença de preço em reagendamento e troca após pagamento | Proposta: nova cotação, crédito do recebido, cobrança/devolução da diferença; mesma entidade recebedora na primeira versão. |
-| PEN-07 | Tarifas reais, horários noturnos, antecedências e margem | Formulário de onboarding exige publicação explícita. Valores de exemplos ficam fora de produção. |
+| PEN-04 | X fixo resolvido; faltam regras em cancelamento e extras | Não gerar comissão em casos não definidos. Bloquear liquidação se valor não acordado. |
+| PEN-05 | Não comparência e saldo antecipado em cancelamento do cliente | Cancelamento pelo motorista resolvido em DEC-25; não aplicar retenção do sinal a dinheiro que não é sinal. |
+| PEN-06 | Reprecificação resolvida; operacionalização da troca após pagamento pendente | DEC-27 aprovada; mudança de beneficiário precisa de acerto/reembolso explícito, sem mover dinheiro automaticamente entre parceiros. |
+| PEN-07 | Tarifas reais, horários noturnos e regras de carros especiais | Margem/antecedências padrão aprovadas; tarifas de exemplos ficam fora de produção. |
 | PEN-08 | Faturação utilizada pelo negócio e regras fiscais aplicáveis | Adaptador separado; extrato ou confirmação não se apresentam como fatura fiscal. |
 | PEN-09 | Canal de notificações e política de tratamento de dados | Preparar email e link para partilha manual; WhatsApp automático depende de integração própria. |
 | PEN-10 | Lugares comercializados em cada veículo | Guardar capacidade de passageiros, excluindo motorista; não inferir capacidade pelo nome “7 lugares”. |

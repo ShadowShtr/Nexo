@@ -18,13 +18,13 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-02 — Escolher persistência e contratos de repositório
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — Supabase escolhido; falta prova de transação
 
 **Dependências:** BAS-01
 
 **Regras:** CAL-R06; REG-08
 
-**Implementação:** Comparar capacidade transacional, integração com runtime e migrações; registar ADR; definir UnitOfWork, repositórios de reserva/alocação e contratos validados.
+**Implementação:** Validar Supabase/Postgres, capacidade transacional, integração com runtime e migrações; registar ADR; definir UnitOfWork, repositórios de reserva/alocação e contratos validados.
 
 **Aceitação:** Uma prova executável explica como serializa motorista e veículo; schema lógico mapeado; nenhuma reserva depende de localStorage.
 
@@ -52,7 +52,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Regras:** DEC-15; ADR-001..005
 
-**Implementação:** Inicializar aplicação web seguindo Sites, composição modular, tokens premium, navegação por papéis, catálogos PT/EN, package lock, compilador TypeScript e CI; manter o domínio existente.
+**Implementação:** Inicializar aplicação web para hospedagem preferida Vercel, com decisão de plano/alternativa registada, composição modular, tokens premium, navegação por papéis, catálogos PT/EN, package lock, compilador TypeScript e CI; manter o domínio existente.
 
 **Aceitação:** Build e typecheck passam; navegação com estados vazios reais; scripts documentados; nenhum dashboard fictício apresentado como dado real.
 
