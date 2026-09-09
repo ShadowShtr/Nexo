@@ -1,0 +1,45 @@
+# Abas Motoristas e Veículos
+
+Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pronto](../08-entrega.md) antes de implementar.
+
+## CAT-01 — Cadastro e perfil dos motoristas
+
+**Estado:** PLANEADA
+
+**Dependências:** SEC-01
+
+**Regras:** DEC-01..03; DEC-15
+
+**Implementação:** Owner cadastra parceiro convidado, perfil PT/EN, imagem, contacto e estado; associar usuário e estado de habilitação para pagamentos sem expor conta privada.
+
+**Aceitação:** Perfil só publica com campos exigidos; desativação bloqueia novos serviços sem apagar os anteriores; parceiro não cria outro motorista.
+
+**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+## CAT-02 — Veículos, capacidade e associações temporais
+
+**Estado:** PLANEADA
+
+**Dependências:** CAT-01
+
+**Regras:** DEC-02; PEN-10; CAL-R04
+
+**Implementação:** Cadastrar carros com capacidade de passageiros excluindo condutor, bagagem, fotos, comodidades, antecedência, suplementos; associação muitos-para-muitos e indisponibilidade.
+
+**Aceitação:** Carro partilhado é único recurso; capacidade 6 não permite 7 passageiros mesmo que nome diga 7 lugares; histórico e associações futuras preservados.
+
+**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+## CAT-03 — Zonas de atendimento e taxas de recolha
+
+**Estado:** PLANEADA
+
+**Dependências:** CAT-01, CFG-01
+
+**Regras:** DEC-14; CAL-R05
+
+**Implementação:** Editor de zonas por motorista com geometria/área bem definida, taxa, prioridade e publicação; validar endereço/coordenadas e casos de sobreposição.
+
+**Aceitação:** Fronteira e sobreposição têm resultados determinísticos; aplica uma taxa de recolha correta; fora da zona não apresenta disponibilidade confirmada.
+
+**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
