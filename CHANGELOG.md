@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 — 2026-09-09
+
+### Adicionado
+- Sistema visual baseado nas cinco referências enviadas, com cores, tipografia, medidas, componentes e aplicação por aba.
+- Tokens CSS independentes de framework e referências originais no projeto.
+- Tarefas UI-01/02/03: especificação concluída, componentes e QA planeados; instruções visuais ligadas às tarefas existentes.
+- Nenhuma tela foi implementada nesta etapa; sem mudança de hospedagem ou regras de negócio.
+
 ## 0.1.1 — 2026-09-09
 
 ### Atualizado

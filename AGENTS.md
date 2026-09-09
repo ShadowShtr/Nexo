@@ -14,3 +14,4 @@
 12. Não publicar, configurar cobrança real ou inventar credenciais durante a fase de fundação. Preparar primeiro a funcionalidade e a validação correspondentes.
 13. Atualizações pequenas, SemVer, commits por assunto. Nunca incluir dados reais, NIF, contactos ou segredos nos exemplos/testes.
 14. A aprovação do utilizador é necessária para mudar uma regra comercial já confirmada; escolhas técnicas reversíveis podem prosseguir.
+15. Para qualquer tela/componente, ler docs/12-design-system.md e docs/13-mapa-visual-abas.md. Usar src/ui/styles/tokens.css; não inventar tema por aba. Fonte exata das imagens não foi identificada. Aplicar critérios UI-02/UI-03 antes de fechar tarefas de interface.

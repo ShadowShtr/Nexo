@@ -1,6 +1,6 @@
 # 01 — Escopo e decisões
 
-Versão 0.1.1. Fonte: decisões da conversa até 09/09/2026. C = confirmado; H = hipótese de implementação; P = pendente. Hipóteses permitem preparar código e testes, mas não são regras comerciais aprovadas para lançamento.
+Versão 0.1.2. Fonte: decisões da conversa até 09/09/2026. C = confirmado; H = hipótese de implementação; P = pendente. Hipóteses permitem preparar código e testes, mas não são regras comerciais aprovadas para lançamento.
 
 ## Produto
 
@@ -39,6 +39,7 @@ Uma operação privada, gerida por um proprietário que também pode conduzir. P
 | DEC-27 | C | Reagendamento gera nova cotação, credita recebido e cobra/devolve diferença. |
 | DEC-28 | C | X fixo por serviço, definido pelo proprietário e aceite pelo parceiro antes da viagem. |
 | DEC-29 | C | Supabase para banco/autenticação; Vercel como preferência para app. Objetivo de custo base zero; conflito do Vercel Hobby comercial documentado. |
+| DEC-30 | C | Todas as abas seguem as cinco referências visuais do utilizador: guia em 12-design-system e 13-mapa-visual-abas; fonte/medidas são aproximações especificadas. |
 
 ## Pendências que bloqueiam apenas os módulos correspondentes
 

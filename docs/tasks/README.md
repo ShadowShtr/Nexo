@@ -1,6 +1,6 @@
 # Tarefas de implementação por aba
 
-Estado 0.1.1: BAS-01 concluída; BAS-02 EM CURSO; outras tarefas PLANEADAS. Este índice não afirma que existam telas funcionais.
+Estado 0.1.2: BAS-01 e UI-01 concluídas; BAS-02 EM CURSO; outras tarefas PLANEADAS. Este índice não afirma que existam telas funcionais.
 
 Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, CONCLUÍDA (com evidência). Atualizar diretamente os ficheiros de tarefas; não regenerar por cima de alterações.
 
@@ -24,5 +24,6 @@ Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, 
 | MB WAY e reembolsos | PAY-01, PAY-02, PAY-03, PAY-04 | [Abrir](15-pagamentos.md) |
 | Aba Acertos / ganhos do parceiro | SET-01, SET-02 | [Abrir](16-acertos.md) |
 | Estabilização e lançamento | REL-01, REL-02 | [Abrir](17-release.md) |
+| Sistema visual e interface | UI-01, UI-02, UI-03 | [Abrir](18-interface.md) |
 
-Total: **44 tarefas**, sendo **1 concluída** e **1 em curso e 42 planeadas** na versão 0.1.1. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
+Total: **47 tarefas**, sendo **2 concluídas**, **1 em curso** e **44 planeadas** na versão 0.1.2. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.

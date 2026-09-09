@@ -31,3 +31,8 @@ Aprovação e tolerância foram entretanto confirmadas pelo utilizador; proteç�
 `npm run check`: **37 testes aprovados**, zero falhas; **33 documentos, 85 ligações locais e 44 tarefas** validados, sem ciclos de dependência. Seis novos cenários verificam 2h/48h exatas, menos 1ms, herança e mudança de hora. BAS-02 está em curso, Supabase selecionado; prova transacional ainda não implementada.
 
 Pesquisa de viabilidade é documental, com fontes em 11-viabilidade-custos-rotas.md. Não foi feita chamada autenticada de routing, criado projeto Supabase ou realizado deploy. O changelog Supabase em Markdown não esteve acessível; a página HTML foi consultada como alternativa. Nenhuma funcionalidade remota Supabase foi implementada nesta atualização.
+
+
+## Atualização 0.1.2 — sistema visual
+
+Documentação e tokens de estilo, sem alteração de domínio. Cinco referências originais copiadas sem edição. Validação documental: 36 documentos, 128 ligações locais e 47 tarefas. Oito pares de texto/fundo da paleta têm contraste calculado superior a 4,5:1 (menor resultado: 5,22:1). Isto não substitui validação da composição em browser. Nenhuma tela foi renderizada ou declarada implementada; UI-02 e UI-03 permanecem planeadas. Testes funcionais não repetidos porque não houve mudança nas regras.

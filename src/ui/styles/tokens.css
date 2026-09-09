@@ -1,0 +1,82 @@
+/* Sistema visual v1 — decisões derivadas das referências, não valores extraídos delas.
+ * Importar no scaffold futuro. Sem dependência de framework; sem UI funcional nesta fase. */
+:root {
+  color-scheme: light;
+  --pm-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --pm-canvas: #f5f5f7;
+  --pm-surface: #fff;
+  --pm-surface-muted: #eeeef0;
+  --pm-ink: #18181a;
+  --pm-ink-secondary: #62626a;
+  --pm-line: #e5e5ea;
+  --pm-control-border: #85858f;
+  --pm-inverse: #fff;
+  --pm-inverse-muted: #c2c2c8;
+  --pm-success: #176b3a;
+  --pm-success-bg: #eaf5ee;
+  --pm-warning: #805200;
+  --pm-warning-bg: #fff3d6;
+  --pm-danger: #b42332;
+  --pm-danger-bg: #fdecef;
+  --pm-focus: #2459c4;
+  --pm-space-1: .25rem;
+  --pm-space-2: .5rem;
+  --pm-space-3: .75rem;
+  --pm-space-4: 1rem;
+  --pm-space-5: 1.25rem;
+  --pm-space-6: 1.5rem;
+  --pm-space-8: 2rem;
+  --pm-space-10: 2.5rem;
+  --pm-space-12: 3rem;
+  --pm-page-gutter: 1.25rem;
+  --pm-radius-input: .875rem;
+  --pm-radius-button: 1rem;
+  --pm-radius-card: 1.25rem;
+  --pm-radius-summary: 1.5rem;
+  --pm-radius-nav: 2rem;
+  --pm-radius-pill: 999px;
+  --pm-shadow-card: 0 6px 18px rgb(20 24 40 / 6%);
+  --pm-shadow-nav: 0 10px 28px rgb(20 24 40 / 12%);
+  --pm-text-body: 1rem;
+  --pm-text-meta: .875rem;
+  --pm-text-caption: .75rem;
+  --pm-text-section: 1.125rem;
+  --pm-text-detail: 1.5rem;
+  --pm-text-title: 1.875rem;
+  --pm-text-value: 2.5rem;
+  --pm-touch-min: 2.75rem;
+  --pm-input-min: 3rem;
+  --pm-row-min: 3.5rem;
+  --pm-sidebar-width: 15rem;
+  --pm-content-max: 75rem;
+  --pm-motion-fast: 160ms;
+  --pm-motion-panel: 220ms;
+}
+
+/* Primitivas de estilo: aplicar explicitamente, não redefinir todos os elementos globais. */
+.pm-theme { font-family: var(--pm-font); color: var(--pm-ink); background: var(--pm-canvas); line-height: 1.5; }
+.pm-theme *, .pm-theme *::before, .pm-theme *::after { box-sizing: border-box; }
+.pm-page { padding: var(--pm-page-gutter); margin-inline: auto; max-width: var(--pm-content-max); }
+.pm-card { background: var(--pm-surface); border-radius: var(--pm-radius-card); padding: var(--pm-space-4); box-shadow: var(--pm-shadow-card); }
+.pm-summary { background: var(--pm-ink); color: var(--pm-inverse); border-radius: var(--pm-radius-summary); padding: var(--pm-space-6); }
+.pm-summary .pm-secondary { color: var(--pm-inverse-muted); }
+.pm-secondary { color: var(--pm-ink-secondary); }
+.pm-title { font-size: var(--pm-text-title); line-height: 1.2; font-weight: 700; letter-spacing: -.025em; margin: 0; }
+.pm-value { font-size: var(--pm-text-value); line-height: 1.1; font-weight: 700; letter-spacing: -.025em; font-variant-numeric: tabular-nums lining-nums; overflow-wrap: anywhere; }
+.pm-money { font-variant-numeric: tabular-nums lining-nums; }
+.pm-focus:focus-visible { outline: 2px solid var(--pm-focus); outline-offset: 3px; }
+.pm-status { display: inline-flex; align-items: center; gap: var(--pm-space-1); font-size: var(--pm-text-meta); padding: .25rem .625rem; border-radius: var(--pm-radius-pill); }
+.pm-status[data-tone="success"] { color: var(--pm-success); background: var(--pm-success-bg); }
+.pm-status[data-tone="warning"] { color: var(--pm-warning); background: var(--pm-warning-bg); }
+.pm-status[data-tone="danger"] { color: var(--pm-danger); background: var(--pm-danger-bg); }
+.pm-status[data-tone="neutral"] { color: var(--pm-ink-secondary); background: var(--pm-surface-muted); }
+.pm-safe-bottom { padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)); }
+
+@media (max-width: 359px) { :root { --pm-page-gutter: 1rem; --pm-text-value: 2rem; } }
+@media (min-width: 768px) { :root { --pm-page-gutter: 1.5rem; } }
+@media (min-width: 1024px) { :root { --pm-page-gutter: 2rem; } }
+@media (prefers-reduced-motion: reduce) { :root { --pm-motion-fast: 0ms; --pm-motion-panel: 0ms; } }
+@media (forced-colors: active) {
+  .pm-card, .pm-summary, .pm-status { border: 1px solid CanvasText; }
+  .pm-focus:focus-visible { outline-color: Highlight; }
+}
