@@ -65,3 +65,5 @@ AGENTS.md             instruções para futuras implementações
 Cada tarefa tem dependências, trabalho, critérios de aceitação e evidência exigida. Supabase foi escolhido para persistência; Vercel é a preferência de hospedagem, com custo comercial por resolver. Ver estudo de viabilidade.
 
 BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). O próximo bloco é BAS-03: migrações completas e restauro, seguido de autenticação e ligação da interface. Decisões de pagamento podem ser investigadas em paralelo ao desenvolvimento de agenda e CRM, mas bloqueiam a cobrança real.
+
+Incremento 0.2.2: [identidade e permissões locais](docs/17-identidade-local.md). BAS-03 e SEC-01 em curso; nenhuma ligação à MO Limpezas ou publicação remota.

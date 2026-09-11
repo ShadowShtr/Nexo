@@ -16,5 +16,7 @@ jobs:
       - run: npm run build
       - run: npm run db:test:start
       - run: npm run test:db
+      - run: npm run supabase:start
+      - run: npm run test:auth
       - run: npx playwright install --with-deps msedge
       - run: npm run test:ui

@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## SEC-01 — Sessões e papéis do proprietário/parceiro
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — autenticação e RLS locais; convites e interface pendentes
 
 **Dependências:** BAS-03, BAS-04
 
@@ -43,3 +43,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 **Aceitação:** Políticas reais documentadas e validadas pelo negócio; nenhum dado privado em resposta pública ou fixture; testes de segurança e backup registados.
 
 **Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+
+Evidência parcial SEC-01 0.2.2: [identidade local](../17-identidade-local.md).
+

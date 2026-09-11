@@ -1,0 +1,1 @@
+-- No automatic fixtures. Local identity tests create isolated fictional users.

@@ -34,7 +34,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-03 — Migrações, atomicidade e fixtures
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — identidade e RLS locais; schema operacional pendente
 
 **Dependências:** BAS-02
 
@@ -77,3 +77,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 
 Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.
+
+
+Evidência parcial 0.2.2: [identidade local](../17-identidade-local.md).
+

@@ -57,3 +57,8 @@ Workflow CI preparado, ainda não executado remotamente. Sem Supabase, autentica
 11/09/2026: 11 testes de integração PostgreSQL local aprovados, incluindo lock real observado em pg_stat_activity, dupla marcação, idempotência, rollback integral, expiração e isolamento de recursos/atores. Build/TypeScript e 37 testes de domínio passaram. RLS habilitado em oito tabelas privadas; acesso sem privilégios negado; sem policies públicas, SECURITY DEFINER ou integração Auth. O teste usa proprietário da base: não prova RLS de produção.
 
 Docker disponível com PostgreSQL 17; script de arranque testado contra contentor identificado. Cada execução remove apenas a base de testes gerada por ela. Não se aplicaram migrações Supabase nem se alteraram projetos remotos. Testes de browser não repetidos, porque o código de interface não mudou. Ver 16-prova-persistencia.md e ADR-008.
+
+## Incremento 0.2.2 — 11/09/2026
+
+37 testes de domínio e 7 testes reais Auth/PostgREST aprovados; build/typecheck e 41 documentos/145 ligações validados. Duas migrações reconstruídas via reset exclusivamente local; testes de acesso aprovados após reconstrução. Advisors sem avisos/erros no nível warn. Não equivale a restauro de backup operacional. Testes visuais e os 11 testes da prova PostgreSQL anterior não foram repetidos neste incremento sem alterações nessas áreas. CI de autenticação preparado, execução remota não realizada.
+

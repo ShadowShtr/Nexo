@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 — 2026-09-11
+
+- Supabase local exclusivo premium-mobility, portas próprias e registo público desativado.
+- Duas migrações de identidade/RLS, incluindo revogação anónima explícita para reconstrução reprodutível.
+- Módulo de login e memberships; sete testes reais de Auth/PostgREST, isolamento e revogação.
+- BAS-03/SEC-01 em curso. Interface ainda é pré-visualização; convites, login visual e schema operacional pendentes.
+
+
 ## 0.2.1 — 2026-09-11
 
 ### Adicionado
@@ -52,3 +60,4 @@
 - Sem aplicação web, persistência, integrações reais ou deployment.
 - Aprovação antes de pagamento, prazos de aceitação/pagamento e composição da margem de agenda são hipóteses identificadas para validação.
 - Cobrança direta por motorista depende de seleção e validação de um prestador de pagamentos.
+
