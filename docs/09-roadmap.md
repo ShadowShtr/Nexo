@@ -43,6 +43,10 @@ CRM e traduções podem avançar quando contratos/acesso estiverem prontos. Acer
 | Financeiro e acertos pessoais | FIN-01/02, SET-01/02 |
 | Configurações de valores | CFG-01/02/03 |
 
+## Reutilização aprovada como direção de implementação
+
+BAS-05 documenta a pesquisa concluída em [bibliotecas GitHub](14-reutilizacao-github.md). BAS-04 valida o conjunto escolhido; UI-02 e CAL-04 reutilizam componentes. Isto não conclui as tarefas de funcionamento nem altera a ordem de persistência, concorrência e interface.
+
 ## Primeiro ciclo depois desta entrega
 
 1. BAS-02: selecionar persistência adequada e definir transação por motorista/veículo.

@@ -1,12 +1,12 @@
 # Tarefas de implementação por aba
 
-Estado 0.1.2: BAS-01 e UI-01 concluídas; BAS-02 EM CURSO; outras tarefas PLANEADAS. Este índice não afirma que existam telas funcionais.
+Estado 0.1.3: BAS-01, BAS-05 e UI-01 concluídas; BAS-02 EM CURSO; outras tarefas PLANEADAS. Este índice não afirma que existam telas funcionais.
 
 Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, CONCLUÍDA (com evidência). Atualizar diretamente os ficheiros de tarefas; não regenerar por cima de alterações.
 
 | Módulo | Tarefas | Documento |
 |---|---|---|
-| Fundação técnica | BAS-01, BAS-02, BAS-03, BAS-04 | [Abrir](00-base.md) |
+| Fundação técnica | BAS-01, BAS-02, BAS-03, BAS-04, BAS-05 | [Abrir](00-base.md) |
 | Identidade e acesso | SEC-01, SEC-02, SEC-03 | [Abrir](01-seguranca.md) |
 | Aba Configurações | CFG-01, CFG-02, CFG-03 | [Abrir](02-configuracoes.md) |
 | Abas Motoristas e Veículos | CAT-01, CAT-02, CAT-03 | [Abrir](03-catalogo.md) |
@@ -26,4 +26,4 @@ Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, 
 | Estabilização e lançamento | REL-01, REL-02 | [Abrir](17-release.md) |
 | Sistema visual e interface | UI-01, UI-02, UI-03 | [Abrir](18-interface.md) |
 
-Total: **47 tarefas**, sendo **2 concluídas**, **1 em curso** e **44 planeadas** na versão 0.1.2. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
+Total: **48 tarefas**, sendo **3 concluídas**, **1 em curso** e **44 planeadas** na versão 0.1.3. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.

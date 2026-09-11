@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — fundação 0.1.2
+# Plataforma de transporte premium — fundação 0.1.3
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -41,6 +41,7 @@ O Node executa TypeScript com remoção de tipos. Isso não faz verificação es
 12. [Viabilidade de custo zero e rotas](docs/11-viabilidade-custos-rotas.md)
 13. [Sistema visual: fonte, cores, espaçamentos e componentes](docs/12-design-system.md)
 14. [Aplicação visual em cada aba](docs/13-mapa-visual-abas.md)
+15. [Bibliotecas prontas e plano de reutilização](docs/14-reutilizacao-github.md)
 
 ## Estrutura atual
 

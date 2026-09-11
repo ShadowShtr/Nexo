@@ -1,5 +1,7 @@
 # Fundação técnica
 
+Reutilização: BAS-04 deve aplicar a seleção de bibliotecas e a prova de compatibilidade descritas na pesquisa. Ver [pesquisa GitHub](../14-reutilizacao-github.md).
+
 Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pronto](../08-entrega.md) antes de implementar. Para trabalho de interface, aplicar o [sistema visual](../12-design-system.md) e o [mapa de abas](../13-mapa-visual-abas.md); os critérios UI-02/UI-03 complementam os critérios funcionais.
 
 ## BAS-01 — Especificação e domínio inicial
@@ -48,7 +50,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Estado:** PLANEADA
 
-**Dependências:** BAS-02
+**Dependências:** BAS-02, BAS-05
 
 **Regras:** DEC-15; ADR-001..005
 
@@ -57,3 +59,18 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 **Aceitação:** Build e typecheck passam; navegação com estados vazios reais; scripts documentados; nenhum dashboard fictício apresentado como dado real.
 
 **Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+
+## BAS-05 — Pesquisar e selecionar componentes reutilizáveis
+
+**Estado:** CONCLUÍDA — pesquisa documental, sem integração
+
+**Dependências:** BAS-01
+
+**Regras:** ADR-001; DEC-15; DEC-30; pedido de reutilização de 11/09/2026
+
+**Implementação:** Comparar bibliotecas e bases existentes, licenças, custos e adequação às regras; mapear reutilização às tarefas.
+
+**Aceitação:** Fontes dos autores, escolha inicial de calendário e alternativas, limites de reutilização, ausência de promessa de funcionalidades já instaladas.
+
+**Evidência:** [Pesquisa e decisões](../14-reutilizacao-github.md), realizada em 11/09/2026. Integração e compatibilidade executável ficam em BAS-04/CAL-04.

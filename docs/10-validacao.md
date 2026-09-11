@@ -36,3 +36,8 @@ Pesquisa de viabilidade é documental, com fontes em 11-viabilidade-custos-rotas
 ## Atualização 0.1.2 — sistema visual
 
 Documentação e tokens de estilo, sem alteração de domínio. Cinco referências originais copiadas sem edição. Validação documental: 36 documentos, 128 ligações locais e 47 tarefas. Oito pares de texto/fundo da paleta têm contraste calculado superior a 4,5:1 (menor resultado: 5,22:1). Isto não substitui validação da composição em browser. Nenhuma tela foi renderizada ou declarada implementada; UI-02 e UI-03 permanecem planeadas. Testes funcionais não repetidos porque não houve mudança nas regras.
+
+
+## Atualização 0.1.3 — reutilização GitHub
+
+Pesquisa documental em 11/09/2026 com fontes dos autores e mapeamento de bibliotecas para as tarefas. Validação: 37 documentos, 135 ligações locais e 48 tarefas; sem ciclos. git diff --check passou. Nenhum pacote instalado, build de interface ou teste de integração realizado. Testes de domínio não repetidos porque esta versão altera apenas documentação e metadados de versão. BAS-05 concluída significa pesquisa concluída; compatibilidade das bibliotecas e calendário operacional continuam por demonstrar.

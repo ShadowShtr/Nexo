@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 — 2026-09-11
+
+### Adicionado
+- Pesquisa de bibliotecas no GitHub, comparação de calendários e distinção entre componentes gratuitos e módulos Premium.
+- Seleção documental de componentes reutilizáveis por aba, fontes, limites e critérios de integração.
+- BAS-05 concluída para pesquisa; BAS-04, UI-02 e CAL-04 orientadas para reutilização. Nenhuma dependência instalada ou funcionalidade operacional declarada.
+
 ## 0.1.2 — 2026-09-09
 
 ### Adicionado

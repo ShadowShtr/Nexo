@@ -1,5 +1,7 @@
 # Sistema visual e interface
 
+Reutilização: UI-02 deve reutilizar shadcn/ui e os componentes selecionados, adaptados aos tokens existentes. Ver [pesquisa GitHub](../14-reutilizacao-github.md).
+
 Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-abas.md) e [definição de pronto](../08-entrega.md).
 
 ## UI-01 — Documentar referências e criar tokens partilhados
