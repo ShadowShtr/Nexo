@@ -6,3 +6,7 @@ coverage/
 dist/
 *.log
 .DS_Store
+
+artifacts/
+test-results/
+playwright-report/

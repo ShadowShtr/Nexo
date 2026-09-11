@@ -59,3 +59,6 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 **Aceitação:** Nenhum arrastar grava sem validar; mobile não corta horários; filtros não mudam alocações; estados vazio/carregando/erro disponíveis; parceiro só vê agenda própria.
 
 **Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+
+Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.

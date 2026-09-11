@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — fundação 0.1.3
+# Plataforma de transporte premium — base web 0.2.0
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -6,24 +6,28 @@ Base para um proprietário/motorista que gere a operação e atribui serviços a
 
 - Especificação funcional, arquitetura, modelo de dados, matemática, calendário, configurações e plano de implementação por aba.
 - Código TypeScript executável para preço, tours, sinal, espera, cancelamento/reagendamento, conflitos de agenda, acertos e estados de reserva.
-- Testes automáticos e exemplo de orçamento. Sem dependências externas nesta fase.
+- Testes automáticos, exemplo de orçamento e base web React/Vite com dependências fixadas.
+- Navegação PT/EN, calendário visual e simuladores locais. Ver [guia da base web](docs/15-base-web.md).
 - Repositório Git local, changelog e tarefas rastreáveis.
 
 ## O que ainda não existe
 
-Interface, API, autenticação, base de dados persistente, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. Os módulos atuais são funções puras; não são um sistema operacional nem garantem concorrência sem a futura camada transacional. Nada foi publicado. Nenhuma tarefa de tela está marcada como concluída.
+API, autenticação, base de dados persistente, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface é uma pré-visualização com estados vazios e exemplos opcionais. Não é um sistema operacional nem garante concorrência sem a futura camada transacional. Nada foi publicado. Nenhuma tarefa de tela está marcada como concluída.
 
 ## Executar
 
 Requisito: Node.js 24.x. Na raiz deste projeto:
 
 ```sh
-npm test
-npm run demo
-npm run check:docs
+npm ci
+npm run dev
+# Verificações
+npm run build
+npm run check
+npm run test:ui
 ```
 
-O Node executa TypeScript com remoção de tipos. Isso não faz verificação estática de tipos. O compilador TypeScript e o respetivo check serão adicionados na tarefa BAS-04 quando a aplicação web for inicializada com dependências fixadas.
+Abrir http://127.0.0.1:5173 depois de iniciar o servidor. O Node executa os testes de domínio com remoção de tipos; npm run build inclui agora verificação estática com TypeScript. npm run test:ui usa Microsoft Edge.
 
 ## Ordem de leitura
 
@@ -52,6 +56,7 @@ src/ui/styles/        tokens CSS do sistema visual
 design/references/    imagens originais de referência
 tests/                cenários de negócio executáveis
 examples/             demonstração com valores fictícios
+src/web/              aplicação React, rotas, idiomas e simuladores
 scripts/              validação documental
 CHANGELOG.md          histórico de versões
 AGENTS.md             instruções para futuras implementações

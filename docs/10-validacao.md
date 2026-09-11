@@ -41,3 +41,12 @@ Documentação e tokens de estilo, sem alteração de domínio. Cinco referênci
 ## Atualização 0.1.3 — reutilização GitHub
 
 Pesquisa documental em 11/09/2026 com fontes dos autores e mapeamento de bibliotecas para as tarefas. Validação: 37 documentos, 135 ligações locais e 48 tarefas; sem ciclos. git diff --check passou. Nenhum pacote instalado, build de interface ou teste de integração realizado. Testes de domínio não repetidos porque esta versão altera apenas documentação e metadados de versão. BAS-05 concluída significa pesquisa concluída; compatibilidade das bibliotecas e calendário operacional continuam por demonstrar.
+
+
+## Atualização 0.2.0 — base web
+
+11/09/2026: npm run build passou (TypeScript e Vite); 37 testes de domínio e 3 testes Playwright passaram. A navegação foi percorrida em 18 rotas e sete larguras (320, 375, 390, 430, 768, 1024, 1440), com verificação de overflow horizontal e erros de execução. Testados PT/EN, margem de 105 min para deslocação de 90+15, erro de entrada, ausência de persistência simulada, preço/sinal/saldo de tour e calendário às 09:00 de Lisboa com browser em Nova Iorque.
+
+Inspecionadas capturas de início desktop/mobile, configurações e calendário móvel; ajustados rótulo acessível de idioma e formatação de horas. Testes de browser repetidos após essas correções e alterações visuais finais: todos aprovados. Validação documental: 38 documentos, 139 ligações locais, 48 tarefas. Auditoria npm durante a instalação reportou zero vulnerabilidades conhecidas; não equivale a auditoria completa.
+
+Workflow CI preparado, ainda não executado remotamente. Sem Supabase, autenticação, reservas persistentes, pagamentos ou envio de notificações. BAS-04 e UI-02 continuam em curso; CAL-04 continua planeada. A pré-visualização de áreas não prova autorização. Não foi concluída a revisão de zoom 200%, Safari/Android nem de DST interativo.

@@ -1,6 +1,6 @@
 # 12 — Sistema visual da plataforma
 
-Versão visual 1, projeto 0.1.2. Direção aprovada pelo utilizador: cinco imagens de referência fornecidas em 09/09/2026. Este documento e os tokens CSS são a fonte de verdade para a implementação das telas. Não representam telas já implementadas.
+Versão visual 1, projeto 0.1.2. Direção aprovada pelo utilizador: cinco imagens de referência fornecidas em 09/09/2026. Este documento e os tokens CSS são a fonte de verdade para a implementação das telas. A especificação original não representa telas concluídas. A versão 0.2.0 acrescenta a pré-visualização descrita em 15-base-web.md.
 
 ## 1. O que estamos a reproduzir
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 2026-09-11
+
+### Adicionado
+- Base local React/Vite, TypeScript, versões exatas e lockfile; workflow de CI preparado.
+- Navegação de pré-visualização PT/EN para proprietário, motorista e cliente; estilos das referências e componentes partilhados.
+- FullCalendar Standard 6.1.21 com Lisboa/Luxon, vistas dia/semana/mês/lista, exemplo opt-in e detalhe acessível.
+- Simulador de tours ligado ao domínio e formulário validado de margem, sem guardar nem alterar regras.
+- Testes Playwright e estados vazios explícitos; sem API, login ou pagamentos reais. BAS-04/UI-02 em curso.
+
 ## 0.1.3 — 2026-09-11
 
 ### Adicionado

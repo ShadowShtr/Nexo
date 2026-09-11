@@ -20,7 +20,7 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 
 ## UI-02 — Implementar componentes e exemplos de estados
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — primitivas e estados vazios; catálogo completo pendente
 
 **Dependências:** UI-01, BAS-04
 
@@ -45,3 +45,6 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 **Aceitação:** Nenhum valor/ação importante cortado ou tapado pela barra; cada aba mantém hierarquia partilhada; contraste e alvos verificados na composição final; revisão funcional não substituída pela aparência.
 
 **Evidência:** Por preencher com capturas e cenários por aba. Não foi executado browser QA nesta entrega.
+
+
+Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.

@@ -1,6 +1,6 @@
 # 13 — Aplicação do padrão em todas as abas
 
-Esta especificação aplica o [sistema visual](12-design-system.md) às tarefas existentes. Todas as telas abaixo permanecem por implementar; os padrões e tokens foram preparados. Não adiciona funcionalidades comerciais não escolhidas.
+Esta especificação aplica o [sistema visual](12-design-system.md) às tarefas existentes. Na versão 0.2.0 existe uma pré-visualização das áreas e um calendário visual. As funcionalidades operacionais abaixo continuam por implementar; ver 15-base-web.md. Não adiciona funcionalidades comerciais não escolhidas.
 
 ## Proprietário
 

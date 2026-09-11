@@ -4,7 +4,7 @@
 
 Monólito modular: uma aplicação e uma base de dados, com domínios separados. Isto simplifica a primeira operação e preserva pontos de separação para crescimento. Não começar com microserviços. TypeScript no domínio e futura aplicação web; contratos portáveis, independentes do framework.
 
-Nesta versão só existe src/domain e código de demonstração/testes. As pastas abaixo são o desenho futuro, não módulos já implementados.
+Na versão 0.2.0 existem src/domain, src/web e src/ui, além de testes e exemplos. src/web contém a pré-visualização React/Vite; a camada de aplicação, infraestrutura e módulos de dados abaixo continua planeada. Ver 15-base-web.md para os limites do scaffold.
 
 ```text
 app/                         telas, rotas e layouts web PT/EN

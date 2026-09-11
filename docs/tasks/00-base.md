@@ -48,7 +48,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-04 — Inicializar aplicação web e ferramentas de desenvolvimento
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — scaffold local validado; persistência e acesso pendentes
 
 **Dependências:** BAS-02, BAS-05
 
@@ -74,3 +74,6 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 **Aceitação:** Fontes dos autores, escolha inicial de calendário e alternativas, limites de reutilização, ausência de promessa de funcionalidades já instaladas.
 
 **Evidência:** [Pesquisa e decisões](../14-reutilizacao-github.md), realizada em 11/09/2026. Integração e compatibilidade executável ficam em BAS-04/CAL-04.
+
+
+Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.
