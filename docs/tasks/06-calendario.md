@@ -62,3 +62,6 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 
 Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.
+
+Evidência parcial CAL-04 — 0.2.3: agenda interativa de demonstração, filtros, criação/edição/cancelamento em memória e integração com checkSchedule. Ver [roteiro de teste](../18-teste-calendario.md). Não conclui calendário operacional, persistência ou permissões reais.
+

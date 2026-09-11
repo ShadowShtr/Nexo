@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3 — 2026-09-11
+
+- Dados fictícios opt-in para motoristas, carros, clientes, tours e viagens.
+- Agenda de teste com filtros, criação/edição/cancelamento em memória, margem simulada e conflitos por motorista/veículo.
+- Formulários PT/EN, horas de Lisboa, cenários reproduzíveis e testes de navegador. Sem escrita no Supabase.
+
+
 ## 0.2.2 — 2026-09-11
 
 - Supabase local exclusivo premium-mobility, portas próprias e registo público desativado.
@@ -60,4 +67,5 @@
 - Sem aplicação web, persistência, integrações reais ou deployment.
 - Aprovação antes de pagamento, prazos de aceitação/pagamento e composição da margem de agenda são hipóteses identificadas para validação.
 - Cobrança direta por motorista depende de seleção e validação de um prestador de pagamentos.
+
 

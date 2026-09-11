@@ -5,7 +5,9 @@ import { areas, hrefFor, icons, parseRoute, type Area, type Page } from './navig
 import { Button } from '../ui/components/Button';
 import { Empty, Header, Section, Shortcut } from '../ui/components/Primitives';
 import { SettingsPage } from './pages/SettingsPage';
+import { DemoPage } from './pages/DemoPage';
 import { TourSimulator } from './pages/TourSimulator';
+const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
 
 function Language() {
@@ -34,6 +36,7 @@ function CustomerPage({ page }: { page: Page }) {
   return <>{page === 'discover' && <section className="pm-summary pm-customer-hero"><span className="pm-eyebrow">{t('chooseLanguage')}</span><h2>{t('welcome')}</h2><p className="pm-secondary">{t('welcomeBody')}</p><Button asChild variant="secondary"><a href={hrefFor('customer', 'booking')}>{t('start')}<MoveUpRight size={18}/></a></Button></section>}<Section title={t('drivers')}><div className="pm-card"><Empty title={t('noDrivers')} description={t('noDriversBody')}/></div></Section></>;
 }
 export function App() {
+  const [demo, setDemo] = useState(() => new URLSearchParams(window.location.search).get('demo') === '1');
   const { t, i18n } = useTranslation();
   const [route, setRoute] = useState(() => parseRoute(window.location.hash));
   useEffect(() => { const update = () => { setRoute(parseRoute(window.location.hash)); window.scrollTo(0, 0); }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update); }, []);
@@ -44,16 +47,21 @@ export function App() {
   const primary: readonly Page[] = area === 'owner' ? ['home', 'calendar', 'bookings'] : area === 'driver' ? ['home', 'services', 'availability'] : pages;
   const link = (target: Page | 'more', mobile = false) => { const Icon = target === 'more' ? Ellipsis : icons[target]; const active = target === page || (target === 'more' && !primary.includes(page as Page)); return <a key={target} href={hrefFor(area, target)} className={`pm-nav-link ${active ? 'pm-active' : ''}`} aria-current={target === page ? 'page' : undefined}><Icon size={mobile ? 19 : 20} strokeWidth={1.7}/><span>{t(target)}</span></a>; };
   const now = new Intl.DateTimeFormat(i18n.language, { timeZone: 'Europe/Lisbon', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
-  return <div className="pm-theme pm-app"><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.0 · {t('preview')}</span></div></aside>
-    <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}</div>
+  return <div className="pm-theme pm-app"><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.3 · {t('preview')}</span></div></aside>
+    <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}<label className="pm-switch"><input type="checkbox" checked={demo} onChange={e => { setDemo(e.target.checked); const url = new URL(window.location.href); url.searchParams.set('demo', e.target.checked ? '1' : '0'); history.replaceState(null, '', url); }}/>{i18n.language === 'en' ? 'Test data' : 'Dados de teste'}</label></div>
     <main id="main" tabIndex={-1} className="pm-page pm-safe-bottom"><Header eyebrow={page === 'home' ? now : t(area)} title={page === 'home' ? t('greeting') : t(page)} description={page === 'home' ? t('overview') : page === 'more' ? undefined : t(`${page}Body`)} action={<span className="pm-avatar" aria-hidden="true">{area === 'owner' ? 'P' : area === 'driver' ? 'M' : 'C'}</span>}/>
       {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span>{t(p)}</span><ChevronRight size={18}/></a>)}</div>
+      : demo && !['calendar', 'availability', 'settings'].includes(page) ? <DemoPage key={area + page} page={page} area={area}/>
       : area === 'customer' ? <CustomerPage page={page}/>
       : page === 'home' ? <Home area={area}/>
-      : page === 'calendar' || page === 'availability' ? <Suspense fallback={<p role="status">{t('calendar')}…</p>}><CalendarPage/></Suspense>
+      : page === 'calendar' || page === 'availability' ? <Suspense fallback={<p role="status">{t('calendar')}…</p>}>{demo ? <CalendarSandbox driverOnly={area === 'driver'}/> : <CalendarPage/>}</Suspense>
       : page === 'settings' ? <SettingsPage/>
       : page === 'finance' || page === 'earnings' || page === 'settlements' ? <Finance settlement={page === 'settlements'}/>
       : <Collection key={page} page={page}/>}</main></div>
     <nav className="pm-bottom-nav" aria-label={t('daily')}>{primary.map(p => link(p, true))}{area !== 'customer' && link('more', true)}</nav>
   </div>;
 }
+
+
+
+
