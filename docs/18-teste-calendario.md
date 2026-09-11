@@ -26,3 +26,12 @@ As faixas cinzentas mostram margem hipotética aplicada uniformemente após cada
 Cinco testes Playwright cobrem navegação/layout anterior, catálogos, pesquisa, idiomas, criação recusada/aceite, cancelamento e reposição. Testes executados com navegador no fuso America/New_York para verificar apresentação em Lisboa. Build e testes de domínio mantidos.
 
 Referências: [FullCalendar eventClick](https://fullcalendar.io/docs/eventClick) e [Luxon 3.7.2](https://moment.github.io/luxon/api-docs/index.html).
+
+## Testar como cliente — 0.2.4
+
+Abrir http://127.0.0.1:5173/?demo=1#/customer/booking. Escolher motorista e carro, transfer ou tour, data/passageiros/espera, nome e email fictícios, rever orçamento e enviar pedido. Consultar reserva mostra os pedidos desta sessão e permite cancelar pedidos ainda sem pagamento.
+
+Cenário: Miguel / Classe V, tour, 14/09/2026 às 10:00, 4 pessoas e sem espera resulta em 270 EUR, sinal 67,50 e saldo 202,50. Miguel em 11/09 às 09:30 deve ser recusado por conflito. Tours com menos de 48 horas desde o relógio de teste também são recusados.
+
+Os pedidos do cliente ficam em memória separada do editor da agenda, mas validam as mesmas seis viagens de referência e outros pedidos da sessão. Não aparecem ainda no painel do proprietário. Distâncias, duração e deslocação são fixas de demonstração; não existe pesquisa de moradas, pagamento MB WAY, aceite do motorista, registo persistente, link seguro, NIF/faturação, telefone ou reagendamento. Cancelamento aqui é apenas de pedido sem cobrança. Recarregar a página elimina os pedidos. Sete testes de navegador aprovados.
+

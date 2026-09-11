@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.4 — 2026-09-11
+
+- Percurso de teste do cliente: motorista/carro, viagem, dados, orçamento, pedido, consulta e cancelamento.
+- Validação de capacidade, antecedência e conflitos contra dados fictícios; preços pelo domínio existente.
+- Sete testes de interface aprovados. Sem pagamento ou persistência real.
+
+
 ## 0.2.3 — 2026-09-11
 
 - Dados fictícios opt-in para motoristas, carros, clientes, tours e viagens.
@@ -67,5 +74,6 @@
 - Sem aplicação web, persistência, integrações reais ou deployment.
 - Aprovação antes de pagamento, prazos de aceitação/pagamento e composição da margem de agenda são hipóteses identificadas para validação.
 - Cobrança direta por motorista depende de seleção e validação de um prestador de pagamentos.
+
 
 
