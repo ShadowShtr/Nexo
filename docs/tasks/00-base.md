@@ -20,7 +20,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-02 — Escolher persistência e contratos de repositório
 
-**Estado:** EM CURSO — Supabase escolhido; falta prova de transação
+**Estado:** CONCLUÍDA — contratos e prova PostgreSQL local validados
 
 **Dependências:** BAS-01
 
@@ -30,7 +30,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Uma prova executável explica como serializa motorista e veículo; schema lógico mapeado; nenhuma reserva depende de localStorage.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** [Prova de persistência](../16-prova-persistencia.md), contratos e adaptador PostgreSQL; 11 testes de integração aprovados em 11/09/2026. Sem migração remota.
 
 ## BAS-03 — Migrações, atomicidade e fixtures
 

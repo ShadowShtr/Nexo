@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1 — 2026-09-11
+
+### Adicionado
+- Contratos de reserva preparada e UnitOfWork; adaptador PostgreSQL experimental em schema privado.
+- Locks ordenados de motorista/veículo, idempotência, snapshots e gravação atómica de reserva/alocações/outbox.
+- PostgreSQL local isolado e 11 testes reais de concorrência, rollback, expiração e restrições. BAS-02 concluída.
+- Sem migrações remotas nem ligação de reservas reais à interface.
+
+
 ## 0.2.0 — 2026-09-11
 
 ### Adicionado

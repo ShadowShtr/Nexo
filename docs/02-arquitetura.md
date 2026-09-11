@@ -39,7 +39,7 @@ Módulos não escrevem diretamente nas tabelas financeiras de outros módulos. `
 
 ## Persistência e crescimento
 
-Banco relacional com transações reais, restrições únicas e controlo de concorrência obrigatório. Supabase/Postgres foi escolhido pelo utilizador. BAS-02 deve agora provar os contratos/transações antes das migrações; nenhum projeto remoto foi criado. O utilizador escolheu Vercel para o app, substituindo a preferência inicial de Sites. Vercel Hobby exclui uso comercial: resolver plano pago versus alternativa antes de publicar. A aplicação deve manter regras de negócio portáveis e chamadas sensíveis no servidor.
+Banco relacional com transações reais, restrições únicas e controlo de concorrência obrigatório. Supabase/Postgres foi escolhido pelo utilizador. BAS-02 foi validada em PostgreSQL local na versão 0.2.1 (ver 16-prova-persistencia.md); migrações completas e configuração remota continuam pendentes. O utilizador escolheu Vercel para o app, substituindo a preferência inicial de Sites. Vercel Hobby exclui uso comercial: resolver plano pago versus alternativa antes de publicar. A aplicação deve manter regras de negócio portáveis e chamadas sensíveis no servidor.
 
 Todos os dados operacionais levam `organizationId`. Só há uma organização na primeira versão; não existe adesão pública de novas empresas. Esta chave facilita uma evolução sem misturar dados. IDs opacos, createdAt/updatedAt, versão de concorrência e autor de alterações.
 

@@ -50,3 +50,10 @@ Pesquisa documental em 11/09/2026 com fontes dos autores e mapeamento de bibliot
 Inspecionadas capturas de início desktop/mobile, configurações e calendário móvel; ajustados rótulo acessível de idioma e formatação de horas. Testes de browser repetidos após essas correções e alterações visuais finais: todos aprovados. Validação documental: 38 documentos, 139 ligações locais, 48 tarefas. Auditoria npm durante a instalação reportou zero vulnerabilidades conhecidas; não equivale a auditoria completa.
 
 Workflow CI preparado, ainda não executado remotamente. Sem Supabase, autenticação, reservas persistentes, pagamentos ou envio de notificações. BAS-04 e UI-02 continuam em curso; CAL-04 continua planeada. A pré-visualização de áreas não prova autorização. Não foi concluída a revisão de zoom 200%, Safari/Android nem de DST interativo.
+
+
+## Atualização 0.2.1 — prova transacional
+
+11/09/2026: 11 testes de integração PostgreSQL local aprovados, incluindo lock real observado em pg_stat_activity, dupla marcação, idempotência, rollback integral, expiração e isolamento de recursos/atores. Build/TypeScript e 37 testes de domínio passaram. RLS habilitado em oito tabelas privadas; acesso sem privilégios negado; sem policies públicas, SECURITY DEFINER ou integração Auth. O teste usa proprietário da base: não prova RLS de produção.
+
+Docker disponível com PostgreSQL 17; script de arranque testado contra contentor identificado. Cada execução remove apenas a base de testes gerada por ela. Não se aplicaram migrações Supabase nem se alteraram projetos remotos. Testes de browser não repetidos, porque o código de interface não mudou. Ver 16-prova-persistencia.md e ADR-008.

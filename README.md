@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.0
+# Plataforma de transporte premium — base web 0.2.1
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -64,4 +64,4 @@ AGENTS.md             instruções para futuras implementações
 
 Cada tarefa tem dependências, trabalho, critérios de aceitação e evidência exigida. Supabase foi escolhido para persistência; Vercel é a preferência de hospedagem, com custo comercial por resolver. Ver estudo de viabilidade.
 
-O próximo bloco é BAS-02/BAS-03: contratos de persistência e testes de concorrência, seguido do scaffold web BAS-04. Decisões de pagamento podem ser investigadas em paralelo ao desenvolvimento de agenda e CRM, mas bloqueiam a cobrança real.
+BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). O próximo bloco é BAS-03: migrações completas e restauro, seguido de autenticação e ligação da interface. Decisões de pagamento podem ser investigadas em paralelo ao desenvolvimento de agenda e CRM, mas bloqueiam a cobrança real.
