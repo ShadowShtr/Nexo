@@ -86,3 +86,7 @@ Associação de vários motoristas ao mesmo veículo adicionada ao catálogo de 
 
 Consulta de pedidos demo por código de confirmação adicionada. O contrato normaliza espaços/maiúsculas e rejeita referências fora do formato; a consulta de produção ainda deverá combinar o código com um fator adicional e endpoint autenticado.
 
+## Incremento 0.2.11 — 14/09/2026
+
+O fluxo Playwright do cliente cria um pedido, consulta o código normalizado e confirma o estado antes do cancelamento. Os dados continuam fictícios e em memória.
+

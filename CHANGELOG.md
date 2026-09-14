@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.11 — 2026-09-14
+
+- Fluxo de cliente testa consulta do código após criar um pedido.
+- Consulta aceita espaços e letras minúsculas e mantém o estado do pedido encontrado.
+
 ## 0.2.10 — 2026-09-14
 
 - Consulta de pedidos demo por código de confirmação normalizado.

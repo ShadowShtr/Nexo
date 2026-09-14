@@ -33,6 +33,10 @@ test('customer chooses car, checks conflicts and submits and cancels a test requ
   await expect(page.getByRole('status')).toContainText('A aguardar aceitação');
   await page.getByRole('link',{name:'Consultar pedidos',exact:true}).click();
   await expect(page.getByRole('heading',{name:/CLIENT-/})).toBeVisible();
+  const reference=(await page.getByRole('heading',{name:/CLIENT-/}).first().textContent())!;
+  await page.getByLabel('Código de confirmação').fill(`  ${reference.toLowerCase()} `);
+  await page.getByRole('button',{name:'Consultar',exact:true}).click();
+  await expect(page.getByRole('heading',{name:reference,exact:true}).first()).toBeVisible();
   await page.getByRole('button',{name:'Cancelar pedido de teste'}).click();
   await expect(page.getByRole('status')).toContainText('cancelado');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
