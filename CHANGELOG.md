@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.35 — 2026-09-14
+
+- PUB-01: o catálogo de sugestões inclui moradas completas do percurso Carregado, como Avenida Cabo da Boa Esperança L65 e Estação Carregado.
+- PUB-01: a pesquisa parcial filtra e apresenta a morada correspondente no próprio painel, mantendo o mapa e a cotação ligados à opção escolhida.
+- 19 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.34 — 2026-09-14
 
 - PUB-01: sugestões de morada agora aparecem visivelmente enquanto o cliente digita, com correspondência por nome e endereço e seleção direta para atualizar o mapa.

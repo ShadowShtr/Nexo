@@ -178,3 +178,7 @@ O mapa deixou de reaproveitar a rota Lisboa–Sintra quando o cliente escreve ou
 
 As sugestões de morada passaram a aparecer diretamente abaixo do campo enquanto o cliente digita. A lista filtra nomes e endereços, permite selecionar Carregado e outros locais demo e mantém a cotação bloqueada até haver um destino reconhecido. Resultado: 85 testes Node, 18 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.35 — 14/09/2026
+
+O catálogo de demonstração passou a incluir as moradas completas do exemplo enviado, incluindo Avenida Cabo da Boa Esperança L65 e Estação Carregado. A pesquisa parcial “AVENIDA CABO DA BOA ESPERANÇA” apresenta a sugestão imediatamente e a seleção atualiza o destino do mapa. Resultado: 85 testes Node, 19 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

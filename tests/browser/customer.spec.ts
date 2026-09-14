@@ -53,6 +53,17 @@ test('customer planner redraws the map for a different destination', async ({ pa
   await expect(page.locator('.pm-client-route-quote')).toContainText('200,00');
 });
 
+test('customer planner suggests the complete Carregado street address', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('AVENIDA CABO DA BOA ESPERANÇA');
+  await expect(page.getByRole('option', { name: /Avenida Cabo da Boa Esperança L65 Carregado/ })).toBeVisible();
+  await page.getByRole('option', { name: /Avenida Cabo da Boa Esperança L65 Carregado/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Avenida Cabo da Boa Esperança L65');
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Avenida Cabo da Boa Esperança L65');
+});
+
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/booking');

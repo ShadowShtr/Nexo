@@ -15,6 +15,8 @@ const tourOptions = [
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
   { title: 'Carregado', detail: 'Carregado, Alenquer' },
+  { title: 'Avenida Cabo da Boa Esperança L65', detail: 'Carregado, Alenquer' },
+  { title: 'Estação Carregado', detail: 'R. da Estação, Castanheira do Ribatejo' },
   { title: 'Aeroporto de Lisboa', detail: 'Alameda das Comunidades Portuguesas' },
   { title: 'Estação do Oriente', detail: 'Av. Dom João II, Lisboa' },
   { title: 'Centro de Lisboa', detail: 'Lisboa' },
@@ -24,6 +26,8 @@ const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly
   { aliases: ['lisboa', 'centro de lisboa', 'a minha localizacao'], coordinates: [38.7223, -9.1393] },
   { aliases: ['sintra'], coordinates: [38.8029, -9.3817] },
   { aliases: ['carregado'], coordinates: [39.0234, -8.9768] },
+  { aliases: ['avenida cabo da boa esperanca', 'avenida cabo da boa esperanca l65'], coordinates: [39.0198, -8.9742] },
+  { aliases: ['estacao carregado'], coordinates: [39.0228, -8.9757] },
   { aliases: ['aeroporto de lisboa', 'aeroporto'], coordinates: [38.7742, -9.1342] },
   { aliases: ['estacao do oriente', 'oriente'], coordinates: [38.7677, -9.0993] },
   { aliases: ['cascais'], coordinates: [38.6979, -9.4215] },
