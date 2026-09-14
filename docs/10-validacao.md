@@ -82,3 +82,7 @@ Catálogo de demonstração de motoristas e veículos adicionado com cadastro bi
 
 Associação de vários motoristas ao mesmo veículo adicionada ao catálogo de demonstração. O teste Playwright confirma a associação e a suíte ficou com 45 testes Node; build e validação documental continuam aprovados.
 
+## Incremento 0.2.10 — 14/09/2026
+
+Consulta de pedidos demo por código de confirmação adicionada. O contrato normaliza espaços/maiúsculas e rejeita referências fora do formato; a consulta de produção ainda deverá combinar o código com um fator adicional e endpoint autenticado.
+

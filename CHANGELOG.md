@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.10 — 2026-09-14
+
+- Consulta de pedidos demo por código de confirmação normalizado.
+- Validação estrita de referências impede caracteres inesperados e comprimentos inválidos.
+
 ## 0.2.9 — 2026-09-14
 
 - Catálogo demo permite associação de vários motoristas ao mesmo veículo.
