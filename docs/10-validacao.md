@@ -182,3 +182,7 @@ As sugestões de morada passaram a aparecer diretamente abaixo do campo enquanto
 
 O catálogo de demonstração passou a incluir as moradas completas do exemplo enviado, incluindo Avenida Cabo da Boa Esperança L65 e Estação Carregado. A pesquisa parcial “AVENIDA CABO DA BOA ESPERANÇA” apresenta a sugestão imediatamente e a seleção atualiza o destino do mapa. Resultado: 85 testes Node, 19 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.36 — 14/09/2026
+
+O ponto de Avenida Cabo da Boa Esperança L65 usa agora a coordenada geográfica do arruamento em Carregado (CP 2580-469). O enquadramento do mapa inclui explicitamente o ponto de recolha e o destino, mesmo quando a geometria recebida é simplificada. Resultado: 85 testes Node, 19 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

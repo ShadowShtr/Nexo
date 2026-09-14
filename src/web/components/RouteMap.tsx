@@ -26,7 +26,11 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
       L.circleMarker([item.coordinates[0], item.coordinates[1]], { radius: 9, color: '#fff', weight: 3, fillColor: end ? '#18181a' : '#4f5056', fillOpacity: 1 })
         .addTo(map).bindTooltip(`${index + 1}. ${item.label}`);
     });
-    if (shape.length > 1) map.fitBounds(L.latLngBounds(shape), { padding: [32,32], maxZoom: 12 });
+    // Include the explicit pickup/destination points in the bounds as well
+    // as the line. This keeps both pins visible when a provider returns a
+    // simplified geometry or when a demo route is assembled from aliases.
+    const boundsPoints = [...shape, ...route.points.map(item => L.latLng(item.coordinates[0], item.coordinates[1]))];
+    if (boundsPoints.length > 1) map.fitBounds(L.latLngBounds(boundsPoints), { padding: [32,32], maxZoom: 12 });
     else if (shape[0]) map.setView(shape[0], 12);
     setTimeout(() => map.invalidateSize(), 0);
     return () => { map.remove(); };

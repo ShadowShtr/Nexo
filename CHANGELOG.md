@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.36 — 2026-09-14
+
+- PUB-01: o ponto de Avenida Cabo da Boa Esperança L65 passa a usar a coordenada geográfica do arruamento em Carregado (CP 2580-469), com o mapa a enquadrar sempre os dois pontos da rota.
+- 19 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.35 — 2026-09-14
 
 - PUB-01: o catálogo de sugestões inclui moradas completas do percurso Carregado, como Avenida Cabo da Boa Esperança L65 e Estação Carregado.
