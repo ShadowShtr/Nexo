@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## CAT-01 — Cadastro e perfil dos motoristas
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — contratos e catálogo de demonstração; persistência de mutações pendente
 
 **Dependências:** SEC-01
 
@@ -14,11 +14,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Perfil só publica com campos exigidos; desativação bloqueia novos serviços sem apagar os anteriores; parceiro não cria outro motorista.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/contracts/catalog.ts`, `src/web/pages/CatalogSandbox.tsx`, `tests/catalog.test.ts` e teste Playwright do catálogo. O modo de demonstração valida campos bilingues, estado ativo/inativo e associação visual; convite e perfil real usam a base Supabase, mas o endpoint owner para editar ainda falta.
 
 ## CAT-02 — Veículos, capacidade e associações temporais
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — schema e validações prontas; CRUD e associação persistentes pendentes
 
 **Dependências:** CAT-01
 
@@ -28,7 +28,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Carro partilhado é único recurso; capacidade 6 não permite 7 passageiros mesmo que nome diga 7 lugares; histórico e associações futuras preservados.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** Migração operacional `vehicles`/`driver_vehicle_assignments`, `src/contracts/catalog.ts`, `CatalogSandbox.tsx` e teste de capacidade 6/7 lugares. Falta endpoint autenticado de edição, fotos/indisponibilidades e teste de histórico temporal no browser.
 
 ## CAT-03 — Zonas de atendimento e taxas de recolha
 

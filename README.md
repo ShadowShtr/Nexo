@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.7
+# Plataforma de transporte premium — base web 0.2.8
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -12,7 +12,7 @@ Base para um proprietário/motorista que gere a operação e atribui serviços a
 
 ## O que ainda não existe
 
-API operacional ligada às abas, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface autenticada e as migrações foram validadas apenas no Supabase local; nenhum projeto Supabase remoto foi ligado.
+API operacional ligada às abas, catálogo persistente, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface autenticada e as migrações foram validadas apenas no Supabase local; nenhum projeto Supabase remoto foi ligado.
 
 ## Executar
 

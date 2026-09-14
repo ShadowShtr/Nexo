@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.8 — 2026-09-14
+
+- Catálogo de teste para motoristas e veículos com cadastro, estado ativo/inativo e validação de capacidade.
+- Contratos de catálogo bilingue e limites de lugares, bagagem, antecedência e suplemento.
+- CAT-01/CAT-02 avançam para EM CURSO; mutações persistentes aguardam endpoint autenticado do proprietário.
+
 ## 0.2.7 — 2026-09-14
 
 - Áreas internas protegidas por sessão Supabase, membership ativa e papel; modo de demonstração explicitamente separado.

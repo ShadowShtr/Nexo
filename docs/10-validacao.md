@@ -74,3 +74,7 @@ Migração operacional criada pela CLI Supabase 2.117.0 e aplicada duas vezes a 
 
 Áreas internas protegidas por sessão e membership, login PT/EN, conclusão de convite e logout implementados. Convite privado do parceiro validado contra Auth local e compensado quando o perfil falha. Resultado: 42 testes Node, 12 testes Auth/PostgREST/PostgreSQL, 10 testes Playwright e teste visual real de login aprovados; build e TypeScript aprovados. Nenhuma secret key foi incluída no browser ou no repositório.
 
+## Incremento 0.2.8 — 14/09/2026
+
+Catálogo de demonstração de motoristas e veículos adicionado com cadastro bilingue, ativação/desativação, capacidade de passageiros, bagagem, antecedência e suplemento. Três testes de contrato e um fluxo Playwright cobrem os limites; o catálogo continua sem escrita real por browser até existir o endpoint owner.
+
