@@ -10,7 +10,11 @@ test('test data can be searched, translated and removed', async ({ page }) => {
   await expect(page.getByText('Example X amount, not agreed',{exact:true})).toBeVisible();
   for (const route of ['owner/home','owner/bookings','owner/customers','owner/tours','owner/finance','driver/services','customer/discover']) {
     await page.goto(`/?demo=1&lang=en#/${route}`);
-    await expect(page.locator('.pm-demo-record').first()).toBeVisible();
+    if (route === 'customer/discover') {
+      await expect(page.getByRole('heading', { name: 'Where are you going?', exact: true })).toBeVisible();
+    } else {
+      await expect(page.locator('.pm-demo-record').first()).toBeVisible();
+    }
     expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth + 1)).toBeTruthy();
   }
   await page.goto('/?demo=1#/owner/home');

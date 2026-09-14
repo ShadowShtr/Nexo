@@ -82,6 +82,29 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-fieldset legend { padding:0; color:var(--pm-ink-secondary); font-size:.8rem; font-weight:600; }
 .pm-fieldset label { display:flex; align-items:center; gap:.5rem; color:var(--pm-ink-secondary); font-size:.875rem; }
 .pm-fieldset input { width:1.1rem; height:1.1rem; accent-color:var(--pm-ink); }
+.pm-customer-booking { gap:1.25rem; }
+.pm-route-entry,.pm-selection-step { display:grid; gap:1rem; }
+.pm-route-entry h2,.pm-selection-step h2 { font-size:1.4rem; letter-spacing:-.025em; }
+.pm-route-entry>label,.pm-selection-step>label,.pm-customer-booking section>label { display:grid; gap:.5rem; color:var(--pm-ink-secondary); font-size:.875rem; font-weight:600; }
+.pm-route-entry :is(input,select),.pm-selection-step :is(input,select) { width:100%; min-height:48px; }
+.pm-location-button { justify-self:start; }
+.pm-field-help { color:var(--pm-ink-secondary); font-size:.8rem; line-height:1.5; margin:0; }
+.pm-route-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.pm-route-options label { display:grid; gap:.5rem; color:var(--pm-ink-secondary); font-size:.875rem; font-weight:600; }
+.pm-route-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; overflow:hidden; border:1px solid var(--pm-line); border-radius:var(--pm-radius-input); background:var(--pm-line); }
+.pm-route-metrics>div { display:grid; gap:.25rem; padding:.8rem; background:var(--pm-surface-muted); }
+.pm-route-metrics span { color:var(--pm-ink-secondary); font-size:.72rem; }
+.pm-route-metrics strong { font-size:1rem; font-variant-numeric:tabular-nums; }
+.pm-review-grid { display:grid; gap:0; padding:.5rem 1rem; border-radius:var(--pm-radius-input); background:var(--pm-surface-muted); }
+.pm-review-grid .pm-setting-row { min-height:48px; }
+.pm-selection-step>.pm-demo-grid { margin:.25rem 0; }
+@media (max-width:767px) {
+  .pm-route-options { grid-template-columns:1fr 1fr; gap:.75rem; }
+  .pm-route-metrics { grid-template-columns:1fr; }
+  .pm-route-metrics>div { grid-template-columns:1fr auto; align-items:center; }
+  .pm-route-metrics strong { text-align:right; }
+  .pm-location-button { width:100%; }
+}
 
 /* Agenda: layered glass surfaces, solid event text and a shared spacing rhythm. */
 .pm-agenda-workspace {

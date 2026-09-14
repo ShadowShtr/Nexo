@@ -154,3 +154,7 @@ A interface recebeu ajustes responsivos no calendário: os botões de vista pass
 
 Cartões de seleção, badges de estado, textareas e grupos de associação passaram a reutilizar os tokens de superfície, foco, raio e sucesso. A validação mantém os 85 testes Node, os 15 testes Playwright, build TypeScript/Vite e verificação documental aprovados.
 
+## Incremento 0.2.29 — 14/09/2026
+
+O percurso público passou a começar por origem e destino, com sugestão de localização atual e fallback editável, mapa de pré-visualização, distância/duração, escolha posterior de motorista e carro, registo completo, revisão e divisão 25/75 do valor. O pedido permanece pendente de aceite antes do pagamento; consulta, reagendamento e cancelamento continuam demonstráveis em memória. Resultado: 85 testes Node, 15 testes Playwright, build TypeScript/Vite e validação documental aprovados. Geolocalização, cálculo rodoviário e pagamento reais continuam dependentes de serviços de produção.
+

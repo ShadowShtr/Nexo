@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.29 — 2026-09-14
+
+- PUB-01/02: fluxo do cliente começa pela origem/destino, sugere localização atual com fallback editável, apresenta mapa, distância e duração e permite escolher serviço, data, passageiros e espera.
+- PUB-02: seleção de motorista e carro passa a ocorrer depois da rota; capacidade, NIF, contacto, revisão, sinal de 25% e saldo de 75% ficam visíveis antes do pedido.
+- Consulta, cancelamento e reagendamento continuam ligados ao código de confirmação; o pedido fica a aguardar aceitação do motorista antes de qualquer pagamento.
+- Build, validação documental e 15 testes de navegador aprovados.
+
 ## 0.2.28 — 2026-09-14
 
 - CAL-04/UI-02: agenda com painéis de vidro, filtros alinhados, tipografia e separação revista, vistas segmentadas e eventos legíveis.
