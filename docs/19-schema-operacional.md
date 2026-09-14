@@ -37,3 +37,7 @@ Não existe ligação a Supabase remoto, API operacional, convite por email ou i
 
 - [Fluxo de desenvolvimento local Supabase](https://supabase.com/docs/guides/local-development/cli-workflows)
 - [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+## Extensão 0.2.23
+
+A migração `20260914111106_scheduling_slots_payments_changes.sql` acrescenta `scheduling_windows`, `scheduling_exceptions`, `payment_events` e `booking_change_proposals`. As quatro tabelas têm `organization_id`, chaves estrangeiras compostas quando aplicável, RLS e leitura autenticada filtrada por proprietário/motorista; escritas continuam exclusivas de `service_role`. O reset local, `db lint`, advisors de segurança/desempenho e 13 testes Auth/PostgREST foram repetidos após a extensão.

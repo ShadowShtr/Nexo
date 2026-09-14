@@ -134,3 +134,7 @@ Política de cancelamento e reagendamento server-side adicionada. O fluxo exige 
 
 Gerador de slots local do calendário adicionado. A grelha configurável não encurta a duração do serviço, filtra antecedência e datas bloqueadas e rejeita horas DST inexistentes ou ambíguas. Resultado: 81 testes Node aprovados; typecheck, build e documentação repetidos.
 
+## Incremento 0.2.23 — 14/09/2026
+
+Extensão de schema Supabase criada pela CLI e aplicada numa base local limpa: janelas/exceções do calendário, eventos de pagamento e propostas de alteração, todas com RLS e grants mínimos. Lint e advisors de segurança/desempenho não encontraram problemas; 13 testes Auth/PostgREST locais passaram.
+

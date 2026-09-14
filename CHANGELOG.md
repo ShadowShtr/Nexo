@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.23 — 2026-09-14
+
+- Migração Supabase local para janelas/exceções do calendário, eventos de pagamento e propostas de alteração.
+- RLS e grants mínimos aplicados às quatro tabelas; testes locais cobrem chaves de tenant, inserção válida e ausência de acesso anónimo.
+
 ## 0.2.22 — 2026-09-14
 
 - Gerador de slots do calendário por timezone IANA, jornada, antecedência e datas bloqueadas.

@@ -70,7 +70,7 @@ before(async () => {
 });
 
 after(async () => {
-  for (const table of ['outbox_events','resource_allocations','request_commands','bookings','quote_snapshots','driver_vehicle_assignments','vehicles','customer_records','scheduling_policy_versions','driver_profiles','memberships'])
+  for (const table of ['booking_change_proposals','payment_events','scheduling_exceptions','scheduling_windows','outbox_events','resource_allocations','request_commands','bookings','quote_snapshots','driver_vehicle_assignments','vehicles','customer_records','scheduling_policy_versions','driver_profiles','memberships'])
     await db.query(`delete from public.${table} where organization_id=$1`,[ids.organization]);
   await db.query('delete from public.organizations where id=$1',[ids.organization]);
   for (const actor of actors) { await actor.api.auth.signOut(); await admin.auth.admin.deleteUser(actor.id); }
@@ -131,9 +131,29 @@ test('owner reads organization bookings; assigned driver reads own booking but n
   assert.ok(quotes.error);
 });
 
+test('calendar, payment and change tables accept valid snapshots with tenant foreign keys', async () => {
+  await db.query(`insert into public.scheduling_windows(organization_id,weekday,starts_at,ends_at)
+    values($1,1,'09:00','18:00')`, [ids.organization]);
+  await db.query(`insert into public.scheduling_exceptions(organization_id,service_date,kind,note)
+    values($1,'2026-12-24','blocked','Feriado')`, [ids.organization]);
+  await db.query(`insert into public.payment_events(
+    organization_id,booking_id,driver_user_id,phase,direction,amount_cents,provider_reference,idempotency_key,recorded_at
+  ) values($1,$2,$3,'deposit','charge',3000,'provider-op-1','operational-payment-key','2026-10-01T08:00:00Z')`, [ids.organization,ids.bookingA,ids.driver]);
+  const proposalId = randomUUID();
+  await db.query(`insert into public.booking_change_proposals(
+    id,organization_id,booking_id,quote_id,original_starts_at,proposed_starts_at,proposed_ends_at,expected_booking_version,idempotency_key,created_by
+  ) values($1,$2,$3,$4,'2026-10-01T09:00:00Z','2026-10-03T09:00:00Z','2026-10-03T10:30:00Z',1,'operational-change-key',$5)`, [proposalId,ids.organization,ids.bookingA,ids.quote,ids.owner]);
+  const counts = await db.query(`select
+    (select count(*) from public.scheduling_windows where organization_id=$1) as windows,
+    (select count(*) from public.scheduling_exceptions where organization_id=$1) as exceptions,
+    (select count(*) from public.payment_events where organization_id=$1) as payments,
+    (select count(*) from public.booking_change_proposals where organization_id=$1) as proposals`, [ids.organization]);
+  assert.deepEqual(counts.rows[0], { windows: '1', exceptions: '1', payments: '1', proposals: '1' });
+});
+
 test('anonymous role has no operational table grants', async () => {
   const anon = publicClient();
-  for (const table of ['vehicles','driver_vehicle_assignments','quote_snapshots','bookings','resource_allocations','request_commands','outbox_events'])
+  for (const table of ['vehicles','driver_vehicle_assignments','quote_snapshots','bookings','resource_allocations','request_commands','outbox_events','scheduling_windows','scheduling_exceptions','payment_events','booking_change_proposals'])
     assert.ok((await anon.from(table).select('*')).error, table);
 });
 

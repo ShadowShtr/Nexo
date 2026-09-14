@@ -72,7 +72,7 @@ test('driver cannot read colleague, CRM or settings through direct API calls',as
 });
 test('anonymous access and public signup are rejected',async () => {
   const anon = client();
-  for (const table of ['organizations','memberships','driver_profiles','customer_records','scheduling_policy_versions']) {
+  for (const table of ['organizations','memberships','driver_profiles','customer_records','scheduling_policy_versions','scheduling_windows','scheduling_exceptions','payment_events','booking_change_proposals']) {
     assert.ok((await anon.from(table).select('*')).error);
   }
   assert.ok((await anon.auth.signUp({email:`blocked-${randomUUID()}@example.invalid`,password})).error);
@@ -103,9 +103,9 @@ test('revoking membership removes access even with an existing token',async () =
 test('all application tables have RLS and no anonymous table grants',async () => {
   const result = await db.query("select relname,relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind='r'");
   assert.deepEqual(result.rows.map(row=>row.relname).sort(),[
-    'bookings','customer_records','driver_profiles','driver_vehicle_assignments','memberships',
-    'organizations','outbox_events','quote_snapshots','request_commands','resource_allocations',
-    'scheduling_policy_versions','vehicles',
+    'booking_change_proposals','bookings','customer_records','driver_profiles','driver_vehicle_assignments','memberships',
+    'organizations','outbox_events','payment_events','quote_snapshots','request_commands','resource_allocations',
+    'scheduling_exceptions','scheduling_policy_versions','scheduling_windows','vehicles',
   ]);
   assert.ok(result.rows.every(row=>row.relrowsecurity));
   for (const {relname} of result.rows) {
