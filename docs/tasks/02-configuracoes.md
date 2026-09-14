@@ -32,7 +32,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## CFG-03 — Simulador de preço e calendário antes de publicar
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — simulador local de preço e margem; publicação persistente pendente
 
 **Dependências:** CFG-02, PRC-01, CAL-02
 
@@ -42,4 +42,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** O mesmo input produz preço idêntico na API e simulação; apresenta origem das linhas, depósito/saldo e motivo de conflito; não grava reserva.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web/pages/SettingsPage.tsx` reutiliza `src/domain/pricing.ts` para transfer/tour, passageiros, distância, noite, espera, depósito e saldo. Teste Playwright de configurações confirma cálculo e ausência de persistência; comparação com API persistente e simulação de duas viagens continuam pendentes.

@@ -90,3 +90,7 @@ Consulta de pedidos demo por código de confirmação adicionada. O contrato nor
 
 O fluxo Playwright do cliente cria um pedido, consulta o código normalizado e confirma o estado antes do cancelamento. Os dados continuam fictícios e em memória.
 
+## Incremento 0.2.12 — 14/09/2026
+
+Simulador de preço local adicionado às configurações. O teste de interface confirma transfer de 35 km com base de 10 € e divisão 25/75%; build, 46 testes Node e suíte Playwright de configurações aprovados.
+

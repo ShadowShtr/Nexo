@@ -35,6 +35,10 @@ test('tour uses domain price and deposit; settings simulation does not persist',
   await expect(page.locator('.pm-summary-split')).toContainText('58,75');
   await expect(page.locator('.pm-summary-split')).toContainText('176,25');
   await page.goto('/?demo=1#/owner/settings');
+  const priceSimulator=page.getByRole('form',{name:'Simulador de preço'});
+  await priceSimulator.getByRole('button',{name:'Simular preço',exact:true}).click();
+  await expect(priceSimulator.locator('.pm-price-result')).toContainText('80,00');
+  await expect(priceSimulator.locator('.pm-price-result')).toContainText('20,00');
   await page.getByLabel('Deslocação estimada (min)').fill('90');
   await page.getByRole('button',{name:'Simular margem'}).click();
   await expect(page.locator('.pm-simulation-result')).toHaveText('Margem necessária: 105 min');

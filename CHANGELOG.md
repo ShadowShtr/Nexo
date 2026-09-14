@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.12 — 2026-09-14
+
+- Simulador de preço local na aba Configurações para transfer e tour.
+- Campos de base, distância, tarifa/km, noite, espera e divisão 25/75% reutilizam o motor de preços.
+
 ## 0.2.11 — 2026-09-14
 
 - Fluxo de cliente testa consulta do código após criar um pedido.
