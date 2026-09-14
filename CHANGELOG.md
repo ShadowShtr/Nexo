@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.32 — 2026-09-14
+
+- PUB-01: o planeador inline passa a mostrar o mapa imediatamente ao abrir a pesquisa, centrado no ponto de partida; ao escolher o destino, a mesma pré-visualização transforma-se na rota calculada.
+- UI-02: o painel mantém campos, mapa e ação principal na mesma área e remove a navegação inferior durante o planeamento para preservar o botão de cálculo.
+- 17 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.31 — 2026-09-14
 
 - PUB-01: a pesquisa da descoberta deixou de trocar imediatamente de aba; agora abre um planeador inline com origem sugerida, localização atual, locais recentes e destino editável.

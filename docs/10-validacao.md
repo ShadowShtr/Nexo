@@ -166,3 +166,7 @@ A descoberta do cliente passou a usar a composição Glovo solicitada: pesquisa 
 
 O botão de pesquisa da descoberta passou a abrir o planeador inline, sem trocar de aba. A origem fica sugerida e editável, a localização atual tem fallback, locais recentes preenchem o destino e o cliente vê o mapa, os 62 km, a duração prevista, o preço do pacote de 200,00 € e o sinal de 25% antes de avançar para motorista e carro. Resultado: 85 testes Node, 17 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.32 — 14/09/2026
+
+Ao abrir a pesquisa, o mapa aparece imediatamente na mesma tela, centrado na origem sugerida e com uma mensagem para escolher o destino. Depois de selecionar um local recente ou escrever um endereço, o mapa passa a mostrar a rota do tour; o preço só é confirmado pelo botão “Ver rota e preço”, antes da etapa de motorista e carro. Resultado: 85 testes Node, 17 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

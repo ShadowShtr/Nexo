@@ -241,6 +241,9 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-primary-action:disabled { cursor:not-allowed; opacity:.42; }
 .pm-client-planner .pm-route-preview { border-color:#dfe0e3; border-radius:22px; box-shadow:0 5px 18px rgb(20 24 40 / 6%); }
 .pm-client-planner .pm-route-map { height:235px; }
+.pm-client-planner .pm-route-preview-message { display:grid; gap:.25rem; padding:1rem 1.1rem; border-top:1px solid #e7e7e9; }
+.pm-client-planner .pm-route-preview-message strong { font-size:.92rem; }
+.pm-client-planner .pm-route-preview-message span { color:#777981; font-size:.76rem; }
 .pm-client-planner .pm-route-points { padding:.8rem 1rem; gap:.75rem; }
 .pm-client-route-quote { display:grid; gap:.9rem; padding:1rem; border:1px solid #dfe0e3; border-radius:22px; background:#fff; box-shadow:0 5px 18px rgb(20 24 40 / 6%); }
 .pm-client-route-quote-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
