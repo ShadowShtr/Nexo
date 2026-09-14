@@ -45,6 +45,7 @@ test('customer planner redraws the map for a different destination', async ({ pa
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Destino', { exact: true }).fill('CARREGADO');
+  await expect(page.getByRole('option', { name: /Carregado Carregado, Alenquer/ })).toBeVisible();
   const map = page.getByRole('region', { name: 'Pré-visualização do percurso' });
   await expect(map).toContainText('CARREGADO');
   await expect(map).not.toContainText('Sintra');

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.34 — 2026-09-14
+
+- PUB-01: sugestões de morada agora aparecem visivelmente enquanto o cliente digita, com correspondência por nome e endereço e seleção direta para atualizar o mapa.
+- UI-02: o campo de destino mantém uma lista acessível de opções e explica quando o endereço ainda não foi reconhecido.
+- 18 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.33 — 2026-09-14
 
 - PUB-01/NAV-01: o mapa do planeador passa a usar o destino reconhecido, incluindo Carregado, em vez de reutilizar a geometria fixa de Sintra.

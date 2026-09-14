@@ -174,3 +174,7 @@ Ao abrir a pesquisa, o mapa aparece imediatamente na mesma tela, centrado na ori
 
 O mapa deixou de reaproveitar a rota Lisboa–Sintra quando o cliente escreve outro destino. O planeador reconhece destinos demo como Carregado, desenha os pontos correspondentes e impede a cotação enquanto o endereço não for reconhecido, evitando uma rota visualmente incorreta. Resultado: 85 testes Node, 18 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.34 — 14/09/2026
+
+As sugestões de morada passaram a aparecer diretamente abaixo do campo enquanto o cliente digita. A lista filtra nomes e endereços, permite selecionar Carregado e outros locais demo e mantém a cotação bloqueada até haver um destino reconhecido. Resultado: 85 testes Node, 18 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

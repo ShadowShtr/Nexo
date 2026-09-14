@@ -79,6 +79,10 @@ export default function CustomerDiscoverSandbox() {
 
   const previewRoute = useMemo(() => plannerRoute(origin, destination, i18n.language === 'en'), [origin, destination, i18n.language]);
   const routeKnown = Boolean(coordinatesFor(origin) && coordinatesFor(destination));
+  const destinationSuggestions = useMemo(() => {
+    const query = normalizePlace(destination);
+    return recentPlaces.filter(place => !query || normalizePlace(`${place.title} ${place.detail}`).includes(query));
+  }, [destination]);
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -138,6 +142,7 @@ export default function CustomerDiscoverSandbox() {
         <div className="pm-client-address-divider" />
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onChange={event => { setDestination(event.target.value); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><span className="pm-client-add-stop" aria-hidden="true">＋</span></label>
       </div>
+      {destination.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{destinationSuggestions.length ? destinationSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={place.title} onClick={() => { setDestination(place.title); setRouteReady(false); }}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{say('Nenhuma sugestão local. Escolha uma morada reconhecida na lista abaixo.', 'No local suggestion. Choose a recognised address from the list below.')}</p>}</div>}
       <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
