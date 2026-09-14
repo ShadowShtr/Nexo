@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.1
+# Plataforma de transporte premium — base web 0.2.6
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -12,7 +12,7 @@ Base para um proprietário/motorista que gere a operação e atribui serviços a
 
 ## O que ainda não existe
 
-API, autenticação, base de dados persistente, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface é uma pré-visualização com estados vazios e exemplos opcionais. Não é um sistema operacional nem garante concorrência sem a futura camada transacional. Nada foi publicado. Nenhuma tarefa de tela está marcada como concluída.
+API operacional ligada à interface, login visual, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface é uma pré-visualização com estados vazios e exemplos opcionais. As migrações e garantias transacionais já foram validadas apenas no Supabase local; nenhum projeto Supabase remoto foi ligado.
 
 ## Executar
 
@@ -64,7 +64,7 @@ AGENTS.md             instruções para futuras implementações
 
 Cada tarefa tem dependências, trabalho, critérios de aceitação e evidência exigida. Supabase foi escolhido para persistência; Vercel é a preferência de hospedagem, com custo comercial por resolver. Ver estudo de viabilidade.
 
-BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). O próximo bloco é BAS-03: migrações completas e restauro, seguido de autenticação e ligação da interface. Decisões de pagamento podem ser investigadas em paralelo ao desenvolvimento de agenda e CRM, mas bloqueiam a cobrança real.
+BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). BAS-03 concluiu as migrações operacionais e o restauro local; ver [evidência do schema](docs/19-schema-operacional.md). O próximo bloco é concluir SEC-01 e ligar a interface autenticada.
 
 Incremento 0.2.2: [identidade e permissões locais](docs/17-identidade-local.md). BAS-03 e SEC-01 em curso; nenhuma ligação à MO Limpezas ou publicação remota.
 

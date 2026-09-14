@@ -102,7 +102,11 @@ test('revoking membership removes access even with an existing token',async () =
 });
 test('all application tables have RLS and no anonymous table grants',async () => {
   const result = await db.query("select relname,relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind='r'");
-  assert.equal(result.rows.length,5);
+  assert.deepEqual(result.rows.map(row=>row.relname).sort(),[
+    'bookings','customer_records','driver_profiles','driver_vehicle_assignments','memberships',
+    'organizations','outbox_events','quote_snapshots','request_commands','resource_allocations',
+    'scheduling_policy_versions','vehicles',
+  ]);
   assert.ok(result.rows.every(row=>row.relrowsecurity));
   for (const {relname} of result.rows) {
     const grants = await db.query("select has_table_privilege('anon',$1,'SELECT') as allowed", [`public.${relname}`]);

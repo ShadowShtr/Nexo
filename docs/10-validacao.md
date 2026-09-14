@@ -66,3 +66,7 @@ Docker disponível com PostgreSQL 17; script de arranque testado contra contento
 
 Mapa do percurso validado no fluxo móvel do cliente, em PT/EN, com rota de transfer e tour com paragem. Oito testes Playwright aprovados: percurso cliente, conflitos, orçamento, consulta/cancelamento, filtros e agenda anterior, além do formato do link Waze. Dois testes Node validam ordem dos pontos e parâmetros do deep link. Tiles externos são bloqueados nos testes automatizados; linha, marcadores, resumo e fallback textual permanecem verificáveis. Build, TypeScript, testes de domínio e documentação validados. Não houve teste em dispositivo Android/iOS, cálculo rodoviário real, pesquisa de moradas ou localização em tempo real.
 
+## Incremento 0.2.6 — 14/09/2026
+
+Migração operacional criada pela CLI Supabase 2.117.0 e aplicada duas vezes a partir de uma base local limpa. Onze testes reais aprovados: sete de identidade/RLS e quatro de schema operacional, incluindo duas transações concorrentes na mesma vaga, rollback integral e privilégios anónimos. `supabase db lint` não encontrou erros; advisors de segurança e desempenho não encontraram problemas no nível warn. Nenhum projeto remoto foi ligado ou alterado.
+

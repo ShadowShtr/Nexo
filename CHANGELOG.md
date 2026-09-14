@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.6 — 2026-09-14
+
+- Schema operacional versionado para veículos, associações, cotações imutáveis, reservas, alocações exclusivas, idempotência e outbox.
+- RLS e privilégios mínimos nas 12 tabelas públicas; dados internos e cotações sem leitura direta pelo motorista.
+- Concorrência real rejeita a segunda alocação sobreposta; rollback transacional não deixa registos órfãos.
+- Reset local repetido, 11 testes Auth/PostgREST/PostgreSQL, lint e advisors Supabase aprovados. BAS-03 concluída.
+
 ## 0.2.5 — 2026-09-14
 
 - Mapa Leaflet no percurso e na revisão do cliente, com recolha, paragem, destino, distância, duração e fallback textual.

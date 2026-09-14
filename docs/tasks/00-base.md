@@ -34,7 +34,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-03 — Migrações, atomicidade e fixtures
 
-**Estado:** EM CURSO — identidade e RLS locais; schema operacional pendente
+**Estado:** CONCLUÍDA — migrações operacionais e restauração local validadas
 
 **Dependências:** BAS-02
 
@@ -44,7 +44,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Dois pedidos concorrentes por mesma vaga resultam em uma alocação; rollback não deixa hold órfão; migrações repetidas são controladas e restauração testável.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** [Schema operacional](../19-schema-operacional.md), migração `20260914084608_operational_booking_schema.sql` e `tests/supabase/operational.test.mjs`. Reset local repetido, 11 testes Auth/PostgREST/PostgreSQL, lint e advisors aprovados em 14/09/2026.
 
 ## BAS-04 — Inicializar aplicação web e ferramentas de desenvolvimento
 
