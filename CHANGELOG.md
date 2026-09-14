@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.43 — 2026-09-14
+
+- PUB-01: resultados de morada priorizam a rua correspondente e deixam de exibir números próximos sem relação quando existe correspondência local.
+- PUB-01: o mapa Leaflet mantém a instância e atualiza apenas geometria e marcadores, evitando piscar a cada letra digitada.
+- 12 testes de cliente, 85 testes de domínio, build e validação documental aprovados.
+
 ## 0.2.42 — 2026-09-14
 
 - PUB-01: lotes e números reconhecem `lt`, `lote`, `n`, `n.º` e `numero`; o resultado selecionado usa o número confirmado na consulta.

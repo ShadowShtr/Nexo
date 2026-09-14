@@ -101,7 +101,7 @@ test('customer planner relaxes an over-specified street search', async ({ page }
   await page.route('https://nominatim.openstreetmap.org/search**', async route => {
     const query = new URL(route.request().url()).searchParams.get('q') ?? '';
     queries.push(query);
-    if (!query.toLocaleLowerCase().includes('rua pedro 40 carregado')) {
+    if (!query.toLocaleLowerCase().includes('rua pedro 40 centro')) {
       await route.fulfill({ contentType: 'application/json', body: '[]' });
       return;
     }
@@ -113,13 +113,23 @@ test('customer planner relaxes an over-specified street search', async ({ page }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
-  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lt 40 carregado');
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lt 40 centro');
   await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
   await page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ }).click();
   await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, n.º 40');
-  expect(queries.some(query => query.toLocaleLowerCase().includes('rua pedro 40 carregado'))).toBeTruthy();
+  expect(queries.some(query => query.toLocaleLowerCase().includes('rua pedro 40 centro'))).toBeTruthy();
   await page.getByLabel('Local de partida', { exact: true }).fill('ruapedrodesintralt40');
   await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
+});
+
+test('customer planner prioritises the matching street over nearby numeric results', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra n 40');
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
+  await expect(page.locator('.pm-client-inline-suggestion')).toHaveCount(1);
+  await expect(page.locator('.pm-client-inline-suggestion', { hasText: /Lawrence|^40/ })).toHaveCount(0);
 });
 
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {

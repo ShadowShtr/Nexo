@@ -12,6 +12,15 @@ type RouteMapProps = {
 
 export function RouteMap({ route, language, mode = 'full', previewMessage }: RouteMapProps) {
   const target = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const routeLayerRef = useRef<L.LayerGroup | null>(null);
+  // Labels change while the user types, but the map should only redraw when
+  // its geometry or stop coordinates change.
+  const routeVisualKey = [
+    ...route.shape.map(point => point.join(',')),
+    ...route.points.map(point => `${point.kind}:${point.coordinates.join(',')}`),
+  ].join('|');
+
   useEffect(() => {
     if (!target.current) return;
     const map = L.map(target.current, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
@@ -19,12 +28,27 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
+    mapRef.current = map;
+    routeLayerRef.current = L.layerGroup().addTo(map);
+    setTimeout(() => map.invalidateSize(), 0);
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      routeLayerRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const routeLayer = routeLayerRef.current;
+    if (!map || !routeLayer) return;
+    routeLayer.clearLayers();
     const shape = route.shape.map(([lat,lng]) => L.latLng(lat,lng));
-    if (route.meters > 0 && shape.length > 1) L.polyline(shape, { color: '#18181a', weight: 5, opacity: 0.9, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+    if (route.meters > 0 && shape.length > 1) L.polyline(shape, { color: '#18181a', weight: 5, opacity: 0.9, lineCap: 'round', lineJoin: 'round' }).addTo(routeLayer);
     route.points.forEach((item, index) => {
       const end = item.kind === 'destination';
       L.circleMarker([item.coordinates[0], item.coordinates[1]], { radius: 9, color: '#fff', weight: 3, fillColor: end ? '#18181a' : '#4f5056', fillOpacity: 1 })
-        .addTo(map).bindTooltip(`${index + 1}. ${item.label}`);
+        .addTo(routeLayer).bindTooltip(`${index + 1}. ${item.label}`);
     });
     // Include the explicit pickup/destination points in the bounds as well
     // as the line. This keeps both pins visible when a provider returns a
@@ -33,8 +57,7 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
     if (boundsPoints.length > 1) map.fitBounds(L.latLngBounds(boundsPoints), { padding: [32,32], maxZoom: 12 });
     else if (shape[0]) map.setView(shape[0], 12);
     setTimeout(() => map.invalidateSize(), 0);
-    return () => { map.remove(); };
-  }, [route]);
+  }, [routeVisualKey]);
   const km = new Intl.NumberFormat(language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(route.meters / 1000);
   return <section className="pm-route-preview" aria-label={language === 'en' ? 'Route preview' : 'Pré-visualização do percurso'}>
     <div ref={target} className="pm-route-map" aria-hidden="true" />

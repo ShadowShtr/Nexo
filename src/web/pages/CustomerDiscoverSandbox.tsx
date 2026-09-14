@@ -94,10 +94,39 @@ function normalizePlace(value: string) {
   return value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
 
+const addressTypeWords = new Set(['rua', 'r', 'avenida', 'av', 'estrada', 'travessa', 'alameda', 'rotunda', 'largo', 'praia']);
+const addressConnectorWords = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+
+function addressSearchTerms(value: string) {
+  const parsed = /\s/.test(value) ? value : runningAddressQuery(value);
+  const withoutUnit = normalizePlace(parsed)
+    .replace(/(?:^|[\s,])(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*\d{1,5}[a-z]?(?=\s|$)/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const tokens = withoutUnit.split(/\s+/).filter(token => token && !/^\d/.test(token));
+  const meaningful = tokens.filter(token => !addressTypeWords.has(token) && !addressConnectorWords.has(token));
+  return meaningful.length ? meaningful : tokens;
+}
+
+function containsAddressTerm(value: string, term: string) {
+  return normalizePlace(value).split(/[^a-z0-9]+/).includes(term);
+}
+
+function geocoderRelevance(query: string, title: string, detail: string, requestedUnit?: AddressUnit, rawTitle = title) {
+  const terms = addressSearchTerms(query);
+  const matchedTerms = terms.filter(term => containsAddressTerm(`${title} ${detail}`, term)).length;
+  const titleHasStreet = terms.some(term => containsAddressTerm(title, term));
+  const hasUnit = requestedUnit ? containsAddressTerm(title, normalizePlace(requestedUnit.value)) : false;
+  const genericNumberTitle = /^\d+[A-Za-z]?$/.test(rawTitle.trim());
+  return matchedTerms * 20 + (matchedTerms === terms.length && terms.length > 1 ? 12 : 0) + (titleHasStreet ? 5 : 0) + (hasUnit ? 8 : 0) - (genericNumberTitle ? 12 : 0);
+}
+
 function placeMatches(place: { title: string; detail: string }, query: string) {
   const tokens = normalizePlace(query).split(/\s+/).filter(Boolean);
   const haystack = normalizePlace(`${place.title} ${place.detail}`);
   if (tokens.every(token => haystack.includes(token))) return true;
+  const streetTerms = addressSearchTerms(query);
+  if (streetTerms.length >= 1 && streetTerms.every(token => containsAddressTerm(haystack, token))) return true;
   const unit = addressUnit(query);
   const compactQuery = normalizePlace(query).replace(/[^a-z0-9]/g, '').replace(unit ? /(?:loteamento|lote|lt|numero|num|n)\d{1,5}[a-z]?$/ : /$^/, '');
   return compactQuery.length >= 5 && haystack.replace(/[^a-z0-9]/g, '').includes(compactQuery);
@@ -330,23 +359,26 @@ export default function CustomerDiscoverSandbox() {
             controller.signal.removeEventListener('abort', relayAbort);
           }
         };
-        const originalTokens = normalizePlace(query).split(/\s+/).filter(Boolean);
         const next: Array<{ place: GeocodedPlace; score: number }> = [];
         for (const candidate of geocoderQueries(query)) {
           const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${candidate}, Portugal` });
           const response = await request(`${endpoint}?${params.toString()}`);
           if (!response?.ok) continue;
-          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string; address?: { house_number?: string } }>;
+          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string; address?: { house_number?: string; road?: string; pedestrian?: string; residential?: string; street?: string } }>;
           next.push(...payload.flatMap(item => {
             const latitude = Number(item.lat);
             const longitude = Number(item.lon);
             if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
-            const rawTitle = item.name?.trim() || item.display_name.split(',')[0]?.trim() || candidate;
-            const title = titleWithUnit(rawTitle || (item.address?.house_number ? `N.º ${item.address.house_number}` : candidate), requestedUnit);
+            const providerName = item.name?.trim();
+            const providerStreet = [item.address?.road, item.address?.pedestrian, item.address?.residential, item.address?.street].find(Boolean)?.trim();
+            const rawTitle = providerName && !/^\d+[A-Za-z]?$/.test(providerName)
+              ? providerName
+              : providerStreet || item.display_name.split(',')[0]?.trim() || candidate;
+            const providerUnit = item.address?.house_number ? { value: item.address.house_number, marker: 'number' as const } : undefined;
+            const title = titleWithUnit(rawTitle || candidate, requestedUnit ?? providerUnit);
             const detail = item.display_name.replace(`${rawTitle},`, '').trim() || item.display_name;
-            const haystack = normalizePlace(`${title} ${detail}`);
-            const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
-            return [{ place: { title, detail, coordinates: [latitude, longitude] as const }, score }];
+            const relevance = geocoderRelevance(query, title, detail, requestedUnit, rawTitle);
+            return [{ place: { title, detail, coordinates: [latitude, longitude] as const }, score: relevance }];
           }));
         }
         // Photon é uma segunda fonte pública sem chave para o caso de o
@@ -365,8 +397,7 @@ export default function CustomerDiscoverSandbox() {
               const rawTitle = properties.name?.trim() && !/^\d+[A-Za-z]?$/.test(properties.name.trim()) ? properties.name.trim() : streetTitle || properties.name?.trim() || query;
               const title = titleWithUnit(rawTitle, requestedUnit);
               const detail = [properties.street && properties.name !== properties.street ? properties.street : '', properties.housenumber && properties.name !== properties.housenumber ? properties.housenumber : '', properties.city, properties.state, properties.country].filter(Boolean).join(', ') || 'Portugal';
-              const haystack = normalizePlace(`${title} ${detail}`);
-              const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
+              const score = geocoderRelevance(query, title, detail, requestedUnit, rawTitle);
               return [{ place: { title, detail, coordinates: [coordinates[1], coordinates[0]] as const }, score }];
             }));
           }
@@ -375,6 +406,7 @@ export default function CustomerDiscoverSandbox() {
           .sort((left, right) => right.score - left.score)
           .map(item => item.place)
           .filter((place, index, all) => index === all.findIndex(other => normalizePlace(`${other.title}|${other.detail}`) === normalizePlace(`${place.title}|${place.detail}`)));
+        if (controller.signal.aborted) return;
         setRemoteSuggestions(unique.slice(0, 6));
       } catch (error) {
         if ((error as { name?: string }).name !== 'AbortError') setRemoteSuggestions([]);
