@@ -44,3 +44,30 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
 .pm-route-preview>.pm-secondary { padding:0 1.25rem 1rem; }
 .pm-demo-record>.pm-button { display:inline-flex; margin-top:1rem; }
 @media (max-width:767px) { .pm-route-map { height:240px; }.pm-route-summary { gap:.65rem; font-size:.875rem; }.pm-route-summary strong { font-size:1rem; } }
+
+/* Ajustes de interface: leitura confortável em ecrãs pequenos e calendário com controlos claros. */
+.pm-step-progress { display:flex; align-items:center; gap:.5rem; width:max-content; max-width:100%; margin:0 0 1rem; padding:.45rem .75rem; border-radius:var(--pm-radius-pill); background:var(--pm-surface-muted); color:var(--pm-ink-secondary); font-size:.8rem; }
+.pm-step-progress strong { color:var(--pm-ink); font-weight:650; }
+.pm-demo-form>label { color:var(--pm-ink-secondary); font-size:.875rem; font-weight:600; }
+.pm-demo-form>label input,.pm-demo-form>label select { margin-top:.05rem; font-weight:400; }
+.pm-calendar .fc-header-toolbar { align-items:center; }
+.pm-calendar .fc-toolbar-title { color:var(--pm-ink); font-size:1rem; font-weight:650; letter-spacing:-.015em; }
+.pm-calendar .fc-button-group { display:flex; flex-wrap:wrap; gap:.35rem; }
+.pm-calendar .fc-button-group>.fc-button { border-radius:var(--pm-radius-button)!important; margin:0!important; }
+.pm-calendar .fc-button { min-height:40px; border-radius:var(--pm-radius-button); box-shadow:none; font-weight:600; }
+.pm-calendar .fc-list-table td { padding:.85rem .75rem; }
+.pm-calendar .fc-list-event-title { overflow-wrap:anywhere; }
+.pm-calendar .fc-list-event:hover td { background:var(--pm-surface-muted); }
+@media (max-width:767px) {
+  .pm-topbar { min-height:64px; }
+  .pm-calendar .fc-header-toolbar { display:grid; grid-template-columns:1fr; align-items:stretch; gap:.65rem; }
+  .pm-calendar .fc-toolbar-chunk { display:flex; flex-wrap:wrap; gap:.35rem; width:100%; }
+  .pm-calendar .fc-toolbar-chunk:first-child { justify-content:flex-start; }
+  .pm-calendar .fc-toolbar-chunk:last-child .fc-button-group { width:100%; }
+  .pm-calendar .fc-toolbar-chunk:last-child .fc-button { flex:1 1 calc(50% - .35rem); min-width:0; }
+  .pm-calendar .fc-toolbar-title { font-size:.95rem; }
+  .pm-calendar .fc-list-table { min-width:0; }
+  .pm-calendar .fc-list-table td.fc-list-event-time { width:6.25rem; white-space:nowrap; }
+  .pm-calendar .fc-list-table td.fc-list-event-title { font-size:.8rem; }
+  .pm-calendar-controls .pm-actions { flex-wrap:wrap; }
+}

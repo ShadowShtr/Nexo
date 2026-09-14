@@ -30,7 +30,7 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 
 **Aceitação:** Componentes partilham tokens; keyboard/foco/disabled/loading funcionam; nenhuma ação demonstra sucesso fictício; estilos não alteram regras de negócio; sem fontes remotas não aprovadas.
 
-**Evidência:** Por preencher com ficheiros, commit, build e revisão dos estados.
+**Evidência:** `src/ui/styles/tokens.css`, `src/ui/components/Primitives.tsx`, `src/web/styles.css`, build TypeScript/Vite e 15 cenários Playwright. O calendário demo foi revisto em viewport móvel; persistência real e catálogo completo continuam pendentes.
 
 ## UI-03 — Rever consistência visual em todas as abas implementadas
 

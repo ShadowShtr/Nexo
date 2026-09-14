@@ -146,3 +146,7 @@ Adaptador OSRM server-side adicionado para distância e duração de estrada. O 
 
 Documentação do motorista alinhada com as guardas do caso de uso server-side. Validação documental repetida sem alteração de comportamento.
 
+## Incremento 0.2.26 — 14/09/2026
+
+A interface recebeu ajustes responsivos no calendário: os botões de vista passam a ocupar linhas legíveis no telemóvel, cada botão mantém alvo táctil e a lista evita truncamento. O fluxo do cliente ganhou um indicador visual de passo e os rótulos dos formulários foram uniformizados. Resultado: 15 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.26 — 2026-09-14
+
+- Ajustes visuais responsivos para o calendário no telemóvel: controlos separados, botões legíveis e lista sem truncamento.
+- Indicador visual do passo no fluxo do cliente, rótulos de formulário mais claros e rodapé alinhado com a versão publicada.
+
 ## 0.2.25 — 2026-09-14
 
 - Documentação do motorista atualizada com as guardas server-side de execução e saldo.
