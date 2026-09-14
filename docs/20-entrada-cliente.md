@@ -1,12 +1,12 @@
 # Entrada do cliente — revisão do planeamento
 
-Pedido de 14/09/2026. Estado: direção aplicada no fluxo demo; localização, rota rodoviária, persistência e pagamento reais continuam pendentes. Esta sequência substitui a seleção inicial de motorista no transfer. Não altera as políticas de pagamentos, cancelamentos ou tours.
+Pedido de 14/09/2026. Estado: direção aplicada no fluxo demo, incluindo planeador inline na descoberta; localização, rota rodoviária, persistência e pagamento reais continuam pendentes. Esta sequência substitui a seleção inicial de motorista no transfer. Não altera as políticas de pagamentos, cancelamentos ou tours.
 
 ## Sequência
 
 Antes do formulário, a tela **Descobrir** funciona como catálogo visual: pesquisa “Para onde?”, opção de horário, categorias de tours e um destaque Lisboa–Sintra com imagem. O destaque e cada categoria conduzem ao fluxo abaixo, já com o serviço tour selecionado.
 
-1. **Para onde vai?** Entrada com PT/EN acessível, destino como ação principal e mapa. Origem sugerida pela localização atual após autorização; confirmar endereço/pino, permitindo editar sempre. Sem autorização, precisão suficiente ou localização disponível, preencher a origem manualmente. Não pedir localização repetidamente nem tratar a posição aproximada como recolha confirmada.
+1. **Para onde vai?** A descoberta abre os campos na mesma tela, sem trocar de aba. Entrada com PT/EN acessível, destino como ação principal, locais recentes e mapa após o cálculo. Origem sugerida pela localização atual após autorização; confirmar endereço/pino, permitindo editar sempre. Sem autorização, precisão suficiente ou localização disponível, preencher a origem manualmente. Não pedir localização repetidamente nem tratar a posição aproximada como recolha confirmada.
 2. **Percurso e horário.** Confirmar origem/destino, data/hora e passageiros; permitir paragens e espera. Estes dados são necessários antes de filtrar motoristas/carros por disponibilidade, capacidade e antecedência. Viagem no próprio dia continua dependente dessas regras.
 3. **Distância e estimativa.** Consultar distância e duração rodoviárias reais entre os pontos ordenados. Mostrar km e estimativa calculada com a tarifa publicada pelo proprietário. Enquanto não houver rota válida, mostrar erro/repetição, nunca zero euros ou distância em linha reta como cotação rodoviária.
 4. **Motorista e carro.** Escolher motorista e um dos carros associados disponíveis para o percurso e horário. Mostrar foto, nome, lugares de passageiros, bagagem, suplementos e total de cada opção. Recalcular quando a seleção alterar a tarifa; manter os dados do percurso ao voltar.

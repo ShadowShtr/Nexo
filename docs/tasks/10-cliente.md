@@ -10,11 +10,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Regras:** DEC-03; DEC-15
 
-**Implementação:** Criar entrada PT/EN “Para onde vai?” e links específicos de motorista que preservam o perfil como contexto; transfer começa pelo percurso conforme a [revisão de entrada](../20-entrada-cliente.md). Perfil e tours continuam acessíveis.
+**Implementação:** Criar entrada PT/EN “Para onde vai?” e links específicos de motorista que preservam o perfil como contexto; a descoberta abre um planeador inline com origem, destino, locais recentes e localização atual antes de seguir para o percurso, conforme a [revisão de entrada](../20-entrada-cliente.md). Perfil e tours continuam acessíveis.
 
 **Aceitação:** Escolha de inglês traduz navegação e conteúdo publicado; deep link Instagram mantém motorista; nenhuma etapa regressa silenciosamente a português.
 
-**Evidência:** `src/web/pages/CustomerSandbox.tsx` e `tests/browser/customer.spec.ts` cobrem entrada bilingue e sequência de teste. Perfil vindo de Instagram e publicação persistente continuam pendentes.
+**Evidência:** `src/web/pages/CustomerDiscoverSandbox.tsx`, `src/web/pages/CustomerSandbox.tsx` e `tests/browser/customer.spec.ts` cobrem entrada bilingue e sequência de teste. Perfil vindo de Instagram e publicação persistente continuam pendentes.
 
 ## PUB-02 — Seleção e formulário de reserva
 

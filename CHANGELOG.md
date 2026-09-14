@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.31 — 2026-09-14
+
+- PUB-01: a pesquisa da descoberta deixou de trocar imediatamente de aba; agora abre um planeador inline com origem sugerida, localização atual, locais recentes e destino editável.
+- PUB-01/02: o cliente pode calcular na mesma tela o mapa do tour, distância de 62 km, duração prevista, preço de 200,00 €, sinal de 25% e depois avançar para escolher motorista e carro.
+- 17 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.30 — 2026-09-14
 
 - UI-02/PUB-01: descoberta do cliente redesenhada no padrão Glovo indicado: barra “Para onde?”, seletor “Mais tarde”, categorias de tours em quadrados e navegação inferior Início/Próximas viagens/Conta.

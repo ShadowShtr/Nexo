@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', route => route.abort());
 });
 
-test('customer discovery presents tour categories and a Lisbon Sintra promotion', async ({ page }) => {
+test('customer discovery opens the inline planner before booking', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await expect(page.getByRole('heading', { name: 'Escolhe a tua aventura.', exact: true })).toBeVisible();
@@ -14,8 +14,28 @@ test('customer discovery presents tour categories and a Lisbon Sintra promotion'
   await expect(page.locator('.pm-client-tour-promo img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
+  await expect(page).toHaveURL(/#\/customer\/discover$/);
+  await expect(page.getByRole('heading', { name: 'Planear a sua viagem', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Lisboa');
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeVisible();
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('62 km');
+  await expect(page.locator('.pm-client-route-quote')).toContainText('200,00 €');
+  await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();
+  await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
   await expect(page).toHaveURL(/#\/customer\/booking$/);
   await expect(page.getByLabel('Serviço', { exact: true })).toHaveValue('tour');
+});
+
+test('customer planner fills destination from recent places', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await expect(page.getByRole('heading', { name: 'Planear a sua viagem', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: /Estação do Oriente/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Estação do Oriente');
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
 });
 
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
