@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.13 — 2026-09-14
+
+- Pedido demo permite reagendamento de uma hora dentro da janela de 24 horas.
+- A nova hora passa novamente pelo motor de conflitos e preserva o registo original no histórico da sessão.
+
 ## 0.2.12 — 2026-09-14
 
 - Simulador de preço local na aba Configurações para transfer e tour.

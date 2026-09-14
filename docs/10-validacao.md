@@ -94,3 +94,7 @@ O fluxo Playwright do cliente cria um pedido, consulta o código normalizado e c
 
 Simulador de preço local adicionado às configurações. O teste de interface confirma transfer de 35 km com base de 10 € e divisão 25/75%; build, 46 testes Node e suíte Playwright de configurações aprovados.
 
+## Incremento 0.2.13 — 14/09/2026
+
+O fluxo do cliente consulta o código, propõe reagendamento de uma hora, verifica disponibilidade e mantém o estado atualizado antes do cancelamento. Build, 46 testes Node e 3 testes Playwright do cliente aprovados.
+

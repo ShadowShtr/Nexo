@@ -32,7 +32,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## PUB-03 — Pagamento, consulta e reagendamento por link
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — consulta e reagendamento demo; segurança e pagamento persistentes pendentes
 
 **Dependências:** PUB-02, BKG-03, SEC-02
 
@@ -42,7 +42,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Tela distingue recebido/aguarda/confirmado; sem integração real não mostra pago; regra de 24h visível antes de pagar; histórico de alteração e erro de notificação acessíveis.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/contracts/lookup.ts` normaliza o código, `CustomerSandbox.tsx` mostra consulta, cancelamento e pedido de reagendamento, e o teste Playwright cobre o percurso. O resultado é fictício, sem pagamento nem endpoint autenticado de produção.
 
 Evidência parcial 0.2.4: [percurso de teste do cliente](../18-teste-calendario.md). Protótipo em memória; não conclui PUB nem pagamento.
 

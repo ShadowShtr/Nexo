@@ -32,7 +32,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BKG-03 — Cancelamento e reagendamento versionado
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — elegibilidade e reagendamento demonstrados em memória; mutação atómica persistente pendente
 
 **Dependências:** BKG-02, SEC-02
 
@@ -42,4 +42,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** 24h exatas permitem; menos 1ms bloqueia reagendamento/retém sinal; pedidos repetidos não duplicam; falha preserva original; troca não muda beneficiário de pagamento existente.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/domain/policy.ts` calcula a fronteira de 24h e `CustomerSandbox.tsx` propõe nova hora, verifica conflito e mantém a reserva original no modo demo. Falta persistência versionada, hold atómico, reembolso e auditoria.

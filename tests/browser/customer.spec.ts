@@ -37,7 +37,9 @@ test('customer chooses car, checks conflicts and submits and cancels a test requ
   await page.getByLabel('Código de confirmação').fill(`  ${reference.toLowerCase()} `);
   await page.getByRole('button',{name:'Consultar',exact:true}).click();
   await expect(page.getByRole('heading',{name:reference,exact:true}).first()).toBeVisible();
-  await page.getByRole('button',{name:'Cancelar pedido de teste'}).click();
+  await page.getByRole('button',{name:'Pedir reagendamento (+1h)',exact:true}).first().click();
+  await expect(page.locator('.pm-demo-record').first()).toContainText('11:00');
+  await page.getByRole('button',{name:'Cancelar pedido de teste'}).first().click();
   await expect(page.getByRole('status')).toContainText('cancelado');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
 });
