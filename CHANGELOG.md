@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.37 — 2026-09-14
+
+- PUB-01: a pesquisa genérica passa a cotar como transfer; o tour só é usado quando o cliente escolhe uma opção de tour.
+- PUB-01: a cotação de transfer usa base de 10,00 € + 2,00 €/km e divide o valor em sinal de 25% e saldo de 75%, sem reutilizar o preço fixo do tour.
+- PUB-01: o botão “+” adiciona paragens editáveis no próprio cartão; a distância soma cada trecho e os locais recentes desaparecem depois de escolher o destino.
+- 20 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.36 — 2026-09-14
 
 - PUB-01: o ponto de Avenida Cabo da Boa Esperança L65 passa a usar a coordenada geográfica do arruamento em Carregado (CP 2580-469), com o mapa a enquadrar sempre os dois pontos da rota.

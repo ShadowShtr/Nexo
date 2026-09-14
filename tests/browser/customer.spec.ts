@@ -50,7 +50,8 @@ test('customer planner redraws the map for a different destination', async ({ pa
   await expect(map).toContainText('CARREGADO');
   await expect(map).not.toContainText('Sintra');
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
-  await expect(page.locator('.pm-client-route-quote')).toContainText('200,00');
+  await expect(page.locator('.pm-client-route-quote')).toContainText('Estimativa do transfer');
+  await expect(page.locator('.pm-client-route-quote')).not.toContainText('2 dias');
 });
 
 test('customer planner suggests the complete Carregado street address', async ({ page }) => {
@@ -62,6 +63,22 @@ test('customer planner suggests the complete Carregado street address', async ({
   await page.getByRole('option', { name: /Avenida Cabo da Boa Esperança L65 Carregado/ }).click();
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Avenida Cabo da Boa Esperança L65');
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Avenida Cabo da Boa Esperança L65');
+});
+
+test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await expect(page.locator('.pm-client-suggestions')).toBeVisible();
+  await page.getByLabel('Destino', { exact: true }).fill('Sintra');
+  await page.getByRole('option', { name: /Sintra Sintra, Lisboa/ }).click();
+  await expect(page.locator('.pm-client-suggestions')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Adicionar paragem' }).click();
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toBeVisible();
+  await page.getByLabel('Paragem 1', { exact: true }).fill('Carregado');
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Carregado');
+  await page.getByRole('button', { name: 'Remover paragem 1' }).click();
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveCount(0);
 });
 
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
