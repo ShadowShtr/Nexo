@@ -95,3 +95,14 @@ test('owner can create a manual WhatsApp booking after schedule validation', asy
   await expect(page.getByText('João WhatsApp', { exact: true })).toBeVisible();
   await expect(page.locator('.pm-demo-record').filter({ hasText: 'João WhatsApp' })).toContainText('WhatsApp');
 });
+
+test('driver advances a service through execution states and opens Waze', async ({ page }) => {
+  await page.goto('/?demo=1#/driver/services');
+  const card = page.locator('.pm-demo-record').first();
+  await expect(card.getByRole('link', { name: 'Abrir destino no Waze' })).toHaveAttribute('target', '_blank');
+  for (const action of ['Marcar a caminho', 'Marcar chegada', 'Iniciar viagem', 'Concluir serviço']) {
+    await card.getByRole('button', { name: action, exact: true }).click();
+  }
+  await expect(card.getByText('Concluído', { exact: true })).toBeVisible();
+  await expect(card.getByRole('button')).toHaveCount(0);
+});

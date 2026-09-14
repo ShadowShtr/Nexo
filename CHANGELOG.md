@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.15 — 2026-09-14
+
+- Vista do motorista com serviços atribuídos, cliente, rota e Waze.
+- Execução demo com transições confirmada, a caminho, no local, em viagem e concluída.
+
 ## 0.2.14 — 2026-09-14
 
 - Aba de reservas demo permite marcação manual originada por WhatsApp/telefone.

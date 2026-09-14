@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## DRV-01 — Início, meus serviços e disponibilidade própria
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — serviços demo filtrados por motorista e navegação Waze
 
 **Dependências:** BKG-02, CAL-04, SEC-01
 
@@ -14,11 +14,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Sem CRM global ou edição de tarifa; parceiro vê apenas atribuições próprias; bloqueio pessoal não cancela reserva existente e conflitos vão ao owner.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web/pages/DriverServicesSandbox.tsx` mostra serviços atribuídos, cliente, horário, estado e destino Waze. Teste Playwright confirma o link e a execução local; disponibilidade persistente, notificações e sessão real continuam pendentes.
 
 ## DRV-02 — Execução, espera e registo de recebimentos
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — transições de execução demonstradas sem recebimentos reais
 
 **Dependências:** DRV-01, FIN-01, PRC-02
 
@@ -28,4 +28,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Transições fora de ordem/por outro motorista falham no servidor; saldo não vira pago por iniciar viagem; override exige motivo; espera duplicada não cria duas linhas.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** O sandbox aplica `transition` para confirmado → a caminho → no local → em viagem → concluído. Registo de espera, recebimento por motorista e ledger persistente ainda faltam.
