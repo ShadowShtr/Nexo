@@ -6,7 +6,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## CAL-01 — Horários, timezone, geração de slots e duração
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — slots locais, jornada, antecedência, bloqueios e DST implementados; exceções persistentes e ligação ao calendário operacional pendentes
 
 **Dependências:** CAT-02, CAT-03, CFG-01
 
@@ -16,7 +16,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Grelha 60 min não encurta serviço de 150 min; slots não ultrapassam jornada; mesma data PT/EN aponta ao mesmo instante; mudanças de hora testadas.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/domain/slots.ts` e `tests/slots.test.ts` geram slots de 60 minutos sem encurtar serviços de 150 minutos, respeitam jornada/antecedência/datas bloqueadas e rejeitam horários inexistentes ou ambíguos. Falta ligar janelas e exceções versionadas ao Supabase e aos recursos reais.
 
 ## CAL-02 — Motor de conflitos e margens reais
 

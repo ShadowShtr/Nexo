@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.22 — 2026-09-14
+
+- Gerador de slots do calendário por timezone IANA, jornada, antecedência e datas bloqueadas.
+- Grelha de uma hora preserva a duração real do serviço e rejeita horários locais ambíguos ou inexistentes em DST.
+
+## 0.2.21 — 2026-09-14
+
+- Política server-side de cancelamento e reagendamento com token do cliente e concorrência por versão.
+- 24 horas exatas devolvem o sinal elegível; motorista cancelante devolve o total pago; reagendamento cria cotação/proposta nova e preserva o original.
+
 ## 0.2.20 — 2026-09-14
 
 - Ledger financeiro append-only para cobranças, reembolsos, fases e motorista beneficiário.

@@ -18,7 +18,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BKG-02 — Atribuição ao parceiro e estados da reserva
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — transições protegidas por ator, pagamento, alocação e versão; persistência do caso de uso pendente
 
 **Dependências:** BKG-01, SEC-01
 
@@ -28,7 +28,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Parceiro recusa sem cancelar silenciosamente cliente já confirmado; aceite fora de prazo falha; reserva só confirma com prova válida e recurso garantido.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/application/booking-command.ts` e `tests/booking-command.test.ts` exigem motorista atribuído para aceitar/recusar, pagamento sucedido e alocação garantida para confirmar, saldo registado antes de iniciar e `expectedVersion` para evitar escrita obsoleta. Falta ligar o gateway à mutação transacional Supabase e às notificações.
 
 ## BKG-03 — Cancelamento e reagendamento versionado
 
@@ -42,4 +42,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** 24h exatas permitem; menos 1ms bloqueia reagendamento/retém sinal; pedidos repetidos não duplicam; falha preserva original; troca não muda beneficiário de pagamento existente.
 
-**Evidência:** `src/domain/policy.ts` calcula a fronteira de 24h e `CustomerSandbox.tsx` propõe nova hora, verifica conflito e mantém a reserva original no modo demo. Falta persistência versionada, hold atómico, reembolso e auditoria.
+**Evidência:** `src/domain/policy.ts` calcula a fronteira de 24h, `CustomerSandbox.tsx` demonstra a proposta e `src/application/booking-change.ts` aplica token do cliente, versão esperada, reembolso de sinal elegível, reembolso integral no cancelamento pelo motorista e proposta com nova cotação sem substituir a original. Falta persistência transacional, hold atómico, webhook de reembolso e auditoria.

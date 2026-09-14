@@ -126,3 +126,11 @@ Máquina de estados de reservas adicionada no servidor lógico. O caso exige mot
 
 Ledger append-only e contrato de eventos de pagamento adicionados. Cobranças e reembolsos conservam histórico, o beneficiário é resolvido pelo contexto server-side e eventos não verificados, duplicados ou acima do valor recebido são rejeitados. Resultado: 69 testes Node aprovados; typecheck, build e documentação repetidos.
 
+## Incremento 0.2.21 — 14/09/2026
+
+Política de cancelamento e reagendamento server-side adicionada. O fluxo exige token do cliente ou ator interno, respeita 24 horas decorridas, diferencia reembolso de cancelamento pelo motorista e cria proposta/cotação nova sem alterar a reserva original. Resultado: 75 testes Node aprovados; typecheck, build e documentação repetidos.
+
+## Incremento 0.2.22 — 14/09/2026
+
+Gerador de slots local do calendário adicionado. A grelha configurável não encurta a duração do serviço, filtra antecedência e datas bloqueadas e rejeita horas DST inexistentes ou ambíguas. Resultado: 81 testes Node aprovados; typecheck, build e documentação repetidos.
+
