@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.28 — 2026-09-14
+
+- CAL-04/UI-02: agenda com painéis de vidro, filtros alinhados, tipografia e separação revista, vistas segmentadas e eventos legíveis.
+- PUB-01/02: novo fluxo de entrada por destino documentado, ainda não implementado.
+- Build e 15 testes de navegador aprovados.
+
 ## 0.2.27 — 2026-09-14
 
 - Cartões selecionáveis, badges de estado, textareas e associações de catálogo uniformizados com os tokens visuais.

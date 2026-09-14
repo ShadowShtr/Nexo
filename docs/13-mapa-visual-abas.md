@@ -33,6 +33,8 @@ Ficha de execução: cabeçalho voltar + referência; hora/estado; rota com pont
 
 ## Cliente
 
+Para transfers, a ordem abaixo é substituída pela [revisão de entrada do cliente](20-entrada-cliente.md): destino/origem → percurso e horário → estimativa → motorista/carro → cadastro e total → pedido. As composições abaixo permanecem referências de componentes.
+
 | Etapa | Composição e aplicação do padrão |
 |---|---|
 | Idioma — PUB-01 | Duas opções grandes PT/EN, seleção visível; não usar bandeira como único rótulo; preferência acessível depois |

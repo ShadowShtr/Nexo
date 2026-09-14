@@ -11,7 +11,7 @@ Uma operação privada, gerida por um proprietário que também pode conduzir. P
 | ID | Estado | Regra |
 |---|---|---|
 | DEC-01 | C | Um proprietário e motoristas parceiros; gestão centralizada. |
-| DEC-02 | C | Cliente escolhe motorista e depois um dos carros disponíveis para ele. |
+| DEC-02 | C | No transfer, cliente define primeiro percurso, recebe estimativa por km e depois escolhe motorista e carro disponível; cadastro apresenta o total. Revisão em [entrada do cliente](20-entrada-cliente.md). |
 | DEC-03 | C | Instagram leva ao perfil com motorista, veículo e serviços. |
 | DEC-04 | C | Recolher nome completo, email, telefone e NIF para faturação. |
 | DEC-05 | H | Mostrar orçamento antes de exigir registo; cliente manual pode completar dados por link. |
@@ -60,7 +60,7 @@ Uma operação privada, gerida por um proprietário que também pode conduzir. P
 
 | Superfície | Abas/rotas |
 |---|---|
-| Cliente | Idioma; perfil do motorista; carros; pacotes/tours; personalização/percurso; registo; orçamento/pagamento; consulta da reserva/reagendamento. |
+| Cliente | Idioma; destino/origem; percurso e horário; estimativa; motorista/carro; cadastro e total; pedido/pagamento; consulta/reagendamento. Perfil e pacotes acessíveis separadamente. |
 | Proprietário | Início; Agenda; Reservas; Clientes/CRM; Motoristas; Veículos; Pacotes; Financeiro; Acertos; Configurações. |
 | Parceiro | Início; Meus serviços; Disponibilidade; Ganhos/acertos; Perfil. |
 

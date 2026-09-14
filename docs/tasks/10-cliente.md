@@ -10,7 +10,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Regras:** DEC-03; DEC-15
 
-**Implementação:** Criar rotas PT/EN e links específicos de motorista; mostrar perfil, carros, tours e CTA reservar; persistir só preferência de idioma no dispositivo.
+**Implementação:** Criar entrada PT/EN “Para onde vai?” e links específicos de motorista que preservam o perfil como contexto; transfer começa pelo percurso conforme a [revisão de entrada](../20-entrada-cliente.md). Perfil e tours continuam acessíveis.
 
 **Aceitação:** Escolha de inglês traduz navegação e conteúdo publicado; deep link Instagram mantém motorista; nenhuma etapa regressa silenciosamente a português.
 
@@ -24,7 +24,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Regras:** DEC-02; DEC-04; REG-02..05
 
-**Implementação:** Motorista → carros dele → serviço/data/pessoas/percurso → orçamento → dados; apresentar inclusões, extras, sinal/saldo e condições; recalcular ao mudar dados relevantes.
+**Implementação:** Destino e origem confirmada → percurso/data/pessoas/extras → km e estimativa → motorista e carro disponíveis → cadastro com total → pedido. Aplicar a [revisão de entrada](../20-entrada-cliente.md); apresentar inclusões, extras, sinal/saldo e recalcular ao mudar dados relevantes.
 
 **Aceitação:** Carro indisponível/capacidade insuficiente não continua; totais discriminados; voltar não perde campos nem mantém orçamento inválido; registo completo antes de confirmação.
 

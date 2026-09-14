@@ -65,3 +65,5 @@ Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e
 
 Evidência parcial CAL-04 — 0.2.3: agenda interativa de demonstração, filtros, criação/edição/cancelamento em memória e integração com checkSchedule. Ver [roteiro de teste](../18-teste-calendario.md). Não conclui calendário operacional, persistência ou permissões reais.
 
+
+Revisão visual CAL-04: filtros em painel de vidro, separação de 24 px entre painéis, vistas segmentadas e eventos com hierarquia horário/percurso/motorista. Alteração apenas visual da demonstração; calendário operacional continua pendente.

@@ -2,6 +2,8 @@
 
 Versão visual 1, projeto 0.1.2. Direção aprovada pelo utilizador: cinco imagens de referência fornecidas em 09/09/2026. Este documento e os tokens CSS são a fonte de verdade para a implementação das telas. A especificação original não representa telas concluídas. A versão 0.2.0 acrescenta a pré-visualização descrita em 15-base-web.md.
 
+Revisão de 14/09/2026: a entrada do cliente passa a priorizar o padrão Uber solicitado, conforme [direção e tokens propostos](20-entrada-cliente.md). A família tipográfica exata ainda será verificada; as áreas internas conservam esta base até revisão específica.
+
 ## 1. O que estamos a reproduzir
 
 Interface clara, monocromática, com fundo cinzento muito suave, cartões brancos arredondados, resumo principal preto, números em destaque, listas compactas e navegação inferior flutuante. A hierarquia depende de tamanho, peso, alinhamento e espaço; a cor serve estados específicos.
@@ -149,3 +151,7 @@ Valores, moradas e nomes não têm altura fixa. Moradas completas disponíveis n
 7. Registar alterações visuais em changelog; mudança geral altera token, não onze cópias de CSS.
 
 Critério final: páginas diferentes devem parecer da mesma aplicação, mas usar a organização necessária à tarefa. A UI não altera cálculo, pagamento, política ou permissão para caber num cartão.
+
+## Revisão da agenda — vidro e hierarquia
+
+Pedido do utilizador: glassmorphism subtil na agenda. Painéis brancos a 76%, blur de 20 px, raio de 24 px e separação de 24 px (16 px móvel); superfície sólida no calendário para preservar leitura. Tipografia Arial/Helvetica como aproximação local, sem afirmar identidade com a fonte Uber. Controlos inativos claros e vista ativa preta; margens de deslocação hachuradas. Esta revisão substitui a restrição anterior ao vidro nesta composição. A interface sem suporte a blur usa branco sólido.
