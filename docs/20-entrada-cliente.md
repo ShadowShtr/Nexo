@@ -1,6 +1,6 @@
 # Entrada do cliente — revisão do planeamento
 
-Pedido de 14/09/2026. Estado: aprovado como direção; ainda não implementado na demonstração. Esta sequência substitui a seleção inicial de motorista no transfer. Não altera as políticas de pagamentos, cancelamentos ou tours.
+Pedido de 14/09/2026. Estado: direção aplicada no fluxo demo; localização, rota rodoviária, persistência e pagamento reais continuam pendentes. Esta sequência substitui a seleção inicial de motorista no transfer. Não altera as políticas de pagamentos, cancelamentos ou tours.
 
 ## Sequência
 
@@ -39,4 +39,4 @@ Desktop: painel de percurso e mapa lado a lado. Telemóvel: mapa e painel de cam
 - PUB-03: pedido, aceite, sinal e consulta; preservar as políticas existentes.
 - UI-03: verificar PC e telemóvel, PT/EN, teclado, localização recusada e textos longos.
 
-Critérios de revisão: percurso preservado ao voltar; nenhum recurso indisponível selecionável; preço atualizado sem cotação antiga parecer válida; GPS recusado não impede marcação; distância real e extras discriminados; total sempre acessível no cadastro. Esta revisão documental não conclui as tarefas nem modifica a UI existente.
+Critérios de revisão: percurso preservado ao voltar; nenhum recurso indisponível selecionável; preço atualizado sem cotação antiga parecer válida; GPS recusado não impede marcação; distância real e extras discriminados; total sempre acessível no cadastro. A demonstração cobre a sequência e as guardas principais em memória; a integração de produção continua nas tarefas PUB, NAV, PRC e CAL.
