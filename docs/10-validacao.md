@@ -170,3 +170,7 @@ O botão de pesquisa da descoberta passou a abrir o planeador inline, sem trocar
 
 Ao abrir a pesquisa, o mapa aparece imediatamente na mesma tela, centrado na origem sugerida e com uma mensagem para escolher o destino. Depois de selecionar um local recente ou escrever um endereço, o mapa passa a mostrar a rota do tour; o preço só é confirmado pelo botão “Ver rota e preço”, antes da etapa de motorista e carro. Resultado: 85 testes Node, 17 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.33 — 14/09/2026
+
+O mapa deixou de reaproveitar a rota Lisboa–Sintra quando o cliente escreve outro destino. O planeador reconhece destinos demo como Carregado, desenha os pontos correspondentes e impede a cotação enquanto o endereço não for reconhecido, evitando uma rota visualmente incorreta. Resultado: 85 testes Node, 18 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

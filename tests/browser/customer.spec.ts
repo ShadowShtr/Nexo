@@ -40,6 +40,18 @@ test('customer planner fills destination from recent places', async ({ page }) =
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
 });
 
+test('customer planner redraws the map for a different destination', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('CARREGADO');
+  const map = page.getByRole('region', { name: 'Pré-visualização do percurso' });
+  await expect(map).toContainText('CARREGADO');
+  await expect(map).not.toContainText('Sintra');
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await expect(page.locator('.pm-client-route-quote')).toContainText('200,00');
+});
+
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/booking');

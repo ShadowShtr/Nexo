@@ -14,19 +14,58 @@ const tourOptions = [
 
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
+  { title: 'Carregado', detail: 'Carregado, Alenquer' },
   { title: 'Aeroporto de Lisboa', detail: 'Alameda das Comunidades Portuguesas' },
   { title: 'Estação do Oriente', detail: 'Av. Dom João II, Lisboa' },
   { title: 'Centro de Lisboa', detail: 'Lisboa' },
 ];
 
+const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly [number, number] }> = [
+  { aliases: ['lisboa', 'centro de lisboa', 'a minha localizacao'], coordinates: [38.7223, -9.1393] },
+  { aliases: ['sintra'], coordinates: [38.8029, -9.3817] },
+  { aliases: ['carregado'], coordinates: [39.0234, -8.9768] },
+  { aliases: ['aeroporto de lisboa', 'aeroporto'], coordinates: [38.7742, -9.1342] },
+  { aliases: ['estacao do oriente', 'oriente'], coordinates: [38.7677, -9.0993] },
+  { aliases: ['cascais'], coordinates: [38.6979, -9.4215] },
+  { aliases: ['setubal', 'setúbal'], coordinates: [38.5244, -8.8882] },
+];
+
+function normalizePlace(value: string) {
+  return value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function coordinatesFor(value: string) {
+  const normalized = normalizePlace(value);
+  return placeCoordinates.find(place => place.aliases.some(alias => normalized === normalizePlace(alias) || normalized.includes(normalizePlace(alias))))?.coordinates;
+}
+
+function distanceMeters(from: readonly [number, number], to: readonly [number, number]) {
+  const radians = (degrees: number) => degrees * Math.PI / 180;
+  const earthRadius = 6_371_000;
+  const latitudeDelta = radians(to[0] - from[0]);
+  const longitudeDelta = radians(to[1] - from[1]);
+  const a = Math.sin(latitudeDelta / 2) ** 2 + Math.cos(radians(from[0])) * Math.cos(radians(to[0])) * Math.sin(longitudeDelta / 2) ** 2;
+  return Math.round(2 * earthRadius * Math.asin(Math.sqrt(a)) * 1.2);
+}
+
+function dynamicRoute(origin: string, destination: string): DemoRoute {
+  const start = coordinatesFor(origin) ?? tourRoute.points[0].coordinates;
+  const end = coordinatesFor(destination);
+  if (!end) return { name: `${origin || 'Lisboa'} → ${destination}`, meters: 0, minutes: 0, points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }, { ...tourRoute.points[2], label: destination || 'Destino', coordinates: start }], shape: [start] };
+  const shape = [start, [start[0] + (end[0] - start[0]) * .33, start[1] + (end[1] - start[1]) * .28], [start[0] + (end[0] - start[0]) * .68, start[1] + (end[1] - start[1]) * .78], end] as const;
+  const meters = distanceMeters(start, end);
+  return { name: `${origin || 'Lisboa'} → ${destination}`, meters, minutes: Math.max(10, Math.round(meters / 1000 / 55 * 60)), points: [{ ...tourRoute.points[0], label: origin || 'Lisboa', coordinates: start }, { ...tourRoute.points[2], label: destination, coordinates: end }], shape };
+}
+
 function plannerRoute(origin: string, destination: string, english: boolean): DemoRoute {
   const stopSuffix = english ? 'stop' : 'paragem';
+  if (normalizePlace(destination) !== 'sintra' || !normalizePlace(origin).includes('lisboa')) return dynamicRoute(origin, destination);
   const points = tourRoute.points.map((point, index) => index === 0
     ? { ...point, label: origin || 'Lisboa' }
     : index === tourRoute.points.length - 1
-      ? { ...point, label: destination && destination.toLocaleLowerCase() !== 'sintra' ? destination : 'Cabo da Roca' }
+      ? { ...point, label: 'Cabo da Roca' }
       : point.label.toLocaleLowerCase() === destination.toLocaleLowerCase() ? { ...point, label: `${point.label} · ${stopSuffix}` } : point);
-  return { ...tourRoute, name: `${origin || 'Lisboa'} → ${destination || 'Cabo da Roca'}`, points };
+  return { ...tourRoute, name: `${origin || 'Lisboa'} → ${destination}`, points };
 }
 
 export default function CustomerDiscoverSandbox() {
@@ -39,6 +78,7 @@ export default function CustomerDiscoverSandbox() {
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
 
   const previewRoute = useMemo(() => plannerRoute(origin, destination, i18n.language === 'en'), [origin, destination, i18n.language]);
+  const routeKnown = Boolean(coordinatesFor(origin) && coordinatesFor(destination));
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -96,13 +136,13 @@ export default function CustomerDiscoverSandbox() {
       <div className="pm-client-address-card">
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-pickup-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Local de partida', 'Pickup location')}</small><input aria-label={say('Local de partida', 'Pickup location')} value={origin} onChange={event => { setOrigin(event.target.value); setRouteReady(false); }} placeholder={say('De onde partimos?', 'Where should we pick you up?')} /></span></label>
         <div className="pm-client-address-divider" />
-        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input aria-label={say('Destino', 'Destination')} value={destination} onChange={event => { setDestination(event.target.value); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /></span><span className="pm-client-add-stop" aria-hidden="true">＋</span></label>
+        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onChange={event => { setDestination(event.target.value); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><span className="pm-client-add-stop" aria-hidden="true">＋</span></label>
       </div>
-      <RouteMap route={destination.trim() ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() ? 'full' : 'preview'} previewMessage={say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
+      <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
-      <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
+      <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
       <div className="pm-client-suggestions"><div className="pm-client-suggestions-title"><strong>{say('Locais recentes', 'Recent places')}</strong><span>{say('Toque para preencher o destino', 'Tap to fill destination')}</span></div>{recentPlaces.map(place => <button type="button" className="pm-client-suggestion" key={place.title} onClick={() => { setDestination(place.title); setRouteReady(false); }}><span className="pm-client-suggestion-pin"><Clock3 size={17}/></span><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={17}/></button>)}</div>
-      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim()))} disabled={!origin.trim() || !destination.trim()}>{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{say('Estimativa do tour', 'Tour estimate')}</span><strong>{money(tourPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{say('2 dias', '2 days')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(tourPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{say('Inclui até 2 pessoas. Cada pessoa adicional acrescenta 35,00 €. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. Each additional person adds €35. Driver availability is confirmed in the next step.')}</p><button type="button" className="pm-client-primary-action" onClick={chooseTour}>{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
+      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim() && routeKnown))} disabled={!origin.trim() || !destination.trim() || !routeKnown}>{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{say('Estimativa do tour', 'Tour estimate')}</span><strong>{money(tourPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{say('2 dias', '2 days')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(tourPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{say('Inclui até 2 pessoas. Cada pessoa adicional acrescenta 35,00 €. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. Each additional person adds €35. Driver availability is confirmed in the next step.')}</p><button type="button" className="pm-client-primary-action" onClick={chooseTour}>{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
     </section> : <>
       <section className="pm-client-categories" aria-labelledby="client-adventure-title">
         <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>

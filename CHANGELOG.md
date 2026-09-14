@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.33 — 2026-09-14
+
+- PUB-01/NAV-01: o mapa do planeador passa a usar o destino reconhecido, incluindo Carregado, em vez de reutilizar a geometria fixa de Sintra.
+- PUB-01: destinos não reconhecidos mantêm o mapa no ponto de partida e pedem uma sugestão válida, evitando mostrar uma rota sem relação com o endereço digitado.
+- 18 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.32 — 2026-09-14
 
 - PUB-01: o planeador inline passa a mostrar o mapa imediatamente ao abrir a pesquisa, centrado no ponto de partida; ao escolher o destino, a mesma pré-visualização transforma-se na rota calculada.
