@@ -14,6 +14,6 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Testes em Android/iOS com app presente/ausente; paragem certa em cada etapa; Waze não é apresentado como fornecedor do preço ou tracking automático.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/infrastructure/routing/osrm.ts` implementa `RouteProvider` server-side com OSRM configurável, coordenadas ordenadas, HTTPS obrigatório para hosts remotos, timeout, arredondamento conservador e erro explícito sem fallback fictício. `tests/osrm.test.ts` cobre URL, rota ausente, falha HTTP/rede e coordenadas. Continuam pendentes próxima etapa dinâmica, teste em Android/iOS com app presente/ausente e endereço copiável.
 
-Evidência parcial 0.2.5: mapa Leaflet no percurso público com pontos ordenados, geometria fictícia, atribuição OSM e fallback textual; link oficial HTTPS do Waze por coordenadas nos serviços do motorista. Testes automatizados validam parâmetros, PT/EN e layout. Continuam pendentes RouteProvider rodoviário, próxima etapa dinâmica, teste em Android/iOS com app presente/ausente e endereço copiável.
+Evidência parcial 0.2.5–0.2.24: mapa Leaflet no percurso público com pontos ordenados, geometria fictícia, atribuição OSM e fallback textual; link oficial HTTPS do Waze por coordenadas nos serviços do motorista; adaptador OSRM server-side para distância/duração rodoviárias. Testes automatizados validam parâmetros, PT/EN, layout e falhas do provedor. Continuam pendentes próxima etapa dinâmica, teste em Android/iOS com app presente/ausente e endereço copiável.

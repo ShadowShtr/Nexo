@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.24 — 2026-09-14
+
+- Adaptador de rota rodoviária OSRM configurável no servidor para distância e duração reais.
+- HTTPS obrigatório para provedores remotos, timeout, coordenadas ordenadas e falha explícita sem estimativa fictícia.
+
 ## 0.2.23 — 2026-09-14
 
 - Migração Supabase local para janelas/exceções do calendário, eventos de pagamento e propostas de alteração.

@@ -138,3 +138,7 @@ Gerador de slots local do calendário adicionado. A grelha configurável não en
 
 Extensão de schema Supabase criada pela CLI e aplicada numa base local limpa: janelas/exceções do calendário, eventos de pagamento e propostas de alteração, todas com RLS e grants mínimos. Lint e advisors de segurança/desempenho não encontraram problemas; 13 testes Auth/PostgREST locais passaram.
 
+## Incremento 0.2.24 — 14/09/2026
+
+Adaptador OSRM server-side adicionado para distância e duração de estrada. O adaptador exige coordenadas, HTTPS remoto e rota devolvida pelo provedor; arredonda para cima e não inventa fallback quando falha. Resultado: 85 testes Node aprovados; typecheck, build e documentação repetidos.
+
