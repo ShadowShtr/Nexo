@@ -132,6 +132,17 @@ test('customer planner prioritises the matching street over nearby numeric resul
   await expect(page.locator('.pm-client-inline-suggestion', { hasText: /Lawrence|^40/ })).toHaveCount(0);
 });
 
+test('customer planner corrects a close street typo and preserves the lot number', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sinta lote 84');
+  const suggestion = page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 84 Carregado e Cadafais/ });
+  await expect(suggestion).toBeVisible();
+  await suggestion.click();
+  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, n.º 84');
+});
+
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');

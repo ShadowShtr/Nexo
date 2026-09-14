@@ -112,10 +112,33 @@ function containsAddressTerm(value: string, term: string) {
   return normalizePlace(value).split(/[^a-z0-9]+/).includes(term);
 }
 
+function editDistance(left: string, right: string) {
+  const row = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {
+    let diagonal = row[0];
+    row[0] = leftIndex;
+    for (let rightIndex = 1; rightIndex <= right.length; rightIndex += 1) {
+      const above = row[rightIndex];
+      row[rightIndex] = left[leftIndex - 1] === right[rightIndex - 1]
+        ? diagonal
+        : Math.min(diagonal, row[rightIndex - 1], above) + 1;
+      diagonal = above;
+    }
+  }
+  return row[right.length];
+}
+
+function similarAddressTerm(value: string, term: string) {
+  if (containsAddressTerm(value, term)) return true;
+  if (term.length < 4) return false;
+  const maxDistance = term.length >= 7 ? 2 : 1;
+  return normalizePlace(value).split(/[^a-z0-9]+/).some(word => word.length >= 4 && editDistance(word, term) <= maxDistance);
+}
+
 function geocoderRelevance(query: string, title: string, detail: string, requestedUnit?: AddressUnit, rawTitle = title) {
   const terms = addressSearchTerms(query);
-  const matchedTerms = terms.filter(term => containsAddressTerm(`${title} ${detail}`, term)).length;
-  const titleHasStreet = terms.some(term => containsAddressTerm(title, term));
+  const matchedTerms = terms.filter(term => similarAddressTerm(`${title} ${detail}`, term)).length;
+  const titleHasStreet = terms.some(term => similarAddressTerm(title, term));
   const hasUnit = requestedUnit ? containsAddressTerm(title, normalizePlace(requestedUnit.value)) : false;
   const genericNumberTitle = /^\d+[A-Za-z]?$/.test(rawTitle.trim());
   return matchedTerms * 20 + (matchedTerms === terms.length && terms.length > 1 ? 12 : 0) + (titleHasStreet ? 5 : 0) + (hasUnit ? 8 : 0) - (genericNumberTitle ? 12 : 0);
@@ -126,7 +149,7 @@ function placeMatches(place: { title: string; detail: string }, query: string) {
   const haystack = normalizePlace(`${place.title} ${place.detail}`);
   if (tokens.every(token => haystack.includes(token))) return true;
   const streetTerms = addressSearchTerms(query);
-  if (streetTerms.length >= 1 && streetTerms.every(token => containsAddressTerm(haystack, token))) return true;
+  if (streetTerms.length >= 1 && streetTerms.every(token => similarAddressTerm(haystack, token))) return true;
   const unit = addressUnit(query);
   const compactQuery = normalizePlace(query).replace(/[^a-z0-9]/g, '').replace(unit ? /(?:loteamento|lote|lt|numero|num|n)\d{1,5}[a-z]?$/ : /$^/, '');
   return compactQuery.length >= 5 && haystack.replace(/[^a-z0-9]/g, '').includes(compactQuery);

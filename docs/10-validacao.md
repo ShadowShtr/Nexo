@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.44 — 14/09/2026
+
+Sugestões de ruas passam a tolerar erros de edição de uma ou duas letras em termos relevantes e mantêm os marcadores de lote/número. Para `rua pedro sinta lote 84`, a opção corrigida é `Rua Pedro de Sintra, n.º 84`, com a coordenada do arruamento conhecido. Resultado: 85 testes Node, 25 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.43 — 14/09/2026
 
 Sugestões de morada agora priorizam os termos da rua e ignoram títulos que sejam apenas números quando há uma rua correspondente no catálogo. O mapa Leaflet é mantido entre alterações do formulário e só redesenha a geometria quando as coordenadas mudam, evitando cintilação durante a digitação. Resultado: 85 testes Node, 23 testes Playwright, build TypeScript/Vite e validação documental aprovados.

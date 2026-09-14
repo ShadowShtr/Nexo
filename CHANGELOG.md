@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.44 — 2026-09-14
+
+- PUB-01: sugestões locais toleram pequenos erros de escrita, como `sinta` → `Sintra`, sem perder o número do lote.
+- PUB-01: `lote 84` passa a sugerir a rua correspondente do catálogo em vez de listar ruas homónimas de outras localidades.
+- 85 testes de domínio, 25 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.43 — 2026-09-14
 
 - PUB-01: resultados de morada priorizam a rua correspondente e deixam de exibir números próximos sem relação quando existe correspondência local.
