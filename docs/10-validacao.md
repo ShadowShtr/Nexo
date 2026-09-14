@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.41 — 14/09/2026
+
+Números de porta com marcador (`n`, `n.º`, `numero`) passaram a ser extraídos da consulta, enviados ao geocoder e preservados no título selecionável quando a fonte devolve apenas o arruamento. O teste cobre uma pesquisa sobre-especificada com rua, porta e localidade. Resultado: 85 testes Node, 23 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.40 — 14/09/2026
 
 Consultas de rua com localidade adicional passaram a tentar variantes da frase, ordenar os resultados pela correspondência dos termos originais e desistir de uma fonte lenta após 2,5 segundos. Photon foi ligado como fallback público sem chave. Resultado: 85 testes Node, 23 testes Playwright, build TypeScript/Vite e validação documental aprovados.

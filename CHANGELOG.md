@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.41 — 2026-09-14
+
+- PUB-01: números de porta escritos como `n 40`, `n.º 40` ou `numero 40` são preservados nas sugestões e na morada selecionada.
+- PUB-01: a consulta mantém números que fazem parte do nome da rua e valida a pesquisa com localidade e porta.
+- 23 testes de navegador, 85 testes de domínio, build e validação documental aprovados.
+
 ## 0.2.40 — 2026-09-14
 
 - PUB-01: pesquisas longas de rua deixam de falhar quando o utilizador acrescenta a localidade; são tentadas variantes da frase e os resultados são ordenados pela correspondência com todos os termos.

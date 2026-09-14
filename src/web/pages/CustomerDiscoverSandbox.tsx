@@ -98,8 +98,16 @@ function placeMatches(place: { title: string; detail: string }, query: string) {
   return tokens.every(token => haystack.includes(token));
 }
 
+function houseNumber(value: string) {
+  return value.match(/(?:^|[\s,])(?:n(?:\s*[.ºo°])?|numero|num)\s*(\d{1,5}[A-Za-z]?)(?=\s|$)/i)?.[1];
+}
+
 function geocoderQueries(query: string) {
-  const compact = query.replace(/\s+/g, ' ').trim();
+  const compact = query
+    .replace(/[;,]+/g, ' ')
+    .replace(/\b(?:n(?:\s*[.ºo°])?|numero|num)\s*(?=\d)/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
   const tokens = compact.split(' ').filter(Boolean);
   const variants = [compact];
   // Pessoas costumam acrescentar a localidade no fim (por exemplo,
@@ -260,6 +268,12 @@ export default function CustomerDiscoverSandbox() {
       setGeocoderState('loading');
       try {
         const endpoint = import.meta.env.VITE_GEOCODER_URL || 'https://nominatim.openstreetmap.org/search';
+        const requestedHouseNumber = houseNumber(query);
+        const withHouseNumber = (title: string) => {
+          if (!requestedHouseNumber) return title;
+          const escaped = requestedHouseNumber.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          return new RegExp(`(?:^|\\D)${escaped}(?:\\D|$)`).test(title) ? title : `${title}, n.º ${requestedHouseNumber}`;
+        };
         const request = async (url: string) => {
           const requestController = new AbortController();
           let timedOut = false;
@@ -289,8 +303,9 @@ export default function CustomerDiscoverSandbox() {
             const latitude = Number(item.lat);
             const longitude = Number(item.lon);
             if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
-            const title = item.name?.trim() || item.display_name.split(',')[0]?.trim() || candidate;
-            const detail = item.display_name.replace(`${title},`, '').trim() || item.display_name;
+            const rawTitle = item.name?.trim() || item.display_name.split(',')[0]?.trim() || candidate;
+            const title = withHouseNumber(rawTitle);
+            const detail = item.display_name.replace(`${rawTitle},`, '').trim() || item.display_name;
             const haystack = normalizePlace(`${title} ${detail}`);
             const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
             return [{ place: { title, detail, coordinates: [latitude, longitude] as const }, score }];
@@ -308,7 +323,8 @@ export default function CustomerDiscoverSandbox() {
               const coordinates = feature.geometry?.coordinates;
               const properties = feature.properties ?? {};
               if (!coordinates || coordinates.length < 2 || !Number.isFinite(coordinates[0]) || !Number.isFinite(coordinates[1])) return [];
-              const title = properties.name?.trim() || [properties.street, properties.housenumber].filter(Boolean).join(' ') || query;
+              const rawTitle = properties.name?.trim() || [properties.street, properties.housenumber].filter(Boolean).join(' ') || query;
+              const title = withHouseNumber(rawTitle);
               const detail = [properties.street && properties.name !== properties.street ? properties.street : '', properties.housenumber && properties.name !== properties.housenumber ? properties.housenumber : '', properties.city, properties.state, properties.country].filter(Boolean).join(', ') || 'Portugal';
               const haystack = normalizePlace(`${title} ${detail}`);
               const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
