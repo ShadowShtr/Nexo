@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.17 — 2026-09-14
+
+- Editor demo de pacotes bilingues com duração fixa de dois dias.
+- Base, pessoa adicional e antecedência mínima de 48 horas por pacote.
+
 ## 0.2.16 — 2026-09-14
 
 - CRM demo do proprietário com nome, email, telefone, NIF e notas internas.

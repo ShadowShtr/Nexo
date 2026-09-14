@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## TOUR-01 — Editor bilingue de tours
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — editor demo bilingue com duração de dois dias
 
 **Dependências:** SEC-01, CFG-01
 
@@ -14,11 +14,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** 1 e 2 pessoas partilham preço base; sem texto inglês ou duração não publica; preço e roteiro antigos permanecem no snapshot da reserva.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/contracts/tour.ts` exige nomes/descritivos PT/EN, duração de 2 dias, base e adicional; `TourSandbox.tsx` permite inserir pacotes em memória. Teste Node e Playwright cobrem a regra de dois dias. Persistência e publicação autenticada continuam pendentes.
 
 ## TOUR-02 — Vincular tours a motoristas/carros e disponibilidade
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — antecedência e simulador demo; vínculos persistentes pendentes
 
 **Dependências:** TOUR-01, CAT-02, CAL-01
 
@@ -28,4 +28,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Tour e transfer não sobrepõem mesmo carro/condutor; visitas incluídas não duplicam duração; capacidade respeita mínimo pacote/carro.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** O editor demonstra antecedência mínima configurável a partir de 48h e mantém o simulador de preço para até duas pessoas. Associação a motoristas/carros, calendário e disponibilidade persistentes ainda faltam.

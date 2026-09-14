@@ -121,3 +121,18 @@ test('owner CRM adds and searches a customer with NIF', async ({ page }) => {
   const card = page.locator('.pm-demo-record').filter({ hasText: 'Rita CRM' });
   await expect(card).toContainText('987654321');
 });
+
+test('owner adds a bilingual two-day tour package', async ({ page }) => {
+  await page.goto('/?demo=1#/owner/tours');
+  await page.getByRole('button', { name: 'Novo pacote', exact: true }).click();
+  const form = page.getByRole('form', { name: 'Novo pacote' });
+  await form.getByLabel('Nome em português').fill('Douro Premium');
+  await form.getByLabel('Nome em inglês').fill('Premium Douro');
+  await form.getByLabel('Descrição em português').fill('Vinhos e paisagens.');
+  await form.getByLabel('Descrição em inglês').fill('Wine and landscapes.');
+  await form.getByLabel('Antecedência mínima (horas)').fill('48');
+  await form.getByRole('button', { name: 'Guardar pacote', exact: true }).click();
+  const card = page.locator('.pm-demo-record').filter({ hasText: 'Douro Premium' }).last();
+  await expect(card).toContainText('2 dias');
+  await expect(card).toContainText('200,00');
+});

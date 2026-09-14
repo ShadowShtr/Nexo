@@ -110,3 +110,7 @@ Vista de serviços do motorista adicionada com deep link Waze e transições de 
 
 CRM demo adicionado com validação de dados fiscais e pesquisa. Build, 47 testes Node e 6 testes Playwright de demonstração aprovados.
 
+## Incremento 0.2.17 — 14/09/2026
+
+Editor demo de tours bilingues adicionado com duração obrigatória de dois dias, preço para duas pessoas e adicional. Build, 48 testes Node e 10 testes Playwright aprovados.
+
