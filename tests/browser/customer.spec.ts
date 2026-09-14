@@ -75,8 +75,11 @@ test('customer adds a stop inline and hides recent places after choosing a desti
   await expect(page.locator('.pm-client-suggestions')).toHaveCount(0);
   await page.getByRole('button', { name: 'Adicionar paragem' }).click();
   await expect(page.getByLabel('Paragem 1', { exact: true })).toBeVisible();
-  await page.getByLabel('Paragem 1', { exact: true }).fill('Carregado');
-  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Carregado');
+  await page.getByLabel('Paragem 1', { exact: true }).fill('shopping vasco');
+  await expect(page.getByRole('option', { name: /Vasco da Gama Shopping Av\. Dom João II/ })).toBeVisible();
+  await page.getByRole('option', { name: /Vasco da Gama Shopping Av\. Dom João II/ }).click();
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('Vasco da Gama Shopping');
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Vasco da Gama Shopping');
   await page.getByRole('button', { name: 'Remover paragem 1' }).click();
   await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveCount(0);
 });

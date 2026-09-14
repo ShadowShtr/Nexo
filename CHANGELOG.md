@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.38 — 2026-09-14
+
+- PUB-01: origem, destino e todas as paragens usam a mesma pesquisa inline com sugestões selecionáveis e correspondência por palavras.
+- PUB-01: acrescentado o local de teste Vasco da Gama Shopping, incluindo alias “shopping vasco” e coordenadas para o cálculo da rota.
+- 20 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.37 — 2026-09-14
 
 - PUB-01: a pesquisa genérica passa a cotar como transfer; o tour só é usado quando o cliente escolhe uma opção de tour.

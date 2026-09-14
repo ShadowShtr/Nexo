@@ -190,3 +190,7 @@ O ponto de Avenida Cabo da Boa Esperança L65 usa agora a coordenada geográfica
 
 A pesquisa genérica deixou de reutilizar a cotação fixa de tour: calcula transfer com base de 10,00 €, 2,00 €/km e sinal de 25%; tours continuam com pacote de 2 dias. O botão “+” adiciona e remove paragens no cartão, soma cada trecho conhecido e oculta os locais recentes após a escolha do destino. Resultado: 85 testes Node, 20 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.38 — 14/09/2026
+
+As sugestões de morada foram generalizadas para origem, destino e todas as paragens. A seleção “shopping vasco” preenche Vasco da Gama Shopping e torna o trecho elegível para o mapa e a cotação. Resultado: 85 testes Node, 20 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+

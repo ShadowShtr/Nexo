@@ -19,6 +19,7 @@ const recentPlaces = [
   { title: 'Estação Carregado', detail: 'R. da Estação, Castanheira do Ribatejo' },
   { title: 'Aeroporto de Lisboa', detail: 'Alameda das Comunidades Portuguesas' },
   { title: 'Estação do Oriente', detail: 'Av. Dom João II, Lisboa' },
+  { title: 'Vasco da Gama Shopping', detail: 'Av. Dom João II, Lisboa' },
   { title: 'Centro de Lisboa', detail: 'Lisboa' },
 ];
 
@@ -33,12 +34,19 @@ const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly
   { aliases: ['estacao carregado'], coordinates: [39.0228, -8.9757] },
   { aliases: ['aeroporto de lisboa', 'aeroporto'], coordinates: [38.7742, -9.1342] },
   { aliases: ['estacao do oriente', 'oriente'], coordinates: [38.7677, -9.0993] },
+  { aliases: ['vasco da gama shopping', 'shopping vasco', 'vasco da gama'], coordinates: [38.7677, -9.0993] },
   { aliases: ['cascais'], coordinates: [38.6979, -9.4215] },
   { aliases: ['setubal', 'setúbal'], coordinates: [38.5244, -8.8882] },
 ];
 
 function normalizePlace(value: string) {
   return value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function placeMatches(place: { title: string; detail: string }, query: string) {
+  const tokens = normalizePlace(query).split(/\s+/).filter(Boolean);
+  const haystack = normalizePlace(`${place.title} ${place.detail}`);
+  return tokens.every(token => haystack.includes(token));
 }
 
 function coordinatesFor(value: string) {
@@ -97,20 +105,20 @@ export default function CustomerDiscoverSandbox() {
   const { i18n } = useTranslation();
   const say = (pt: string, en: string) => i18n.language === 'en' ? en : pt;
   type PlannerKind = 'transfer' | 'tour';
+  type ActiveSearch = { kind: 'origin' | 'destination' | 'stop'; index?: number } | null;
   const [planning, setPlanning] = useState(false);
   const [routeReady, setRouteReady] = useState(false);
   const [plannerKind, setPlannerKind] = useState<PlannerKind>('transfer');
   const [origin, setOrigin] = useState('Lisboa');
   const [destination, setDestination] = useState('');
   const [stops, setStops] = useState<string[]>([]);
+  const [activeSearch, setActiveSearch] = useState<ActiveSearch>(null);
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
 
   const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en'), [origin, destination, plannerKind, stops, i18n.language]);
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin) && coordinatesFor(destination) && stops.every(stop => Boolean(coordinatesFor(stop))));
-  const destinationSuggestions = useMemo(() => {
-    const query = normalizePlace(destination);
-    return recentPlaces.filter(place => !query || normalizePlace(`${place.title} ${place.detail}`).includes(query));
-  }, [destination]);
+  const activeQuery = activeSearch?.kind === 'origin' ? origin : activeSearch?.kind === 'destination' ? destination : activeSearch ? stops[activeSearch.index ?? -1] ?? '' : '';
+  const activeSuggestions = useMemo(() => recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery]);
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -128,6 +136,7 @@ export default function CustomerDiscoverSandbox() {
     setPlannerKind(kind);
     setDestination(preset);
     setStops([]);
+    setActiveSearch(null);
   };
   const chooseBooking = () => {
     const url = new URL(window.location.href);
@@ -168,6 +177,14 @@ export default function CustomerDiscoverSandbox() {
     setStops(current => current.filter((_, stopIndex) => stopIndex !== index));
     setRouteReady(false);
   };
+  const selectPlace = (title: string) => {
+    if (!activeSearch) return;
+    if (activeSearch.kind === 'origin') setOrigin(title);
+    else if (activeSearch.kind === 'destination') setDestination(title);
+    else updateStop(activeSearch.index ?? 0, title);
+    setActiveSearch(null);
+    setRouteReady(false);
+  };
 
   return <div className="pm-client-home">
     <header className="pm-client-toolbar">
@@ -183,12 +200,12 @@ export default function CustomerDiscoverSandbox() {
       <div className="pm-client-planner-head"><button type="button" className="pm-client-back" onClick={() => { setPlanning(false); setRouteReady(false); }} aria-label={say('Voltar', 'Back')}><ChevronLeft size={24}/></button><div><span className="pm-client-eyebrow">{say('Tour privado', 'Private tour')}</span><h1 id="client-planner-title">{say('Planear a sua viagem', 'Plan your trip')}</h1></div></div>
       <div className="pm-client-planner-pills"><span><Clock3 size={17}/>{say('Mais tarde', 'Later')}</span><span><MapPinned size={17}/>{say('Para mim', 'For me')}</span></div>
       <div className="pm-client-address-card">
-        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-pickup-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Local de partida', 'Pickup location')}</small><input aria-label={say('Local de partida', 'Pickup location')} value={origin} onChange={event => { setOrigin(event.target.value); setRouteReady(false); }} placeholder={say('De onde partimos?', 'Where should we pick you up?')} /></span></label>
+        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-pickup-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Local de partida', 'Pickup location')}</small><input aria-label={say('Local de partida', 'Pickup location')} value={origin} onFocus={() => setActiveSearch({ kind: 'origin' })} onChange={event => { setOrigin(event.target.value); setActiveSearch({ kind: 'origin' }); setRouteReady(false); }} placeholder={say('De onde partimos?', 'Where should we pick you up?')} /></span></label>
         <div className="pm-client-address-divider" />
-        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onChange={event => { setDestination(event.target.value); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
-        {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onChange={event => updateStop(index, event.target.value)} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
+        <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onFocus={() => setActiveSearch({ kind: 'destination' })} onChange={event => { setDestination(event.target.value); setActiveSearch({ kind: 'destination' }); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
+        {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
       </div>
-      {destination.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{destinationSuggestions.length ? destinationSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={place.title} onClick={() => { setDestination(place.title); setRouteReady(false); }}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{say('Nenhuma sugestão local. Escolha uma morada reconhecida na lista abaixo.', 'No local suggestion. Choose a recognised address from the list below.')}</p>}</div>}
+      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={place.title} onClick={() => selectPlace(place.title)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{say('Nenhuma sugestão local. Escolha uma morada reconhecida na lista abaixo.', 'No local suggestion. Choose a recognised address from the list below.')}</p>}</div>}
       <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
