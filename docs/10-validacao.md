@@ -114,3 +114,7 @@ CRM demo adicionado com validação de dados fiscais e pesquisa. Build, 47 teste
 
 Editor demo de tours bilingues adicionado com duração obrigatória de dois dias, preço para duas pessoas e adicional. Build, 48 testes Node e 10 testes Playwright aprovados.
 
+## Incremento 0.2.18 — 14/09/2026
+
+Contrato administrativo server-side do catálogo adicionado. O proprietário ativo é o único ator autorizado; a organização é obtida da sessão, perfis ativos recebem `publishedAt` do servidor e associações são rejeitadas quando sobrepõem motorista ou veículo. A preparação de cotações passou a exigir rota, resolver tarifa/capacidade do servidor e guardar snapshot com validade e versão; o total do navegador é ignorado. A janela de associação é semiaberta, por isso termina exatamente quando a seguinte começa. Resultado: 58 testes Node aprovados; typecheck, build e validação documental repetidos após a alteração.
+

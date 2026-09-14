@@ -1,6 +1,6 @@
 # Tarefas de implementação por aba
 
-Estado 0.2.17: BAS-01..05, SEC-01 e UI-01 concluídas; CAT-01, CAT-02, NAV-01, UI-02, CFG-03, BKG-01, BKG-03, CRM-01, CRM-02, TOUR-01, TOUR-02, PUB-03, DRV-01 e DRV-02 EM CURSO; outras tarefas PLANEADAS. Protótipos PUB/CAL têm evidência parcial, sem serem marcados concluídos.
+Estado 0.2.18: BAS-01..05, SEC-01 e UI-01 concluídas; CAT-01, CAT-02, NAV-01, UI-02, CFG-03, PRC-01, BKG-01, BKG-03, CRM-01, CRM-02, TOUR-01, TOUR-02, PUB-03, DRV-01 e DRV-02 EM CURSO; outras tarefas PLANEADAS. Protótipos PUB/CAL têm evidência parcial, sem serem marcados concluídos.
 
 Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, CONCLUÍDA (com evidência). Atualizar diretamente os ficheiros de tarefas; não regenerar por cima de alterações.
 
@@ -26,5 +26,5 @@ Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, 
 | Estabilização e lançamento | REL-01, REL-02 | [Abrir](17-release.md) |
 | Sistema visual e interface | UI-01, UI-02, UI-03 | [Abrir](18-interface.md) |
 
-Total: **48 tarefas**, sendo **7 concluídas**, **14 em curso** e **27 planeadas** na versão 0.2.17. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
+Total: **48 tarefas**, sendo **7 concluídas**, **15 em curso** e **26 planeadas** na versão 0.2.18. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
 

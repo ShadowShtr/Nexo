@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.18 — 2026-09-14
+
+- Contrato de comandos administrativo para motoristas, veículos e associações temporais.
+- Autorização exclusiva do proprietário ativo, isolamento por organização, publicação server-side e rejeição de sobreposição por motorista ou veículo.
+- Preparação server-side de cotações com rota obrigatória, snapshot de tarifa/versionamento e cálculo 25/75% sem confiar no total do navegador.
+- Rodapé da aplicação atualizado para refletir a versão corrente.
+
 ## 0.2.17 — 2026-09-14
 
 - Editor demo de pacotes bilingues com duração fixa de dois dias.
