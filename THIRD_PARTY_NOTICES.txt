@@ -1,4 +1,4 @@
-THIRD-PARTY NOTICES — Premium Mobility 0.2.8
+THIRD-PARTY NOTICES — Premium Mobility 0.2.9
 Generated from installed, locked packages on 2026-09-14.
 
 shadcn/ui Radix button composition — MIT

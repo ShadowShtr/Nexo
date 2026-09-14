@@ -78,3 +78,7 @@ Migração operacional criada pela CLI Supabase 2.117.0 e aplicada duas vezes a 
 
 Catálogo de demonstração de motoristas e veículos adicionado com cadastro bilingue, ativação/desativação, capacidade de passageiros, bagagem, antecedência e suplemento. Três testes de contrato e um fluxo Playwright cobrem os limites; o catálogo continua sem escrita real por browser até existir o endpoint owner.
 
+## Incremento 0.2.9 — 14/09/2026
+
+Associação de vários motoristas ao mesmo veículo adicionada ao catálogo de demonstração. O teste Playwright confirma a associação e a suíte ficou com 45 testes Node; build e validação documental continuam aprovados.
+

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.9 — 2026-09-14
+
+- Catálogo demo permite associação de vários motoristas ao mesmo veículo.
+- A contagem de veículos associados acompanha as alterações no perfil do motorista.
+
 ## 0.2.8 — 2026-09-14
 
 - Catálogo de teste para motoristas e veículos com cadastro, estado ativo/inativo e validação de capacidade.

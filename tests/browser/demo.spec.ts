@@ -80,4 +80,6 @@ test('catalog demo adds and disables drivers and vehicles with passenger capacit
   const vehicleCard=page.locator('.pm-demo-record').filter({hasText:'Lexus LM'});
   await expect(vehicleCard).toContainText('6 lugares de passageiros');
   await expect(vehicleCard).toContainText('Aceita lotação');
+  await vehicleCard.getByLabel('Sofia Martins').check();
+  await expect(vehicleCard).toContainText('Sofia Martins');
 });

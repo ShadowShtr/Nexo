@@ -28,7 +28,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Carro partilhado é único recurso; capacidade 6 não permite 7 passageiros mesmo que nome diga 7 lugares; histórico e associações futuras preservados.
 
-**Evidência:** Migração operacional `vehicles`/`driver_vehicle_assignments`, `src/contracts/catalog.ts`, `CatalogSandbox.tsx` e teste de capacidade 6/7 lugares. Falta endpoint autenticado de edição, fotos/indisponibilidades e teste de histórico temporal no browser.
+**Evidência:** Migração operacional `vehicles`/`driver_vehicle_assignments`, `src/contracts/catalog.ts`, `CatalogSandbox.tsx` e teste de capacidade 6/7 lugares. A demonstração permite associar vários motoristas ao mesmo carro e atualizar a contagem nos perfis. Falta endpoint autenticado de edição, fotos/indisponibilidades e teste de histórico temporal no browser.
 
 ## CAT-03 — Zonas de atendimento e taxas de recolha
 
