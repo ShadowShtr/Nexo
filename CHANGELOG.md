@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.5 — 2026-09-14
+
+- Mapa Leaflet no percurso e na revisão do cliente, com recolha, paragem, destino, distância, duração e fallback textual.
+- Geometria fictícia claramente identificada; tiles OSM apenas na demonstração e atribuição visível.
+- Link HTTPS oficial do Waze por coordenadas nos serviços do motorista.
+- Oito testes de interface e dois testes de navegação; NAV-01 continua em curso até existir rota real e validação física.
+
 ## 0.2.4 — 2026-09-11
 
 - Percurso de teste do cliente: motorista/carro, viagem, dados, orçamento, pedido, consulta e cancelamento.

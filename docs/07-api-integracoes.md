@@ -58,6 +58,10 @@ O retorno de sucesso do browser é apenas estado de navegação. Pagamento confi
 
 Mapa/rota da ficha pode usar RouteProvider; botão Waze abre navegação por coordenadas da próxima etapa. Não assumir que Waze fornece orçamento ou sincroniza automaticamente todas as paragens. Validar formato de ligação e fallback nas fontes oficiais durante NAV-01, testar em Android/iOS. Sem localização ao vivo nesta versão.
 
+Na demonstração 0.2.5, Leaflet 1.9.4 mostra rotas e pontos fictícios com tiles Standard do OpenStreetMap apenas para teste interativo de baixo volume. A geometria não segue necessariamente a estrada e não alimenta o preço. Atribuição permanece visível e existe uma lista textual equivalente. Antes de produção, escolher serviço de tiles/rotas com disponibilidade e condições adequadas ao uso comercial; os servidores comunitários do OSM são best-effort, sem SLA e podem bloquear uso inadequado. Não fazer prefetch nem download offline.
+
+O link de demonstração usa `https://waze.com/ul?ll=LAT,LON&navigate=yes&utm_source=premium_mobility_demo`. HTTPS oferece fallback web quando o app não está disponível. Cada clique abre apenas um destino; uma sequência com paragens precisa avançar para a próxima etapa no estado do serviço.
+
 Rotas têm `distanceMeters`, `durationMinutes`, `provider`, `calculatedAt`, `departureAt`. Chaves privadas de mapas não vão para o browser; credenciais públicas permitidas pelo fornecedor devem ser restringidas por origem e capacidade.
 
 ## Notificações e idiomas

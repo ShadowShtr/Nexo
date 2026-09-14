@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## NAV-01 — Percurso e navegação por etapa
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — mapa e deep link Waze demonstrados; rota real e testes físicos pendentes
 
 **Dependências:** DRV-01, PRC-02
 
@@ -15,3 +15,5 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 **Aceitação:** Testes em Android/iOS com app presente/ausente; paragem certa em cada etapa; Waze não é apresentado como fornecedor do preço ou tracking automático.
 
 **Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+
+Evidência parcial 0.2.5: mapa Leaflet no percurso público com pontos ordenados, geometria fictícia, atribuição OSM e fallback textual; link oficial HTTPS do Waze por coordenadas nos serviços do motorista. Testes automatizados validam parâmetros, PT/EN e layout. Continuam pendentes RouteProvider rodoviário, próxima etapa dinâmica, teste em Android/iOS com app presente/ausente e endereço copiável.

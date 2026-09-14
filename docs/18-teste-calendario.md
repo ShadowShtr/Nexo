@@ -35,3 +35,5 @@ Cenário: Miguel / Classe V, tour, 14/09/2026 às 10:00, 4 pessoas e sem espera 
 
 Os pedidos do cliente ficam em memória separada do editor da agenda, mas validam as mesmas seis viagens de referência e outros pedidos da sessão. Não aparecem ainda no painel do proprietário. Distâncias, duração e deslocação são fixas de demonstração; não existe pesquisa de moradas, pagamento MB WAY, aceite do motorista, registo persistente, link seguro, NIF/faturação, telefone ou reagendamento. Cancelamento aqui é apenas de pedido sem cobrança. Recarregar a página elimina os pedidos. Sete testes de navegador aprovados.
 
+Na 0.2.5, o passo Percurso e a revisão mostram mapa, linha, quilómetros, duração e pontos numerados. O tour inclui Sintra como paragem. Os tiles dependem de internet; sem tiles, os pontos, a linha, o resumo e a lista continuam disponíveis. A geometria e as estimativas são fictícias. Na área Motorista > Serviços, “Abrir destino no Waze” usa o destino da etapa de exemplo e abre uma nova aba.
+

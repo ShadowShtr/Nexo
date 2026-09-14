@@ -62,3 +62,7 @@ Docker disponível com PostgreSQL 17; script de arranque testado contra contento
 
 37 testes de domínio e 7 testes reais Auth/PostgREST aprovados; build/typecheck e 41 documentos/145 ligações validados. Duas migrações reconstruídas via reset exclusivamente local; testes de acesso aprovados após reconstrução. Advisors sem avisos/erros no nível warn. Não equivale a restauro de backup operacional. Testes visuais e os 11 testes da prova PostgreSQL anterior não foram repetidos neste incremento sem alterações nessas áreas. CI de autenticação preparado, execução remota não realizada.
 
+## Incremento 0.2.5 — 14/09/2026
+
+Mapa do percurso validado no fluxo móvel do cliente, em PT/EN, com rota de transfer e tour com paragem. Oito testes Playwright aprovados: percurso cliente, conflitos, orçamento, consulta/cancelamento, filtros e agenda anterior, além do formato do link Waze. Dois testes Node validam ordem dos pontos e parâmetros do deep link. Tiles externos são bloqueados nos testes automatizados; linha, marcadores, resumo e fallback textual permanecem verificáveis. Build, TypeScript, testes de domínio e documentação validados. Não houve teste em dispositivo Android/iOS, cálculo rodoviário real, pesquisa de moradas ou localização em tempo real.
+

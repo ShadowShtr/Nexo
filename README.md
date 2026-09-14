@@ -69,3 +69,5 @@ BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e te
 Incremento 0.2.2: [identidade e permissões locais](docs/17-identidade-local.md). BAS-03 e SEC-01 em curso; nenhuma ligação à MO Limpezas ou publicação remota.
 
 Agenda interativa de teste: abrir http://127.0.0.1:5173/?demo=1#/owner/calendar. [Roteiro](docs/18-teste-calendario.md).
+
+Mapa do percurso: abrir `http://127.0.0.1:5173/?demo=1#/customer/booking`, avançar para o passo Percurso e escolher transfer ou tour. A rota é fictícia e não é usada como cálculo rodoviário real.
