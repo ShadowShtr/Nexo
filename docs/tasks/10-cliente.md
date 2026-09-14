@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## PUB-01 — Idioma inicial e perfil vindo do Instagram
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — entrada PT/EN e percurso demo implementados; deep links e publicação persistente pendentes
 
 **Dependências:** BAS-04, CAT-01, TOUR-01
 
@@ -14,11 +14,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Escolha de inglês traduz navegação e conteúdo publicado; deep link Instagram mantém motorista; nenhuma etapa regressa silenciosamente a português.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web/pages/CustomerSandbox.tsx` e `tests/browser/customer.spec.ts` cobrem entrada bilingue e sequência de teste. Perfil vindo de Instagram e publicação persistente continuam pendentes.
 
 ## PUB-02 — Seleção e formulário de reserva
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — fluxo route-first demo implementado; cotação server-side, persistência e pagamento pendentes
 
 **Dependências:** PUB-01, TOUR-02, PRC-02, CAL-03, CRM-01
 
@@ -28,7 +28,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Carro indisponível/capacidade insuficiente não continua; totais discriminados; voltar não perde campos nem mantém orçamento inválido; registo completo antes de confirmação.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web/pages/CustomerSandbox.tsx` mostra rota/mapa, preço, capacidade, motorista/carro, registo, revisão e pedido; `tests/browser/customer.spec.ts` valida conflitos, tour, total e sinal. Endpoints persistentes continuam pendentes.
 
 ## PUB-03 — Pagamento, consulta e reagendamento por link
 
