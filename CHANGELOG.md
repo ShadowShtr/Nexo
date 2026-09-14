@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.25 — 2026-09-14
+
+- Documentação do motorista atualizada com as guardas server-side de execução e saldo.
+
 ## 0.2.24 — 2026-09-14
 
 - Adaptador de rota rodoviária OSRM configurável no servidor para distância e duração reais.

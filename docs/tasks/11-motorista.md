@@ -28,4 +28,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Transições fora de ordem/por outro motorista falham no servidor; saldo não vira pago por iniciar viagem; override exige motivo; espera duplicada não cria duas linhas.
 
-**Evidência:** O sandbox aplica `transition` para confirmado → a caminho → no local → em viagem → concluído. Registo de espera, recebimento por motorista e ledger persistente ainda faltam.
+**Evidência:** O sandbox aplica `transition` para confirmado → a caminho → no local → em viagem → concluído; `src/application/booking-command.ts` restringe execução ao motorista atribuído e exige saldo registado antes de iniciar. Registo de espera, recebimento por motorista e ledger persistente ainda faltam.

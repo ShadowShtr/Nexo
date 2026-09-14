@@ -142,3 +142,7 @@ Extensão de schema Supabase criada pela CLI e aplicada numa base local limpa: j
 
 Adaptador OSRM server-side adicionado para distância e duração de estrada. O adaptador exige coordenadas, HTTPS remoto e rota devolvida pelo provedor; arredonda para cima e não inventa fallback quando falha. Resultado: 85 testes Node aprovados; typecheck, build e documentação repetidos.
 
+## Incremento 0.2.25 — 14/09/2026
+
+Documentação do motorista alinhada com as guardas do caso de uso server-side. Validação documental repetida sem alteração de comportamento.
+
