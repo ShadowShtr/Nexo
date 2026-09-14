@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## CRM-01 — Cadastro e pesquisa de clientes
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — CRM demo com cadastro, validação de NIF e pesquisa
 
 **Dependências:** SEC-01, BAS-03
 
@@ -14,11 +14,11 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Partner não lista CRM; não fundir pessoas só por telefone automaticamente; NIF de turista não recebe validação portuguesa arbitrária; entrada inválida mostra erro localizado.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/contracts/customer.ts` valida nome, email, telefone e NIF de 9 dígitos; `CustomerCrmSandbox.tsx` permite cadastrar e pesquisar clientes. Testes Node e Playwright cobrem os limites. Persistência, deduplicação e ligação ao pedido do servidor continuam pendentes.
 
 ## CRM-02 — Histórico, moradas e notas internas
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — notas internas demonstradas em memória
 
 **Dependências:** CRM-01, BKG-01
 
@@ -28,4 +28,4 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Repetir viagem não reutiliza preço/slot antigo sem cotação; nota interna nunca vai para cliente; ações de edição ficam auditadas.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** O CRM demo mostra notas internas por cliente e deixa o modelo pronto para histórico/moradas. Falta persistência, histórico de reservas, preferências e controlo de acesso detalhado.

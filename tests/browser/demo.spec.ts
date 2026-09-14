@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 
 test('test data can be searched, translated and removed', async ({ page }) => {
   await page.setViewportSize({width:390,height:844});
-  await page.goto('/?demo=1#/owner/customers');
-  await expect(page.locator('.pm-demo-record')).toHaveCount(6);
-  await page.getByRole('searchbox').fill('Ana');
+  await page.goto('/?demo=1#/owner/settlements');
+  await expect(page.locator('.pm-demo-record')).toHaveCount(3);
+  await page.getByRole('searchbox').fill('Sofia');
   await expect(page.locator('.pm-demo-record')).toHaveCount(1);
   await page.getByLabel('Idioma',{exact:true}).selectOption('en');
-  await expect(page.getByText('Test customer',{exact:true})).toBeVisible();
+  await expect(page.getByText('Example X amount, not agreed',{exact:true})).toBeVisible();
   for (const route of ['owner/home','owner/bookings','owner/customers','owner/tours','owner/finance','driver/services','customer/discover']) {
     await page.goto(`/?demo=1&lang=en#/${route}`);
     await expect(page.locator('.pm-demo-record').first()).toBeVisible();
@@ -105,4 +105,19 @@ test('driver advances a service through execution states and opens Waze', async 
   }
   await expect(card.getByText('Concluído', { exact: true })).toBeVisible();
   await expect(card.getByRole('button')).toHaveCount(0);
+});
+
+test('owner CRM adds and searches a customer with NIF', async ({ page }) => {
+  await page.goto('/?demo=1#/owner/customers');
+  await page.getByRole('button', { name: 'Novo cliente', exact: true }).click();
+  const form = page.getByRole('form', { name: 'Novo cliente' });
+  await form.getByLabel('Nome completo').fill('Rita CRM');
+  await form.getByLabel('Email').fill('rita@example.invalid');
+  await form.getByLabel('Telefone').fill('+351 910 000 099');
+  await form.getByLabel('NIF').fill('987654321');
+  await form.getByRole('button', { name: 'Guardar cliente', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Cliente adicionado');
+  await page.getByRole('searchbox').fill('Rita');
+  const card = page.locator('.pm-demo-record').filter({ hasText: 'Rita CRM' });
+  await expect(card).toContainText('987654321');
 });

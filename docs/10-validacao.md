@@ -106,3 +106,7 @@ Marcação manual demo adicionada ao proprietário com origem WhatsApp/telefone,
 
 Vista de serviços do motorista adicionada com deep link Waze e transições de execução até concluído. Build e 5 testes Playwright de demonstração aprovados.
 
+## Incremento 0.2.16 — 14/09/2026
+
+CRM demo adicionado com validação de dados fiscais e pesquisa. Build, 47 testes Node e 6 testes Playwright de demonstração aprovados.
+

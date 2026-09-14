@@ -12,6 +12,7 @@ import { SessionControl } from './auth/SessionControl';
 import { CatalogSandbox } from './pages/CatalogSandbox';
 import { BookingSandbox } from './pages/BookingSandbox';
 import { DriverServicesSandbox } from './pages/DriverServicesSandbox';
+import { CustomerCrmSandbox } from './pages/CustomerCrmSandbox';
 const CustomerSandbox = lazy(() => import('./pages/CustomerSandbox'));
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
@@ -60,6 +61,7 @@ export function App() {
       : demo && area === 'customer' ? <Suspense fallback={<p>…</p>}><CustomerSandbox key={page} page={page}/></Suspense>
       : demo && area === 'owner' && (page === 'drivers' || page === 'vehicles') ? <CatalogSandbox page={page}/>
       : demo && area === 'owner' && page === 'bookings' ? <BookingSandbox/>
+      : demo && area === 'owner' && page === 'customers' ? <CustomerCrmSandbox/>
       : demo && area === 'driver' && page === 'services' ? <DriverServicesSandbox/>
       : demo && !['calendar', 'availability', 'settings'].includes(page) ? <DemoPage key={area + page} page={page} area={area}/>
       : area === 'customer' ? <CustomerPage page={page}/>

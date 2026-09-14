@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.16 — 2026-09-14
+
+- CRM demo do proprietário com nome, email, telefone, NIF e notas internas.
+- Pesquisa imediata e validação de NIF de nove dígitos.
+
 ## 0.2.15 — 2026-09-14
 
 - Vista do motorista com serviços atribuídos, cliente, rota e Waze.
