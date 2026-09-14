@@ -52,12 +52,13 @@ function labelledRoute(route: DemoRoute, origin: string, destination: string): D
 export default function CustomerSandbox({ page }: { page: string }) {
   const { i18n } = useTranslation();
   const say = (pt: string, en: string) => i18n.language === 'en' ? en : pt;
+  const initialTour = new URLSearchParams(window.location.search).get('tour') === '1';
   const money = (n: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(n / 100);
   const [step, setStep] = useState(1);
-  const [service, setService] = useState<ServiceKind>('transfer');
+  const [service, setService] = useState<ServiceKind>(initialTour ? 'tour' : 'transfer');
   const [route, setRoute] = useState(0);
-  const [origin, setOrigin] = useState('Aeroporto de Lisboa');
-  const [destination, setDestination] = useState('Cascais');
+  const [origin, setOrigin] = useState(initialTour ? 'Lisboa' : 'Aeroporto de Lisboa');
+  const [destination, setDestination] = useState(initialTour ? 'Sintra' : 'Cascais');
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
   const [driver, setDriver] = useState(0);
   const [car, setCar] = useState(0);

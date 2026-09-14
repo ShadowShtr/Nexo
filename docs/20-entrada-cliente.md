@@ -4,6 +4,8 @@ Pedido de 14/09/2026. Estado: direção aplicada no fluxo demo; localização, r
 
 ## Sequência
 
+Antes do formulário, a tela **Descobrir** funciona como catálogo visual: pesquisa “Para onde?”, opção de horário, categorias de tours e um destaque Lisboa–Sintra com imagem. O destaque e cada categoria conduzem ao fluxo abaixo, já com o serviço tour selecionado.
+
 1. **Para onde vai?** Entrada com PT/EN acessível, destino como ação principal e mapa. Origem sugerida pela localização atual após autorização; confirmar endereço/pino, permitindo editar sempre. Sem autorização, precisão suficiente ou localização disponível, preencher a origem manualmente. Não pedir localização repetidamente nem tratar a posição aproximada como recolha confirmada.
 2. **Percurso e horário.** Confirmar origem/destino, data/hora e passageiros; permitir paragens e espera. Estes dados são necessários antes de filtrar motoristas/carros por disponibilidade, capacidade e antecedência. Viagem no próprio dia continua dependente dessas regras.
 3. **Distância e estimativa.** Consultar distância e duração rodoviárias reais entre os pontos ordenados. Mostrar km e estimativa calculada com a tarifa publicada pelo proprietário. Enquanto não houver rota válida, mostrar erro/repetição, nunca zero euros ou distância em linha reta como cotação rodoviária.

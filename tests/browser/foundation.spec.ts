@@ -14,7 +14,7 @@ test('preview navigation, English and mobile layout across all areas', async ({ 
     await page.setViewportSize({ width, height: 900 });
     for (const route of ['owner/home', 'owner/calendar', 'owner/bookings', 'owner/customers', 'owner/drivers', 'owner/vehicles', 'owner/tours', 'owner/finance', 'owner/settlements', 'owner/settings', 'owner/more', 'driver/services', 'driver/availability', 'driver/earnings', 'driver/profile', 'customer/discover', 'customer/booking', 'customer/lookup']) {
       await page.goto(`/?demo=1&lang=en#/${route}`);
-      await expect(page.locator('h1')).toBeVisible();
+      await expect(page.locator('h1').first()).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `${route} at ${width}`).toBeTruthy();
     }
   }

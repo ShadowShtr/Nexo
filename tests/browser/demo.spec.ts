@@ -11,7 +11,8 @@ test('test data can be searched, translated and removed', async ({ page }) => {
   for (const route of ['owner/home','owner/bookings','owner/customers','owner/tours','owner/finance','driver/services','customer/discover']) {
     await page.goto(`/?demo=1&lang=en#/${route}`);
     if (route === 'customer/discover') {
-      await expect(page.getByRole('heading', { name: 'Where are you going?', exact: true })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Choose your adventure.', exact: true })).toBeVisible();
+      await expect(page.locator('.pm-client-tour-promo img')).toBeVisible();
     } else {
       await expect(page.locator('.pm-demo-record').first()).toBeVisible();
     }

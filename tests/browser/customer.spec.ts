@@ -4,6 +4,20 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', route => route.abort());
 });
 
+test('customer discovery presents tour categories and a Lisbon Sintra promotion', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await expect(page.getByRole('heading', { name: 'Escolhe a tua aventura.', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Pesquisar um tour' })).toBeVisible();
+  await expect(page.locator('.pm-client-category')).toHaveCount(4);
+  await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
+  await expect(page.locator('.pm-client-tour-promo img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
+  await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
+  await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
+  await expect(page).toHaveURL(/#\/customer\/booking$/);
+  await expect(page.getByLabel('Serviço', { exact: true })).toHaveValue('tour');
+});
+
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/booking');

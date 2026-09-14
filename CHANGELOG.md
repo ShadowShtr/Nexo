@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.30 — 2026-09-14
+
+- UI-02/PUB-01: descoberta do cliente redesenhada no padrão Glovo indicado: barra “Para onde?”, seletor “Mais tarde”, categorias de tours em quadrados e navegação inferior Início/Próximas viagens/Conta.
+- TOUR-02: destaque Lisboa → Sintra com imagem local, duração de dois dias e chamada para abrir o fluxo de reserva; o asset pode ser substituído pelos 3D finais.
+- 16 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.29 — 2026-09-14
 
 - PUB-01/02: fluxo do cliente começa pela origem/destino, sugere localização atual com fallback editável, apresenta mapa, distância e duração e permite escolher serviço, data, passageiros e espera.

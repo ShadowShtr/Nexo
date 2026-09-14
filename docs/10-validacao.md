@@ -158,3 +158,7 @@ Cartões de seleção, badges de estado, textareas e grupos de associação pass
 
 O percurso público passou a começar por origem e destino, com sugestão de localização atual e fallback editável, mapa de pré-visualização, distância/duração, escolha posterior de motorista e carro, registo completo, revisão e divisão 25/75 do valor. O pedido permanece pendente de aceite antes do pagamento; consulta, reagendamento e cancelamento continuam demonstráveis em memória. Resultado: 85 testes Node, 15 testes Playwright, build TypeScript/Vite e validação documental aprovados. Geolocalização, cálculo rodoviário e pagamento reais continuam dependentes de serviços de produção.
 
+## Incremento 0.2.30 — 14/09/2026
+
+A descoberta do cliente passou a usar a composição Glovo solicitada: pesquisa no topo, botão de horário, quatro categorias de tours e promoção Lisboa–Sintra com imagem local e navegação inferior. O clique abre a reserva já no serviço tour. Resultado: 85 testes Node, 16 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
