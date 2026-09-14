@@ -83,3 +83,15 @@ test('catalog demo adds and disables drivers and vehicles with passenger capacit
   await vehicleCard.getByLabel('Sofia Martins').check();
   await expect(vehicleCard).toContainText('Sofia Martins');
 });
+
+test('owner can create a manual WhatsApp booking after schedule validation', async ({ page }) => {
+  await page.goto('/?demo=1#/owner/bookings');
+  await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
+  const form = page.getByRole('form', { name: 'Marcação manual' });
+  await form.getByLabel('Cliente').fill('João WhatsApp');
+  await form.getByLabel('Data e hora').fill('2026-09-14T10:00');
+  await form.getByRole('button', { name: 'Guardar marcação', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Marcação manual criada');
+  await expect(page.getByText('João WhatsApp', { exact: true })).toBeVisible();
+  await expect(page.locator('.pm-demo-record').filter({ hasText: 'João WhatsApp' })).toContainText('WhatsApp');
+});

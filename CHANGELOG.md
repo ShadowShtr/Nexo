@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.14 — 2026-09-14
+
+- Aba de reservas demo permite marcação manual originada por WhatsApp/telefone.
+- A marcação escolhe cliente, motorista, veículo, percurso e passageiros, calcula o orçamento e bloqueia conflitos de agenda.
+
 ## 0.2.13 — 2026-09-14
 
 - Pedido demo permite reagendamento de uma hora dentro da janela de 24 horas.

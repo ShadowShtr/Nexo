@@ -98,3 +98,7 @@ Simulador de preço local adicionado às configurações. O teste de interface c
 
 O fluxo do cliente consulta o código, propõe reagendamento de uma hora, verifica disponibilidade e mantém o estado atualizado antes do cancelamento. Build, 46 testes Node e 3 testes Playwright do cliente aprovados.
 
+## Incremento 0.2.14 — 14/09/2026
+
+Marcação manual demo adicionada ao proprietário com origem WhatsApp/telefone, seleção de recursos, mapa, preço e verificação de conflitos. Build e 4 testes Playwright de demonstração aprovados.
+

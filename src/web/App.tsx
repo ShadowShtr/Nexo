@@ -10,6 +10,7 @@ import { TourSimulator } from './pages/TourSimulator';
 import { AuthGate } from './auth/AuthGate';
 import { SessionControl } from './auth/SessionControl';
 import { CatalogSandbox } from './pages/CatalogSandbox';
+import { BookingSandbox } from './pages/BookingSandbox';
 const CustomerSandbox = lazy(() => import('./pages/CustomerSandbox'));
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
@@ -57,6 +58,7 @@ export function App() {
       {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span>{t(p)}</span><ChevronRight size={18}/></a>)}</div>
       : demo && area === 'customer' ? <Suspense fallback={<p>…</p>}><CustomerSandbox key={page} page={page}/></Suspense>
       : demo && area === 'owner' && (page === 'drivers' || page === 'vehicles') ? <CatalogSandbox page={page}/>
+      : demo && area === 'owner' && page === 'bookings' ? <BookingSandbox/>
       : demo && !['calendar', 'availability', 'settings'].includes(page) ? <DemoPage key={area + page} page={page} area={area}/>
       : area === 'customer' ? <CustomerPage page={page}/>
       : page === 'home' ? <Home area={area}/>

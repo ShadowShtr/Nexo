@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BKG-01 — Criar reserva manual e pedido público pelo mesmo caso de uso
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — marcação manual demo com validação de capacidade, horário e conflito
 
 **Dependências:** CRM-01, PRC-02, CAL-03
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Manual não ignora capacidade/conflito/antecedência; repetir comando não cria duas reservas; override owner fica auditado; rascunho não envia confirmação.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web/pages/BookingSandbox.tsx` permite origem WhatsApp/telefone, cliente, motorista, carro, percurso, data, passageiros e orçamento; `checkSchedule` bloqueia conflitos. Teste Playwright cobre criação manual. Persistência, dedupe, auditoria e integração com o caso de uso do servidor continuam pendentes.
 
 ## BKG-02 — Atribuição ao parceiro e estados da reserva
 
