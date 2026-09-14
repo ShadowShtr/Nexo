@@ -98,6 +98,20 @@ function placeMatches(place: { title: string; detail: string }, query: string) {
   return tokens.every(token => haystack.includes(token));
 }
 
+function geocoderQueries(query: string) {
+  const compact = query.replace(/\s+/g, ' ').trim();
+  const tokens = compact.split(' ').filter(Boolean);
+  const variants = [compact];
+  // Pessoas costumam acrescentar a localidade no fim (por exemplo,
+  // “rua ... Sintra Carregado”). Se a frase completa não devolver nada,
+  // procurar também o núcleo da morada evita perder a rua por excesso de
+  // contexto.
+  for (let index = tokens.length - 1; index > 0 && variants.length < 6; index -= 1) {
+    variants.push(tokens.filter((_, tokenIndex) => tokenIndex !== index).join(' '));
+  }
+  return [...new Set(variants)].filter(value => value.length >= 3);
+}
+
 function coordinatesFor(value: string, resolved: readonly GeocodedPlace[] = []) {
   const normalized = normalizePlace(value);
   const remote = resolved.find(place => normalizePlace(place.title) === normalized);
@@ -246,19 +260,67 @@ export default function CustomerDiscoverSandbox() {
       setGeocoderState('loading');
       try {
         const endpoint = import.meta.env.VITE_GEOCODER_URL || 'https://nominatim.openstreetmap.org/search';
-        const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${query}, Portugal` });
-        const response = await fetch(`${endpoint}?${params.toString()}`, { headers: { Accept: 'application/json' }, signal: controller.signal });
-        if (!response.ok) throw new Error(`geocoder ${response.status}`);
-        const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string }>;
-        const next = payload.flatMap(item => {
-          const latitude = Number(item.lat);
-          const longitude = Number(item.lon);
-          if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
-          const title = item.name?.trim() || item.display_name.split(',')[0]?.trim() || query;
-          const detail = item.display_name.replace(`${title},`, '').trim() || item.display_name;
-          return [{ title, detail, coordinates: [latitude, longitude] as const }];
-        });
-        setRemoteSuggestions(next);
+        const request = async (url: string) => {
+          const requestController = new AbortController();
+          let timedOut = false;
+          const relayAbort = () => requestController.abort();
+          controller.signal.addEventListener('abort', relayAbort, { once: true });
+          const timeout = window.setTimeout(() => { timedOut = true; requestController.abort(); }, 2500);
+          try {
+            return await fetch(url, { headers: { Accept: 'application/json' }, signal: requestController.signal });
+          } catch (error) {
+            // Um pedido lento não pode bloquear as variantes seguintes nem o
+            // segundo provedor. O cancelamento do efeito continua a propagar.
+            if (timedOut) return null;
+            throw error;
+          } finally {
+            window.clearTimeout(timeout);
+            controller.signal.removeEventListener('abort', relayAbort);
+          }
+        };
+        const originalTokens = normalizePlace(query).split(/\s+/).filter(Boolean);
+        const next: Array<{ place: GeocodedPlace; score: number }> = [];
+        for (const candidate of geocoderQueries(query)) {
+          const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${candidate}, Portugal` });
+          const response = await request(`${endpoint}?${params.toString()}`);
+          if (!response?.ok) continue;
+          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string }>;
+          next.push(...payload.flatMap(item => {
+            const latitude = Number(item.lat);
+            const longitude = Number(item.lon);
+            if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
+            const title = item.name?.trim() || item.display_name.split(',')[0]?.trim() || candidate;
+            const detail = item.display_name.replace(`${title},`, '').trim() || item.display_name;
+            const haystack = normalizePlace(`${title} ${detail}`);
+            const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
+            return [{ place: { title, detail, coordinates: [latitude, longitude] as const }, score }];
+          }));
+        }
+        // Photon é uma segunda fonte pública sem chave para o caso de o
+        // Nominatim não responder ou não reconhecer a frase completa.
+        if (!next.length) {
+          const fallback = import.meta.env.VITE_GEOCODER_FALLBACK_URL || 'https://photon.komoot.io/api/';
+          const params = new URLSearchParams({ q: `${query}, Portugal`, limit: '6', lang: i18n.language === 'en' ? 'en' : 'pt' });
+          const response = await request(`${fallback}?${params.toString()}`);
+          if (response?.ok) {
+            const payload = await response.json() as { features?: Array<{ properties?: { name?: string; street?: string; housenumber?: string; city?: string; state?: string; country?: string }; geometry?: { coordinates?: [number, number] } }> };
+            next.push(...(payload.features ?? []).flatMap(feature => {
+              const coordinates = feature.geometry?.coordinates;
+              const properties = feature.properties ?? {};
+              if (!coordinates || coordinates.length < 2 || !Number.isFinite(coordinates[0]) || !Number.isFinite(coordinates[1])) return [];
+              const title = properties.name?.trim() || [properties.street, properties.housenumber].filter(Boolean).join(' ') || query;
+              const detail = [properties.street && properties.name !== properties.street ? properties.street : '', properties.housenumber && properties.name !== properties.housenumber ? properties.housenumber : '', properties.city, properties.state, properties.country].filter(Boolean).join(', ') || 'Portugal';
+              const haystack = normalizePlace(`${title} ${detail}`);
+              const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
+              return [{ place: { title, detail, coordinates: [coordinates[1], coordinates[0]] as const }, score }];
+            }));
+          }
+        }
+        const unique = next
+          .sort((left, right) => right.score - left.score)
+          .map(item => item.place)
+          .filter((place, index, all) => index === all.findIndex(other => normalizePlace(`${other.title}|${other.detail}`) === normalizePlace(`${place.title}|${place.detail}`)));
+        setRemoteSuggestions(unique.slice(0, 6));
       } catch (error) {
         if ((error as { name?: string }).name !== 'AbortError') setRemoteSuggestions([]);
       } finally {

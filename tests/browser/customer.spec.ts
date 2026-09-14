@@ -96,6 +96,28 @@ test('customer planner geocodes an address outside the curated catalogue', async
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Rua do Alecrim, 10');
 });
 
+test('customer planner relaxes an over-specified street search', async ({ page }) => {
+  const queries: string[] = [];
+  await page.route('https://nominatim.openstreetmap.org/search**', async route => {
+    const query = new URL(route.request().url()).searchParams.get('q') ?? '';
+    queries.push(query);
+    if (!query.toLocaleLowerCase().includes('rua pedro carregado')) {
+      await route.fulfill({ contentType: 'application/json', body: '[]' });
+      return;
+    }
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify([{ name: 'Rua Pedro de Sintra', display_name: 'Rua Pedro de Sintra, Carregado e Cadafais, Alenquer, Lisboa, Portugal', lat: '39.0230', lon: '-8.9750' }]),
+    });
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra carregado');
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra Carregado e Cadafais/ })).toBeVisible();
+  expect(queries.some(query => query.toLocaleLowerCase().includes('rua pedro carregado'))).toBeTruthy();
+});
+
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');

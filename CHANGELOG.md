@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.40 — 2026-09-14
+
+- PUB-01: pesquisas longas de rua deixam de falhar quando o utilizador acrescenta a localidade; são tentadas variantes da frase e os resultados são ordenados pela correspondência com todos os termos.
+- PUB-01: cada pedido de geocoding tem timeout curto e fallback para Photon, mantendo a pesquisa utilizável quando o Nominatim está lento ou limitado.
+- 23 testes de navegador, 85 testes de domínio, build e validação documental aprovados.
+
 ## 0.2.39 — 2026-09-14
 
 - PUB-01: catálogo de sugestões ampliado com pontos turísticos de Sintra/Lisboa, centros comerciais, estações, aeroporto e moradas de teste.
