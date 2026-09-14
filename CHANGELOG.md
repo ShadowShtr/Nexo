@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.27 — 2026-09-14
+
+- Cartões selecionáveis, badges de estado, textareas e associações de catálogo uniformizados com os tokens visuais.
+
 ## 0.2.26 — 2026-09-14
 
 - Ajustes visuais responsivos para o calendário no telemóvel: controlos separados, botões legíveis e lista sem truncamento.

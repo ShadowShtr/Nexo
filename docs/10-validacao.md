@@ -150,3 +150,7 @@ Documentação do motorista alinhada com as guardas do caso de uso server-side. 
 
 A interface recebeu ajustes responsivos no calendário: os botões de vista passam a ocupar linhas legíveis no telemóvel, cada botão mantém alvo táctil e a lista evita truncamento. O fluxo do cliente ganhou um indicador visual de passo e os rótulos dos formulários foram uniformizados. Resultado: 15 testes Playwright, build TypeScript/Vite e validação documental aprovados.
 
+## Incremento 0.2.27 — 14/09/2026
+
+Cartões de seleção, badges de estado, textareas e grupos de associação passaram a reutilizar os tokens de superfície, foco, raio e sucesso. A validação mantém os 85 testes Node, os 15 testes Playwright, build TypeScript/Vite e verificação documental aprovados.
+
