@@ -1,6 +1,6 @@
 # Tarefas de implementação por aba
 
-Estado 0.2.6: BAS-01, BAS-02, BAS-03, BAS-05 e UI-01 concluídas; BAS-04, SEC-01, NAV-01 e UI-02 EM CURSO; outras tarefas PLANEADAS. Protótipos PUB/CAL têm evidência parcial, sem serem marcados concluídos.
+Estado 0.2.7: BAS-01..05, SEC-01 e UI-01 concluídas; NAV-01 e UI-02 EM CURSO; outras tarefas PLANEADAS. Protótipos PUB/CAL têm evidência parcial, sem serem marcados concluídos.
 
 Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, CONCLUÍDA (com evidência). Atualizar diretamente os ficheiros de tarefas; não regenerar por cima de alterações.
 
@@ -26,5 +26,5 @@ Estados permitidos: PLANEADA, EM CURSO, BLOQUEADA (com motivo), EM VALIDAÇÃO, 
 | Estabilização e lançamento | REL-01, REL-02 | [Abrir](17-release.md) |
 | Sistema visual e interface | UI-01, UI-02, UI-03 | [Abrir](18-interface.md) |
 
-Total: **48 tarefas**, sendo **5 concluídas**, **4 em curso** e **39 planeadas** na versão 0.2.6. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
+Total: **48 tarefas**, sendo **7 concluídas**, **2 em curso** e **39 planeadas** na versão 0.2.7. Ver [roadmap](../09-roadmap.md) para a ordem de implementação.
 

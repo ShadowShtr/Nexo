@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.7 — 2026-09-14
+
+- Áreas internas protegidas por sessão Supabase, membership ativa e papel; modo de demonstração explicitamente separado.
+- Login e conclusão de convite PT/EN, palavra-passe mínima e término de sessão local.
+- Convite privado de parceiro no servidor, perfil em rascunho e compensação se o provisionamento falhar.
+- 42 testes Node, 12 Auth/PostgREST/PostgreSQL, 10 Playwright e login visual real aprovados. BAS-04 e SEC-01 concluídas.
+
 ## 0.2.6 — 2026-09-14
 
 - Schema operacional versionado para veículos, associações, cotações imutáveis, reservas, alocações exclusivas, idempotência e outbox.

@@ -70,3 +70,7 @@ Mapa do percurso validado no fluxo móvel do cliente, em PT/EN, com rota de tran
 
 Migração operacional criada pela CLI Supabase 2.117.0 e aplicada duas vezes a partir de uma base local limpa. Onze testes reais aprovados: sete de identidade/RLS e quatro de schema operacional, incluindo duas transações concorrentes na mesma vaga, rollback integral e privilégios anónimos. `supabase db lint` não encontrou erros; advisors de segurança e desempenho não encontraram problemas no nível warn. Nenhum projeto remoto foi ligado ou alterado.
 
+## Incremento 0.2.7 — 14/09/2026
+
+Áreas internas protegidas por sessão e membership, login PT/EN, conclusão de convite e logout implementados. Convite privado do parceiro validado contra Auth local e compensado quando o perfil falha. Resultado: 42 testes Node, 12 testes Auth/PostgREST/PostgreSQL, 10 testes Playwright e teste visual real de login aprovados; build e TypeScript aprovados. Nenhuma secret key foi incluída no browser ou no repositório.
+

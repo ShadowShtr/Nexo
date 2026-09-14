@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## SEC-01 — Sessões e papéis do proprietário/parceiro
 
-**Estado:** EM CURSO — autenticação e RLS locais; convites e interface pendentes
+**Estado:** CONCLUÍDA — autenticação, RLS, convite privado e interface local validados
 
 **Dependências:** BAS-03, BAS-04
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Parceiro A recebe 403/404 ao tentar dados de B, CRM, tarifa e settings; testes incluem chamadas diretas à API e organização diferente.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** [Identidade local](../17-identidade-local.md), `AuthGate.tsx`, caso de uso/adaptador de convite e testes `access.test.mjs`, `operational.test.mjs`, `invite-driver.test.ts` e `test-auth-ui.mjs`. Doze testes Auth/PostgREST e login visual real aprovados em 14/09/2026.
 
 ## SEC-02 — Acesso do cliente à marcação por link seguro
 

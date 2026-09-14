@@ -48,7 +48,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## BAS-04 — Inicializar aplicação web e ferramentas de desenvolvimento
 
-**Estado:** EM CURSO — scaffold local validado; persistência e acesso pendentes
+**Estado:** CONCLUÍDA — scaffold, ferramentas, persistência e acesso local validados
 
 **Dependências:** BAS-02, BAS-05
 
@@ -58,7 +58,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Build e typecheck passam; navegação com estados vazios reais; scripts documentados; nenhum dashboard fictício apresentado como dado real.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/web`, workflow CI, lockfile, `tests/browser`, [base web](../15-base-web.md), [schema operacional](../19-schema-operacional.md) e [identidade local](../17-identidade-local.md). Build, TypeScript, PT/EN, estados vazios, acesso e navegadores validados até 0.2.7.
 
 
 ## BAS-05 — Pesquisar e selecionar componentes reutilizáveis

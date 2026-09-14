@@ -1,6 +1,6 @@
 {
   "name": "premium-mobility-foundation",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "private": true,
   "type": "module",
   "engines": {
@@ -19,6 +19,7 @@
     "test:db": "node --test tests/integration/*.test.ts",
     "db:test:start": "node scripts/start-test-db.mjs",
     "test:auth": "node --test tests/supabase/*.test.mjs",
+    "test:auth-ui": "node scripts/test-auth-ui.mjs",
     "supabase:start": "supabase start --exclude realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor"
   },
   "dependencies": {

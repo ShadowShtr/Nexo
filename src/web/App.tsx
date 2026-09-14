@@ -7,6 +7,8 @@ import { Empty, Header, Section, Shortcut } from '../ui/components/Primitives';
 import { SettingsPage } from './pages/SettingsPage';
 import { DemoPage } from './pages/DemoPage';
 import { TourSimulator } from './pages/TourSimulator';
+import { AuthGate } from './auth/AuthGate';
+import { SessionControl } from './auth/SessionControl';
 const CustomerSandbox = lazy(() => import('./pages/CustomerSandbox'));
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
@@ -48,8 +50,8 @@ export function App() {
   const primary: readonly Page[] = area === 'owner' ? ['home', 'calendar', 'bookings'] : area === 'driver' ? ['home', 'services', 'availability'] : pages;
   const link = (target: Page | 'more', mobile = false) => { const Icon = target === 'more' ? Ellipsis : icons[target]; const active = target === page || (target === 'more' && !primary.includes(page as Page)); return <a key={target} href={hrefFor(area, target)} className={`pm-nav-link ${active ? 'pm-active' : ''}`} aria-current={target === page ? 'page' : undefined}><Icon size={mobile ? 19 : 20} strokeWidth={1.7}/><span>{t(target)}</span></a>; };
   const now = new Intl.DateTimeFormat(i18n.language, { timeZone: 'Europe/Lisbon', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
-  return <div className="pm-theme pm-app"><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.6 · {t('preview')}</span></div></aside>
-    <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}<label className="pm-switch"><input type="checkbox" checked={demo} onChange={e => { setDemo(e.target.checked); const url = new URL(window.location.href); url.searchParams.set('demo', e.target.checked ? '1' : '0'); history.replaceState(null, '', url); }}/>{i18n.language === 'en' ? 'Test data' : 'Dados de teste'}</label></div>
+  return <AuthGate area={area} demo={demo}><div className="pm-theme pm-app"><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.7 · {t('preview')}</span></div></aside>
+    <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/><SessionControl demo={demo}/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}<label className="pm-switch"><input type="checkbox" checked={demo} onChange={e => { setDemo(e.target.checked); const url = new URL(window.location.href); url.searchParams.set('demo', e.target.checked ? '1' : '0'); history.replaceState(null, '', url); }}/>{i18n.language === 'en' ? 'Test data' : 'Dados de teste'}</label></div>
     <main id="main" tabIndex={-1} className="pm-page pm-safe-bottom"><Header eyebrow={page === 'home' ? now : t(area)} title={page === 'home' ? t('greeting') : t(page)} description={page === 'home' ? t('overview') : page === 'more' ? undefined : t(`${page}Body`)} action={<span className="pm-avatar" aria-hidden="true">{area === 'owner' ? 'P' : area === 'driver' ? 'M' : 'C'}</span>}/>
       {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span>{t(p)}</span><ChevronRight size={18}/></a>)}</div>
       : demo && area === 'customer' ? <Suspense fallback={<p>…</p>}><CustomerSandbox key={page} page={page}/></Suspense>
@@ -61,7 +63,7 @@ export function App() {
       : page === 'finance' || page === 'earnings' || page === 'settlements' ? <Finance settlement={page === 'settlements'}/>
       : <Collection key={page} page={page}/>}</main></div>
     <nav className="pm-bottom-nav" aria-label={t('daily')}>{primary.map(p => link(p, true))}{area !== 'customer' && link('more', true)}</nav>
-  </div>;
+  </div></AuthGate>;
 }
 
 

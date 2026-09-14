@@ -47,6 +47,10 @@ export const pt = {
   start: 'Explorar serviços', footer: 'Transporte particular. Gestão simples.', skip: 'Ir para o conteúdo',
   routePreview: 'Lisboa → Cascais', routeTour: 'Passeio em Lisboa', back: 'Voltar', chooseLanguage: 'Escolha o seu idioma',
   welcome: 'A sua próxima viagem começa aqui.', welcomeBody: 'Um motorista dedicado. O carro certo. Tudo ao seu ritmo.',
+  authChecking: 'A verificar acesso…', authSetupTitle: 'Ligue a conta da aplicação', authSetupBody: 'As áreas internas só abrem depois de configurar a ligação própria ao Supabase.',
+  authDenied: 'Área sem acesso', authDeniedBody: 'Esta conta não tem permissão ativa para esta área.', signOut: 'Terminar sessão',
+  signIn: 'Entrar', signInBody: 'Use a conta privada criada pelo proprietário.', signInFailed: 'Não foi possível entrar com estes dados.', email: 'Email', password: 'Palavra-passe',
+  completeInvite: 'Concluir convite', completeInviteBody: 'Defina uma palavra-passe com pelo menos 12 caracteres para ativar o seu acesso.', newPassword: 'Nova palavra-passe', confirmPassword: 'Confirmar palavra-passe', savePassword: 'Guardar palavra-passe', passwordMismatch: 'As palavras-passe devem coincidir e ter pelo menos 12 caracteres.', passwordUpdateFailed: 'Não foi possível guardar a palavra-passe.',
 };
 export const en: Record<keyof typeof pt, string> = {
   brand: 'Premium Mobility', workspace: 'Your management space', preview: 'Preview', previewNote: 'Foundation preview · no real bookings or payments',
@@ -81,6 +85,10 @@ export const en: Record<keyof typeof pt, string> = {
   extras: 'Additional passengers', reference: 'Booking code', lookupNote: 'Secure lookup will be available once bookings are confirmed.', start: 'Explore services',
   footer: 'Private transport. Simple management.', skip: 'Skip to content', routePreview: 'Lisbon → Cascais', routeTour: 'Lisbon sightseeing', back: 'Back',
   chooseLanguage: 'Choose your language', welcome: 'Your next journey starts here.', welcomeBody: 'A dedicated driver. The right vehicle. At your own pace.',
+  authChecking: 'Checking access…', authSetupTitle: 'Connect the application account', authSetupBody: 'Internal areas open only after configuring this application’s own Supabase connection.',
+  authDenied: 'Area unavailable', authDeniedBody: 'This account does not have active permission for this area.', signOut: 'Sign out',
+  signIn: 'Sign in', signInBody: 'Use the private account created by the owner.', signInFailed: 'Unable to sign in with these details.', email: 'Email', password: 'Password',
+  completeInvite: 'Complete invitation', completeInviteBody: 'Set a password of at least 12 characters to activate your access.', newPassword: 'New password', confirmPassword: 'Confirm password', savePassword: 'Save password', passwordMismatch: 'Passwords must match and contain at least 12 characters.', passwordUpdateFailed: 'Unable to save the password.',
 };
 const requested = new URLSearchParams(window.location.search).get('lang');
 void i18n.use(initReactI18next).init({ resources: { 'pt-PT': { translation: pt }, en: { translation: en } }, lng: requested === 'en' ? 'en' : 'pt-PT', fallbackLng: 'pt-PT', interpolation: { escapeValue: false } });

@@ -4,6 +4,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 import pg from 'pg';
+import { inviteDriver } from '../../src/application/invite-driver.ts';
+import { supabaseDriverInviteGateway } from '../../src/infrastructure/supabase/driver-invitations.ts';
 
 const status = JSON.parse(execFileSync(process.execPath,
   ['node_modules/supabase/dist/supabase.js', 'status', '-o', 'json'],
@@ -133,4 +135,20 @@ test('anonymous role has no operational table grants', async () => {
   const anon = publicClient();
   for (const table of ['vehicles','driver_vehicle_assignments','quote_snapshots','bookings','resource_allocations','request_commands','outbox_events'])
     assert.ok((await anon.from(table).select('*')).error, table);
+});
+
+test('owner invitation creates a private driver membership and draft profile', async () => {
+  const gateway = supabaseDriverInviteGateway(admin);
+  const email = `invited-${randomUUID()}@example.invalid`;
+  const result = await inviteDriver({userId:ids.owner,organizationId:ids.organization,role:'owner',active:true},{
+    email,displayName:'Parceiro Convidado',redirectTo:'http://127.0.0.1:5173',
+  },gateway);
+  try {
+    const membership = await db.query('select role from public.memberships where organization_id=$1 and user_id=$2',[ids.organization,result.userId]);
+    const profile = await db.query('select status,display_name from public.driver_profiles where organization_id=$1 and user_id=$2',[ids.organization,result.userId]);
+    assert.deepEqual(membership.rows,[{role:'driver'}]);
+    assert.deepEqual(profile.rows,[{status:'draft',display_name:'Parceiro Convidado'}]);
+  } finally {
+    await gateway.removeInvitedUser(result.userId);
+  }
 });

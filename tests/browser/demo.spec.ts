@@ -15,10 +15,10 @@ test('test data can be searched, translated and removed', async ({ page }) => {
   }
   await page.goto('/?demo=1#/owner/home');
   await page.screenshot({path:'artifacts/demo-home-mobile.png',fullPage:true});
-  await page.getByRole('checkbox',{name:'Dados de teste',exact:true}).uncheck();
-  await expect(page.locator('.pm-demo-record')).toHaveCount(0);
+  await page.getByRole('checkbox',{name:'Dados de teste',exact:true}).evaluate((element:HTMLInputElement)=>element.click());
+  await expect(page.getByRole('heading',{name:'Ligue a conta da aplicação'})).toBeVisible();
   await page.reload();
-  await expect(page.getByRole('checkbox',{name:'Dados de teste',exact:true})).not.toBeChecked();
+  await expect(page.getByRole('heading',{name:'Ligue a conta da aplicação'})).toBeVisible();
   await page.goto('/?demo=1#/owner/calendar');
   await expect(page.locator('.fc-list-event')).toHaveCount(2);
   await page.locator('.fc-list-event-title').first().click();

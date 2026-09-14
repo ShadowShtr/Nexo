@@ -4,6 +4,7 @@ import { CarFront, MapPin, UserRound } from 'lucide-react';
 import { Row, Section } from '../../ui/components/Primitives';
 import type { Area } from '../navigation';
 import { wazeHref } from '../demo-routes';
+import { TourSimulator } from './TourSimulator';
 
 const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
 const cars = [
@@ -53,5 +54,6 @@ export function DemoPage({ page, area }: { page: string; area: Area }) {
       <div className="pm-demo-grid">{filtered.map(record=><article className="pm-card pm-demo-record" key={record.title}><div className="pm-section-heading">{page === 'vehicles' ? <CarFront aria-hidden/> : ['drivers','customers','profile'].includes(page) ? <UserRound aria-hidden/> : <MapPin aria-hidden/>}<span className="pm-status" data-tone="neutral">TEST</span></div><h2>{record.title}</h2><p>{record.detail}</p><p className="pm-secondary">{record.meta}</p><Row label={label('Exemplo','Example')} value={record.value}/>{record.waze&&<a className="pm-button pm-button-primary" href={record.waze} target="_blank" rel="noreferrer">{label('Abrir destino no Waze','Open destination in Waze')}</a>}</article>)}</div>
       {!filtered.length && <p role="status">{label('Sem resultados.','No results.')}</p>}
     </Section>
+    {page === 'tours' && <TourSimulator/>}
   </>;
 }

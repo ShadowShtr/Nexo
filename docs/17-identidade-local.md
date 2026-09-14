@@ -1,4 +1,4 @@
-# 17 — Identidade e acesso local (0.2.2)
+# 17 — Identidade e acesso local (0.2.2–0.2.7)
 
 ## Isolamento
 
@@ -33,11 +33,15 @@ O primeiro arranque descarrega imagens Docker e aplica migrações. Arranques po
 
 Para ensaiar a migração numa base local descartável e sem dados a conservar: `npx.cmd --no-install supabase db reset --local --yes`, seguido de `npm.cmd run test:auth`. Reset apaga os dados desse projeto local; não é um procedimento de atualização normal nem um restauro de backup de produção. Para parar apenas este projeto preservando volumes: `npx.cmd --no-install supabase stop --project-id premium-mobility`.
 
-## Limites e próxima parte
+## Conclusão 0.2.7
 
-BAS-03 e SEC-01 continuam EM CURSO. Faltam migrações operacionais de recursos/reservas/alocações/outbox e auditoria, restauro de backup com dados, convites, recuperação de conta, interface de login PT/EN e ligação das abas aos casos de uso. A pré-visualização existente continua sem dados operacionais e sem autenticação; o seletor de papéis é apenas visual.
+As áreas de proprietário e motorista agora passam por `AuthGate`: sem configuração mostram um estado seguro; com Supabase próprio exigem email/password, membership ativa e papel autorizado. O modo explícito `?demo=1` continua livre para demonstrações; a área do cliente permanece pública. O proprietário pode abrir a vista de motorista e o parceiro não pode abrir a área do proprietário. Há término de sessão local.
 
-Os testes de acesso fazem chamadas reais a Auth e PostgREST. Consultas sem autorização retornam listas vazias por RLS; escritas e acesso anónimo retornam erro. Um futuro endpoint de detalhe deverá mapear ausência para 404 sem revelar existência. Não marcar SEC-01 concluída antes desses endpoints.
+O convite é um caso de uso restrito a owner. O adaptador usa `inviteUserByEmail` apenas num servidor com secret key, cria membership/perfil em rascunho e remove o utilizador convidado se o provisionamento falhar. O redirect recebe `invite=1`, e a interface permite definir uma palavra-passe de pelo menos 12 caracteres. A secret key nunca entra no bundle web.
+
+Doze testes reais Auth/PostgREST/PostgreSQL e um teste visual com Supabase local validam login do proprietário, isolamento do parceiro, área do motorista, logout, convite e revogação. BAS-03, BAS-04 e SEC-01 ficam concluídas. Recuperação de palavra-passe, MFA e ambiente remoto pertencem à estabilização futura.
+
+Os testes de acesso fazem chamadas reais a Auth e PostgREST. Consultas sem autorização retornam listas vazias por RLS; escritas e acesso anónimo retornam erro. Um futuro endpoint de detalhe deverá mapear ausência para 404 sem revelar existência.
 
 Fontes técnicas: [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [verificação de utilizador](https://supabase.com/docs/reference/javascript/auth-getuser) e [login](https://supabase.com/docs/reference/javascript/auth-signinwithpassword), consultadas em 11/09/2026.
 

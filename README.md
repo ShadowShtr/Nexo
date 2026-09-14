@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.6
+# Plataforma de transporte premium — base web 0.2.7
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -12,7 +12,7 @@ Base para um proprietário/motorista que gere a operação e atribui serviços a
 
 ## O que ainda não existe
 
-API operacional ligada à interface, login visual, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface é uma pré-visualização com estados vazios e exemplos opcionais. As migrações e garantias transacionais já foram validadas apenas no Supabase local; nenhum projeto Supabase remoto foi ligado.
+API operacional ligada às abas, notificações, cálculo rodoviário real, MB WAY e reembolsos reais. A interface autenticada e as migrações foram validadas apenas no Supabase local; nenhum projeto Supabase remoto foi ligado.
 
 ## Executar
 
@@ -66,7 +66,7 @@ Cada tarefa tem dependências, trabalho, critérios de aceitação e evidência 
 
 BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). BAS-03 concluiu as migrações operacionais e o restauro local; ver [evidência do schema](docs/19-schema-operacional.md). O próximo bloco é concluir SEC-01 e ligar a interface autenticada.
 
-Incremento 0.2.2: [identidade e permissões locais](docs/17-identidade-local.md). BAS-03 e SEC-01 em curso; nenhuma ligação à MO Limpezas ou publicação remota.
+Identidade, permissões, convite privado e login local: [evidência](docs/17-identidade-local.md). Nenhuma ligação à MO Limpezas ou a outro Supabase.
 
 Agenda interativa de teste: abrir http://127.0.0.1:5173/?demo=1#/owner/calendar. [Roteiro](docs/18-teste-calendario.md).
 
