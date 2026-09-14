@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.45 — 2026-09-14
+
+- PUB-01: ao escrever `lote` ou `n.º` sem valor, a morada mostra a lista de números conhecidos do arruamento.
+- PUB-01: números fora da lista não são inventados; resultados remotos são filtrados pela rua pesquisada.
+- 85 testes de domínio, 26 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.44 — 2026-09-14
 
 - PUB-01: sugestões locais toleram pequenos erros de escrita, como `sinta` → `Sintra`, sem perder o número do lote.

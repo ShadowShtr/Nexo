@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.45 — 14/09/2026
+
+Quando o utilizador escreve apenas o marcador `lote` ou `n.º`, a interface apresenta os números conhecidos do arruamento e identifica a lista. Ao escrever um valor não cadastrado, mantém apenas opções existentes e não fabrica uma morada. Resultados remotos são filtrados pelos termos da rua. Resultado: 85 testes Node, 26 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.44 — 14/09/2026
 
 Sugestões de ruas passam a tolerar erros de edição de uma ou duas letras em termos relevantes e mantêm os marcadores de lote/número. Para `rua pedro sinta lote 84`, a opção corrigida é `Rua Pedro de Sintra, n.º 84`, com a coordenada do arruamento conhecido. Resultado: 85 testes Node, 25 testes Playwright, build TypeScript/Vite e validação documental aprovados.

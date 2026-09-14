@@ -49,6 +49,13 @@ const recentPlaces = [
 
 type GeocodedPlace = { title: string; detail: string; coordinates: readonly [number, number] };
 type Suggestion = { title: string; detail: string; coordinates?: readonly [number, number] };
+type AddressUnit = { value: string; marker: 'number' | 'lot' };
+type AddressUnitPrefix = { marker: AddressUnit['marker'] };
+
+const knownStreetUnits: ReadonlyArray<{ aliases: string[]; street: string; detail: string; coordinates: readonly [number, number]; units: string[] }> = [
+  { aliases: ['rua pedro de sintra', 'rua pedro sintra'], street: 'Rua Pedro de Sintra', detail: 'Carregado e Cadafais, Alenquer', coordinates: [39.0230, -8.9750], units: ['40', '84'] },
+  { aliases: ['avenida cabo da boa esperanca', 'avenida cabo da boa esperanca l65'], street: 'Avenida Cabo da Boa Esperança', detail: 'Carregado, Alenquer', coordinates: [39.0218561, -8.9748176], units: ['65'] },
+];
 
 const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly [number, number] }> = [
   { aliases: ['lisboa', 'centro de lisboa', 'a minha localizacao'], coordinates: [38.7223, -9.1393] },
@@ -96,11 +103,13 @@ function normalizePlace(value: string) {
 
 const addressTypeWords = new Set(['rua', 'r', 'avenida', 'av', 'estrada', 'travessa', 'alameda', 'rotunda', 'largo', 'praia']);
 const addressConnectorWords = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+const addressUnitWords = /(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)/i;
 
 function addressSearchTerms(value: string) {
   const parsed = /\s/.test(value) ? value : runningAddressQuery(value);
   const withoutUnit = normalizePlace(parsed)
     .replace(/(?:^|[\s,])(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*\d{1,5}[a-z]?(?=\s|$)/gi, ' ')
+    .replace(new RegExp(`(?:^|[\\s,])${addressUnitWords.source}(?=\\s*$)`, 'i'), ' ')
     .replace(/\s+/g, ' ')
     .trim();
   const tokens = withoutUnit.split(/\s+/).filter(token => token && !/^\d/.test(token));
@@ -135,6 +144,21 @@ function similarAddressTerm(value: string, term: string) {
   return normalizePlace(value).split(/[^a-z0-9]+/).some(word => word.length >= 4 && editDistance(word, term) <= maxDistance);
 }
 
+function knownUnitSuggestions(query: string): Suggestion[] {
+  const street = knownStreetForQuery(query);
+  if (!street) return [];
+  const requestedUnit = addressUnit(query);
+  if (!requestedUnit && !addressUnitPrefix(query)) return [];
+  const values = requestedUnit
+    ? street.units.filter(value => value.toLocaleLowerCase() === requestedUnit.value.toLocaleLowerCase())
+    : street.units;
+  return (values.length ? values : street.units).map(value => ({
+    title: `${street.street}, n.º ${value}`,
+    detail: `${street.detail} · Número reconhecido no mapa`,
+    coordinates: street.coordinates,
+  }));
+}
+
 function geocoderRelevance(query: string, title: string, detail: string, requestedUnit?: AddressUnit, rawTitle = title) {
   const terms = addressSearchTerms(query);
   const matchedTerms = terms.filter(term => similarAddressTerm(`${title} ${detail}`, term)).length;
@@ -155,15 +179,31 @@ function placeMatches(place: { title: string; detail: string }, query: string) {
   return compactQuery.length >= 5 && haystack.replace(/[^a-z0-9]/g, '').includes(compactQuery);
 }
 
-type AddressUnit = { value: string; marker: 'number' | 'lot' };
-
 function addressUnit(value: string): AddressUnit | undefined {
-  const spacedMatch = value.match(/(?:^|[\s,])(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*(\d{1,5}[A-Za-z]?)(?=\s|$)/i);
-  const compact = normalizePlace(value).replace(/[^a-z0-9]/g, '');
+  const parsed = /\s/.test(value) ? value : runningAddressQuery(value);
+  const spacedMatch = parsed.match(/(?:^|[\s,])(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*(\d{1,5}[A-Za-z]?)(?=\s|$)/i);
+  const compact = normalizePlace(parsed).replace(/[^a-z0-9]/g, '');
   const compactMatch = compact.match(/(?:loteamento|lote|lt|numero|num|n)(\d{1,5}[a-z]?)$/i);
   const match = spacedMatch ?? compactMatch;
-  if (!match) return undefined;
+  if (!match) {
+    const bareNumber = parsed.match(/(?:^|[\s,])(\d{1,5}[A-Za-z]?)(?=\s*$)/i);
+    const beforeNumber = bareNumber ? parsed.slice(0, bareNumber.index) : '';
+    if (!bareNumber || !/\b(?:rua|r|avenida|av|estrada|travessa|alameda|rotunda|largo|praia)\b/i.test(beforeNumber)) return undefined;
+    return { value: bareNumber[1], marker: 'number' };
+  }
   return { value: match[1], marker: /(?:lt|lote|loteamento)/i.test(match[0]) ? 'lot' : 'number' };
+}
+
+function addressUnitPrefix(value: string): AddressUnitPrefix | undefined {
+  const parsed = /\s/.test(value) ? value : runningAddressQuery(value);
+  const match = normalizePlace(parsed).match(new RegExp(`(?:^|[\\s,])(${addressUnitWords.source})(?=\\s*$)`, 'i'));
+  if (!match) return undefined;
+  return { marker: /(?:lt|lote|loteamento)/i.test(match[1]) ? 'lot' : 'number' };
+}
+
+function knownStreetForQuery(query: string) {
+  const terms = addressSearchTerms(query);
+  return knownStreetUnits.find(street => terms.length > 0 && terms.every(term => street.aliases.some(alias => similarAddressTerm(alias, term))));
 }
 
 function titleWithUnit(title: string, unit?: AddressUnit) {
@@ -174,8 +214,8 @@ function titleWithUnit(title: string, unit?: AddressUnit) {
 
 function runningAddressQuery(value: string) {
   let compact = normalizePlace(value).replace(/[^a-z0-9]/g, '');
-  const unitMatch = compact.match(/(loteamento|lote|lt|numero|num|n)(\d{1,5}[a-z]?)$/i);
-  const unitSuffix = unitMatch ? ` ${unitMatch[1]} ${unitMatch[2]}` : '';
+  const unitMatch = compact.match(/(loteamento|lote|lt|numero|num|n)(\d{1,5}[a-z]?)?$/i);
+  const unitSuffix = unitMatch?.[2] ? ` ${unitMatch[1]} ${unitMatch[2]}` : unitMatch && /(?:loteamento|lote|lt|numero|num)/i.test(unitMatch[1]) ? ` ${unitMatch[1]}` : '';
   if (unitMatch) compact = compact.slice(0, unitMatch.index);
   const prefixes = ['avenida', 'estrada', 'travessa', 'alameda', 'rotunda', 'praia', 'largo', 'rua', 'av', 'r'];
   const prefix = prefixes.find(candidate => compact.startsWith(candidate) && compact.length > candidate.length);
@@ -194,6 +234,7 @@ function geocoderQueries(query: string) {
   const clean = (value: string) => value
     .replace(/[;,]+/g, ' ')
     .replace(/\b(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*(?=\d)/gi, '')
+    .replace(new RegExp(`\b${addressUnitWords.source}\s*$`, 'i'), '')
     .replace(/\s+/g, ' ')
     .trim();
   const compact = clean(query);
@@ -285,12 +326,17 @@ export default function CustomerDiscoverSandbox() {
   const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en', resolvedPlaces), [origin, destination, plannerKind, stops, i18n.language, resolvedPlaces]);
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
   const activeQuery = activeSearch?.kind === 'origin' ? origin : activeSearch?.kind === 'destination' ? destination : activeSearch ? stops[activeSearch.index ?? -1] ?? '' : '';
-  const localActiveSuggestions = useMemo(() => recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery]);
+  const localUnitSuggestions = useMemo(() => knownUnitSuggestions(activeQuery), [activeQuery]);
+  const localActiveSuggestions = useMemo(() => localUnitSuggestions.length ? localUnitSuggestions : recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery, localUnitSuggestions]);
   const activeUnit = addressUnit(activeQuery);
-  const remoteActiveSuggestions: Suggestion[] = remoteSuggestions.map(place => ({ ...place, title: titleWithUnit(place.title, activeUnit) }));
+  const activeUnitPrefix = addressUnitPrefix(activeQuery);
+  const activeStreetTerms = addressSearchTerms(activeQuery);
+  const remoteActiveSuggestions: Suggestion[] = remoteSuggestions
+    .filter(place => !activeUnitPrefix || activeStreetTerms.length === 0 || activeStreetTerms.every(term => similarAddressTerm(`${place.title} ${place.detail}`, term)))
+    .map(place => ({ ...place, title: titleWithUnit(place.title, activeUnit) }));
   const activeSuggestions: Suggestion[] = [...remoteActiveSuggestions, ...localActiveSuggestions
     .filter(local => !remoteActiveSuggestions.some(remote => normalizePlace(remote.title).startsWith(normalizePlace(local.title))))
-    .map(place => ({ ...place, title: titleWithUnit(place.title, activeUnit) }))];
+    .map(place => ({ ...place, title: localUnitSuggestions.length ? place.title : titleWithUnit(place.title, activeUnit) }))];
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -469,7 +515,7 @@ export default function CustomerDiscoverSandbox() {
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onFocus={() => setActiveSearch({ kind: 'destination' })} onChange={event => { setDestination(event.target.value); setActiveSearch({ kind: 'destination' }); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
         {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
       </div>
-      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={`${place.title}-${place.detail}`} onClick={() => selectPlace(place)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{geocoderState === 'loading' ? say('A procurar moradas…', 'Searching addresses…') : say('Nenhum resultado encontrado. Tente escrever a morada completa.', 'No result found. Try the full address.')}</p>}</div>}
+      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeUnitPrefix && activeSuggestions.length > 0 && <div className="pm-client-suggestions-title"><strong>{say('Números desta rua', 'Numbers on this street')}</strong><span>{say('Escolha um lote ou número', 'Choose a lot or number')}</span></div>}{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={`${place.title}-${place.detail}`} onClick={() => selectPlace(place)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{geocoderState === 'loading' ? say('A procurar moradas…', 'Searching addresses…') : say('Nenhum resultado encontrado. Tente escrever a morada completa.', 'No result found. Try the full address.')}</p>}</div>}
       <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
