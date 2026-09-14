@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.39 — 2026-09-14
+
+- PUB-01: catálogo de sugestões ampliado com pontos turísticos de Sintra/Lisboa, centros comerciais, estações, aeroporto e moradas de teste.
+- PUB-01: pesquisa por palavras funciona em origem, destino e paragens; quando não há correspondência local, a morada é procurada por geocoding em tempo real e as coordenadas ficam ligadas à rota.
+- 22 testes de navegador, 85 testes de domínio, build e validação documental aprovados.
+
 ## 0.2.38 — 2026-09-14
 
 - PUB-01: origem, destino e todas as paragens usam a mesma pesquisa inline com sugestões selecionáveis e correspondência por palavras.

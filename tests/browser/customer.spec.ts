@@ -65,6 +65,37 @@ test('customer planner suggests the complete Carregado street address', async ({
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Avenida Cabo da Boa Esperança L65');
 });
 
+test('customer planner suggests tourist places and shopping centres', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('quinta da regaleira');
+  await expect(page.getByRole('option', { name: /Quinta da Regaleira Rua Barbosa/ })).toBeVisible();
+  await page.getByRole('option', { name: /Quinta da Regaleira Rua Barbosa/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Quinta da Regaleira');
+  await page.getByRole('button', { name: 'Adicionar paragem' }).click();
+  await page.getByLabel('Paragem 1', { exact: true }).fill('colombo');
+  await expect(page.getByRole('option', { name: /Centro Colombo Av\. Lusíada/ })).toBeVisible();
+});
+
+test('customer planner geocodes an address outside the curated catalogue', async ({ page }) => {
+  await page.route('https://nominatim.openstreetmap.org/search**', async route => {
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify([{ name: 'Rua do Alecrim, 10', display_name: 'Rua do Alecrim, 10, Misericórdia, Lisboa, Portugal', lat: '38.7095', lon: '-9.1434' }]),
+    });
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('Rua do Alecrim 10');
+  await expect(page.getByRole('option', { name: /Rua do Alecrim, 10 Misericórdia/ })).toBeVisible();
+  await page.getByRole('option', { name: /Rua do Alecrim, 10 Misericórdia/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Rua do Alecrim, 10');
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Rua do Alecrim, 10');
+});
+
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');

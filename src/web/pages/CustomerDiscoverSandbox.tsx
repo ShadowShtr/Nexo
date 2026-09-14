@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { CalendarDays, ChevronLeft, ChevronRight, Clock3, MapPinned, Search, Sparkles, Ticket, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { quote } from '../../domain/pricing';
@@ -14,6 +14,29 @@ const tourOptions = [
 
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
+  { title: 'Quinta da Regaleira', detail: 'Rua Barbosa du Bocage, Sintra' },
+  { title: 'Palácio Nacional da Pena', detail: 'Estrada da Pena, Sintra' },
+  { title: 'Castelo dos Mouros', detail: 'Estrada da Pena, Sintra' },
+  { title: 'Palácio Nacional de Sintra', detail: 'Largo Rainha Dona Amélia, Sintra' },
+  { title: 'Cabo da Roca', detail: 'Estrada do Cabo da Roca, Sintra' },
+  { title: 'Praia Grande', detail: 'Colares, Sintra' },
+  { title: 'Praia da Adraga', detail: 'Almoçageme, Sintra' },
+  { title: 'Boca do Inferno', detail: 'Av. Rei Humberto II de Itália, Cascais' },
+  { title: 'Marina de Cascais', detail: 'Cascais' },
+  { title: 'Torre de Belém', detail: 'Av. Brasília, Lisboa' },
+  { title: 'Mosteiro dos Jerónimos', detail: 'Praça do Império, Lisboa' },
+  { title: 'Praça do Comércio', detail: 'Baixa, Lisboa' },
+  { title: 'Castelo de São Jorge', detail: 'Rua de Santa Cruz do Castelo, Lisboa' },
+  { title: 'Oceanário de Lisboa', detail: 'Esplanada Dom Carlos I, Lisboa' },
+  { title: 'Parque das Nações', detail: 'Lisboa' },
+  { title: 'LX Factory', detail: 'Rua Rodrigues de Faria, Lisboa' },
+  { title: 'Time Out Market Lisboa', detail: 'Av. 24 de Julho, Lisboa' },
+  { title: 'Centro Colombo', detail: 'Av. Lusíada, Lisboa' },
+  { title: 'Amoreiras Shopping Center', detail: 'Av. Eng. Duarte Pacheco, Lisboa' },
+  { title: 'CascaiShopping', detail: 'Estrada Nacional 9, Alcabideche' },
+  { title: 'Oeiras Parque', detail: 'Av. António Bernardo Cabral de Macedo, Oeiras' },
+  { title: 'UBBO', detail: 'Av. Cruzeiro Seixas, Amadora' },
+  { title: 'Freeport Lisboa Fashion Outlet', detail: 'Av. Euro 2004, Alcochete' },
   { title: 'Carregado', detail: 'Carregado, Alenquer' },
   { title: 'Avenida Cabo da Boa Esperança L65', detail: 'Carregado, Alenquer' },
   { title: 'Estação Carregado', detail: 'R. da Estação, Castanheira do Ribatejo' },
@@ -23,9 +46,35 @@ const recentPlaces = [
   { title: 'Centro de Lisboa', detail: 'Lisboa' },
 ];
 
+type GeocodedPlace = { title: string; detail: string; coordinates: readonly [number, number] };
+type Suggestion = { title: string; detail: string; coordinates?: readonly [number, number] };
+
 const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly [number, number] }> = [
   { aliases: ['lisboa', 'centro de lisboa', 'a minha localizacao'], coordinates: [38.7223, -9.1393] },
   { aliases: ['sintra'], coordinates: [38.8029, -9.3817] },
+  { aliases: ['quinta da regaleira', 'regaleira'], coordinates: [38.7967, -9.3977] },
+  { aliases: ['palacio nacional da pena', 'palacio da pena', 'pena'], coordinates: [38.7876, -9.3906] },
+  { aliases: ['castelo dos mouros'], coordinates: [38.7894, -9.3904] },
+  { aliases: ['palacio nacional de sintra'], coordinates: [38.7975, -9.3904] },
+  { aliases: ['cabo da roca'], coordinates: [38.7804, -9.4989] },
+  { aliases: ['praia grande'], coordinates: [38.8066, -9.4737] },
+  { aliases: ['praia da adraga', 'adraga'], coordinates: [38.8004, -9.4759] },
+  { aliases: ['boca do inferno'], coordinates: [38.6913, -9.4307] },
+  { aliases: ['marina de cascais', 'marina cascais'], coordinates: [38.6916, -9.4183] },
+  { aliases: ['torre de belem', 'torre de belém'], coordinates: [38.6916, -9.2159] },
+  { aliases: ['mosteiro dos jeronimos', 'jeronimos'], coordinates: [38.6979, -9.2065] },
+  { aliases: ['praca do comercio', 'terreiro do paco'], coordinates: [38.7079, -9.1366] },
+  { aliases: ['castelo de sao jorge', 'castelo sao jorge'], coordinates: [38.7139, -9.1335] },
+  { aliases: ['oceanario de lisboa', 'oceanario'], coordinates: [38.7634, -9.0936] },
+  { aliases: ['parque das nacoes'], coordinates: [38.7675, -9.0953] },
+  { aliases: ['lx factory'], coordinates: [38.7034, -9.1784] },
+  { aliases: ['time out market lisboa', 'time out market'], coordinates: [38.7066, -9.1455] },
+  { aliases: ['centro colombo', 'colombo'], coordinates: [38.7537, -9.1883] },
+  { aliases: ['amoreiras shopping center', 'amoreiras shopping', 'amoreiras'], coordinates: [38.7257, -9.1600] },
+  { aliases: ['cascai shopping', 'cascai'], coordinates: [38.7410, -9.4072] },
+  { aliases: ['oeiras parque'], coordinates: [38.7085, -9.2994] },
+  { aliases: ['ubbo'], coordinates: [38.7586, -9.2047] },
+  { aliases: ['freeport lisboa fashion outlet', 'freeport'], coordinates: [38.9536, -8.8710] },
   { aliases: ['carregado'], coordinates: [39.0234, -8.9768] },
   // Centro geográfico da Avenida Cabo da Boa Esperança (CP 2580-469,
   // Carregado). O lote 65 usa o mesmo arruamento até termos geocoding
@@ -49,8 +98,10 @@ function placeMatches(place: { title: string; detail: string }, query: string) {
   return tokens.every(token => haystack.includes(token));
 }
 
-function coordinatesFor(value: string) {
+function coordinatesFor(value: string, resolved: readonly GeocodedPlace[] = []) {
   const normalized = normalizePlace(value);
+  const remote = resolved.find(place => normalizePlace(place.title) === normalized);
+  if (remote) return remote.coordinates;
   return placeCoordinates.find(place => place.aliases.some(alias => normalized === normalizePlace(alias) || normalized.includes(normalizePlace(alias))))?.coordinates;
 }
 
@@ -63,9 +114,9 @@ function distanceMeters(from: readonly [number, number], to: readonly [number, n
   return Math.round(2 * earthRadius * Math.asin(Math.sqrt(a)) * 1.2);
 }
 
-function dynamicRoute(origin: string, destination: string, stops: readonly string[] = []): DemoRoute {
+function dynamicRoute(origin: string, destination: string, stops: readonly string[] = [], resolved: readonly GeocodedPlace[] = []): DemoRoute {
   const labels = [origin || 'Lisboa', ...stops.filter(stop => stop.trim()), destination || 'Destino'];
-  const coordinates = labels.map(coordinatesFor);
+  const coordinates = labels.map(label => coordinatesFor(label, resolved));
   const start = coordinates[0] ?? tourRoute.points[0].coordinates;
   if (coordinates.some((point): point is undefined => !point)) {
     return { name: labels.join(' → '), meters: 0, minutes: 0, points: [{ ...tourRoute.points[0], label: labels[0], coordinates: start }], shape: [start] };
@@ -90,9 +141,9 @@ function dynamicRoute(origin: string, destination: string, stops: readonly strin
   return { name: labels.join(' → '), meters, minutes: Math.max(10, Math.round(meters / 1000 / 55 * 60)), points, shape };
 }
 
-function plannerRoute(origin: string, destination: string, stops: readonly string[], kind: 'transfer' | 'tour', english: boolean): DemoRoute {
+function plannerRoute(origin: string, destination: string, stops: readonly string[], kind: 'transfer' | 'tour', english: boolean, resolved: readonly GeocodedPlace[] = []): DemoRoute {
   const stopSuffix = english ? 'stop' : 'paragem';
-  if (kind !== 'tour' || normalizePlace(destination) !== 'sintra' || stops.length > 0 || !normalizePlace(origin).includes('lisboa')) return dynamicRoute(origin, destination, stops);
+  if (kind !== 'tour' || normalizePlace(destination) !== 'sintra' || stops.length > 0 || !normalizePlace(origin).includes('lisboa')) return dynamicRoute(origin, destination, stops, resolved);
   const points = tourRoute.points.map((point, index) => index === 0
     ? { ...point, label: origin || 'Lisboa' }
     : index === tourRoute.points.length - 1
@@ -113,12 +164,16 @@ export default function CustomerDiscoverSandbox() {
   const [destination, setDestination] = useState('');
   const [stops, setStops] = useState<string[]>([]);
   const [activeSearch, setActiveSearch] = useState<ActiveSearch>(null);
+  const [remoteSuggestions, setRemoteSuggestions] = useState<GeocodedPlace[]>([]);
+  const [geocoderState, setGeocoderState] = useState<'idle' | 'loading'>('idle');
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
+  const [resolvedPlaces, setResolvedPlaces] = useState<GeocodedPlace[]>([]);
 
-  const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en'), [origin, destination, plannerKind, stops, i18n.language]);
-  const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin) && coordinatesFor(destination) && stops.every(stop => Boolean(coordinatesFor(stop))));
+  const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en', resolvedPlaces), [origin, destination, plannerKind, stops, i18n.language, resolvedPlaces]);
+  const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
   const activeQuery = activeSearch?.kind === 'origin' ? origin : activeSearch?.kind === 'destination' ? destination : activeSearch ? stops[activeSearch.index ?? -1] ?? '' : '';
-  const activeSuggestions = useMemo(() => recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery]);
+  const localActiveSuggestions = useMemo(() => recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery]);
+  const activeSuggestions: Suggestion[] = [...localActiveSuggestions, ...remoteSuggestions.filter(remote => !localActiveSuggestions.some(local => normalizePlace(local.title) === normalizePlace(remote.title)))];
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -137,6 +192,8 @@ export default function CustomerDiscoverSandbox() {
     setDestination(preset);
     setStops([]);
     setActiveSearch(null);
+    setRemoteSuggestions([]);
+    setResolvedPlaces([]);
   };
   const chooseBooking = () => {
     const url = new URL(window.location.href);
@@ -177,11 +234,46 @@ export default function CustomerDiscoverSandbox() {
     setStops(current => current.filter((_, stopIndex) => stopIndex !== index));
     setRouteReady(false);
   };
-  const selectPlace = (title: string) => {
+  useEffect(() => {
+    const query = activeQuery.trim();
+    if (!activeSearch || query.length < 3 || localActiveSuggestions.length > 0) {
+      setRemoteSuggestions([]);
+      setGeocoderState('idle');
+      return;
+    }
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      setGeocoderState('loading');
+      try {
+        const endpoint = import.meta.env.VITE_GEOCODER_URL || 'https://nominatim.openstreetmap.org/search';
+        const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${query}, Portugal` });
+        const response = await fetch(`${endpoint}?${params.toString()}`, { headers: { Accept: 'application/json' }, signal: controller.signal });
+        if (!response.ok) throw new Error(`geocoder ${response.status}`);
+        const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string }>;
+        const next = payload.flatMap(item => {
+          const latitude = Number(item.lat);
+          const longitude = Number(item.lon);
+          if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
+          const title = item.name?.trim() || item.display_name.split(',')[0]?.trim() || query;
+          const detail = item.display_name.replace(`${title},`, '').trim() || item.display_name;
+          return [{ title, detail, coordinates: [latitude, longitude] as const }];
+        });
+        setRemoteSuggestions(next);
+      } catch (error) {
+        if ((error as { name?: string }).name !== 'AbortError') setRemoteSuggestions([]);
+      } finally {
+        if (!controller.signal.aborted) setGeocoderState('idle');
+      }
+    }, 350);
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [activeQuery, activeSearch?.kind, activeSearch?.index, i18n.language, localActiveSuggestions.length]);
+  const selectPlace = (place: Suggestion) => {
     if (!activeSearch) return;
-    if (activeSearch.kind === 'origin') setOrigin(title);
-    else if (activeSearch.kind === 'destination') setDestination(title);
-    else updateStop(activeSearch.index ?? 0, title);
+    const coordinates = place.coordinates;
+    if (coordinates) setResolvedPlaces(current => [...current.filter(item => normalizePlace(item.title) !== normalizePlace(place.title)), { title: place.title, detail: place.detail, coordinates }]);
+    if (activeSearch.kind === 'origin') setOrigin(place.title);
+    else if (activeSearch.kind === 'destination') setDestination(place.title);
+    else updateStop(activeSearch.index ?? 0, place.title);
     setActiveSearch(null);
     setRouteReady(false);
   };
@@ -205,7 +297,7 @@ export default function CustomerDiscoverSandbox() {
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onFocus={() => setActiveSearch({ kind: 'destination' })} onChange={event => { setDestination(event.target.value); setActiveSearch({ kind: 'destination' }); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
         {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
       </div>
-      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={place.title} onClick={() => selectPlace(place.title)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{say('Nenhuma sugestão local. Escolha uma morada reconhecida na lista abaixo.', 'No local suggestion. Choose a recognised address from the list below.')}</p>}</div>}
+      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={`${place.title}-${place.detail}`} onClick={() => selectPlace(place)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{geocoderState === 'loading' ? say('A procurar moradas…', 'Searching addresses…') : say('Nenhum resultado encontrado. Tente escrever a morada completa.', 'No result found. Try the full address.')}</p>}</div>}
       <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
