@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## FIN-01 — Ledger de recebimentos, saldos e reembolsos
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — ledger append-only e validações server-side implementados; adaptador persistente e visões por período pendentes
 
 **Dependências:** BAS-03, BKG-01
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Sinal+saldo+extras conciliam com total aprovado; reembolso não apaga recebido histórico; saldo negativo é crédito explícito; proprietário não é apresentado como recebedor bancário.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/domain/payment-ledger.ts`, `src/application/payment-command.ts` e `tests/payment-command.test.ts` conservam cobranças/reembolsos, calculam recebido/devolvido/reembolsável e rejeitam duplicação, excesso e beneficiário implícito. Falta ligar eventos a tabelas Supabase e às vistas financeiras.
 
 ## FIN-02 — Visões financeiras por período/serviço/motorista
 

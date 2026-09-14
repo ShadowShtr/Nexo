@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## PAY-01 — Validar prestador com recebimento por motorista
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — contrato de evento verificado, idempotência e beneficiário server-side implementados; prestador MB WAY ainda por selecionar
 
 **Dependências:** BAS-01
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Evidência demonstra dinheiro destinado ao motorista correto; limitações documentadas; sem alternativa silenciosa de cobrar na conta do proprietário.
 
-**Evidência:** Por preencher: ficheiros/commit, testes executados e resultado. Não marcar concluída sem demonstração do critério acima.
+**Evidência:** `src/application/payment-command.ts` exige webhook já verificado, resolve motorista e montante pelo contexto do servidor e rejeita alterações de organização, moeda ou valor. `tests/payment-command.test.ts` cobre evento, duplicação e falha. Falta comparar prestadores e realizar onboarding sandbox com beneficiários reais.
 
 ## PAY-02 — Cobrança de sinal/saldo por beneficiário
 

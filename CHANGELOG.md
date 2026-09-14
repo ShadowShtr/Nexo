@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.20 — 2026-09-14
+
+- Ledger financeiro append-only para cobranças, reembolsos, fases e motorista beneficiário.
+- Eventos de pagamento aceites apenas após verificação do webhook, com idempotência, moeda/valor esperado e limite de reembolso.
+
+## 0.2.19 — 2026-09-14
+
+- Máquina de estados server-side para ofertas, pagamento, alocação e execução da reserva.
+- Aceite/recusa restritos ao motorista atribuído; confirmação exige pagamento sucedido e recurso garantido; execução exige saldo registado.
+- `expectedVersion` impede alterações obsoletas e preserva estados terminais.
+
 ## 0.2.18 — 2026-09-14
 
 - Contrato de comandos administrativo para motoristas, veículos e associações temporais.

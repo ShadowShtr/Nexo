@@ -118,3 +118,11 @@ Editor demo de tours bilingues adicionado com duração obrigatória de dois dia
 
 Contrato administrativo server-side do catálogo adicionado. O proprietário ativo é o único ator autorizado; a organização é obtida da sessão, perfis ativos recebem `publishedAt` do servidor e associações são rejeitadas quando sobrepõem motorista ou veículo. A preparação de cotações passou a exigir rota, resolver tarifa/capacidade do servidor e guardar snapshot com validade e versão; o total do navegador é ignorado. A janela de associação é semiaberta, por isso termina exatamente quando a seguinte começa. Resultado: 58 testes Node aprovados; typecheck, build e validação documental repetidos após a alteração.
 
+## Incremento 0.2.19 — 14/09/2026
+
+Máquina de estados de reservas adicionada no servidor lógico. O caso exige motorista atribuído para aceite/execução, pagamento sucedido e alocação garantida para confirmação, saldo registado antes de iniciar e `expectedVersion` para concorrência otimista. Resultado: 63 testes Node aprovados; typecheck, build e suíte de navegador repetidos.
+
+## Incremento 0.2.20 — 14/09/2026
+
+Ledger append-only e contrato de eventos de pagamento adicionados. Cobranças e reembolsos conservam histórico, o beneficiário é resolvido pelo contexto server-side e eventos não verificados, duplicados ou acima do valor recebido são rejeitados. Resultado: 69 testes Node aprovados; typecheck, build e documentação repetidos.
+
