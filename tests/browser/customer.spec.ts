@@ -113,11 +113,13 @@ test('customer planner relaxes an over-specified street search', async ({ page }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
-  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra n 40 carregado');
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lt 40 carregado');
   await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
   await page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ }).click();
   await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, n.º 40');
   expect(queries.some(query => query.toLocaleLowerCase().includes('rua pedro 40 carregado'))).toBeTruthy();
+  await page.getByLabel('Local de partida', { exact: true }).fill('ruapedrodesintralt40');
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
 });
 
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {

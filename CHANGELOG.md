@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.42 — 2026-09-14
+
+- PUB-01: lotes e números reconhecem `lt`, `lote`, `n`, `n.º` e `numero`; o resultado selecionado usa o número confirmado na consulta.
+- PUB-01: consultas corridas sem espaços são separadas para pesquisa de ruas e marcadores de porta, mantendo uma sugestão baseada no mapa.
+- 23 testes de navegador, 85 testes de domínio, build e validação documental aprovados.
+
 ## 0.2.41 — 2026-09-14
 
 - PUB-01: números de porta escritos como `n 40`, `n.º 40` ou `numero 40` são preservados nas sugestões e na morada selecionada.

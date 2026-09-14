@@ -38,6 +38,7 @@ const recentPlaces = [
   { title: 'UBBO', detail: 'Av. Cruzeiro Seixas, Amadora' },
   { title: 'Freeport Lisboa Fashion Outlet', detail: 'Av. Euro 2004, Alcochete' },
   { title: 'Carregado', detail: 'Carregado, Alenquer' },
+  { title: 'Rua Pedro de Sintra', detail: 'Carregado e Cadafais, Alenquer' },
   { title: 'Avenida Cabo da Boa Esperança L65', detail: 'Carregado, Alenquer' },
   { title: 'Estação Carregado', detail: 'R. da Estação, Castanheira do Ribatejo' },
   { title: 'Aeroporto de Lisboa', detail: 'Alameda das Comunidades Portuguesas' },
@@ -76,6 +77,7 @@ const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly
   { aliases: ['ubbo'], coordinates: [38.7586, -9.2047] },
   { aliases: ['freeport lisboa fashion outlet', 'freeport'], coordinates: [38.9536, -8.8710] },
   { aliases: ['carregado'], coordinates: [39.0234, -8.9768] },
+  { aliases: ['rua pedro de sintra'], coordinates: [39.0230, -8.9750] },
   // Centro geográfico da Avenida Cabo da Boa Esperança (CP 2580-469,
   // Carregado). O lote 65 usa o mesmo arruamento até termos geocoding
   // por porta/lote no fornecedor de mapas.
@@ -95,21 +97,58 @@ function normalizePlace(value: string) {
 function placeMatches(place: { title: string; detail: string }, query: string) {
   const tokens = normalizePlace(query).split(/\s+/).filter(Boolean);
   const haystack = normalizePlace(`${place.title} ${place.detail}`);
-  return tokens.every(token => haystack.includes(token));
+  if (tokens.every(token => haystack.includes(token))) return true;
+  const unit = addressUnit(query);
+  const compactQuery = normalizePlace(query).replace(/[^a-z0-9]/g, '').replace(unit ? /(?:loteamento|lote|lt|numero|num|n)\d{1,5}[a-z]?$/ : /$^/, '');
+  return compactQuery.length >= 5 && haystack.replace(/[^a-z0-9]/g, '').includes(compactQuery);
 }
 
-function houseNumber(value: string) {
-  return value.match(/(?:^|[\s,])(?:n(?:\s*[.ºo°])?|numero|num)\s*(\d{1,5}[A-Za-z]?)(?=\s|$)/i)?.[1];
+type AddressUnit = { value: string; marker: 'number' | 'lot' };
+
+function addressUnit(value: string): AddressUnit | undefined {
+  const spacedMatch = value.match(/(?:^|[\s,])(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*(\d{1,5}[A-Za-z]?)(?=\s|$)/i);
+  const compact = normalizePlace(value).replace(/[^a-z0-9]/g, '');
+  const compactMatch = compact.match(/(?:loteamento|lote|lt|numero|num|n)(\d{1,5}[a-z]?)$/i);
+  const match = spacedMatch ?? compactMatch;
+  if (!match) return undefined;
+  return { value: match[1], marker: /(?:lt|lote|loteamento)/i.test(match[0]) ? 'lot' : 'number' };
+}
+
+function titleWithUnit(title: string, unit?: AddressUnit) {
+  if (!unit) return title;
+  const escaped = unit.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(?:^|\\D)${escaped}(?:\\D|$)`).test(title) ? title : `${title}, n.º ${unit.value}`;
+}
+
+function runningAddressQuery(value: string) {
+  let compact = normalizePlace(value).replace(/[^a-z0-9]/g, '');
+  const unitMatch = compact.match(/(loteamento|lote|lt|numero|num|n)(\d{1,5}[a-z]?)$/i);
+  const unitSuffix = unitMatch ? ` ${unitMatch[1]} ${unitMatch[2]}` : '';
+  if (unitMatch) compact = compact.slice(0, unitMatch.index);
+  const prefixes = ['avenida', 'estrada', 'travessa', 'alameda', 'rotunda', 'praia', 'largo', 'rua', 'av', 'r'];
+  const prefix = prefixes.find(candidate => compact.startsWith(candidate) && compact.length > candidate.length);
+  let spaced = prefix ? `${prefix} ${compact.slice(prefix.length)}` : compact;
+  spaced = spaced.replace(/([a-z])(\d)/gi, '$1 $2').replace(/(\d)([a-z])/gi, '$1 $2');
+  if (prefix) {
+    const rest = spaced.slice(prefix.length).trim().replace(/([a-z]{3,})(de|da|do|dos|das)([a-z]{3,})/gi, '$1 $2 $3');
+    spaced = `${prefix} ${rest}`.trim();
+  } else {
+    spaced = spaced.replace(/([a-z]{3,})(de|da|do|dos|das)([a-z]{3,})/gi, '$1 $2 $3');
+  }
+  return `${spaced}${unitSuffix}`.trim();
 }
 
 function geocoderQueries(query: string) {
-  const compact = query
+  const clean = (value: string) => value
     .replace(/[;,]+/g, ' ')
-    .replace(/\b(?:n(?:\s*[.ºo°])?|numero|num)\s*(?=\d)/gi, '')
+    .replace(/\b(?:n(?:\s*[.ºo°]){0,2}|numero|num|lt|lote|loteamento)\s*(?=\d)/gi, '')
     .replace(/\s+/g, ' ')
     .trim();
-  const tokens = compact.split(' ').filter(Boolean);
-  const variants = [compact];
+  const compact = clean(query);
+  const running = /\s/.test(query) ? '' : clean(runningAddressQuery(query));
+  const base = running || compact;
+  const tokens = base.split(' ').filter(Boolean);
+  const variants = [...new Set([base, compact])];
   // Pessoas costumam acrescentar a localidade no fim (por exemplo,
   // “rua ... Sintra Carregado”). Se a frase completa não devolver nada,
   // procurar também o núcleo da morada evita perder a rua por excesso de
@@ -195,7 +234,11 @@ export default function CustomerDiscoverSandbox() {
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
   const activeQuery = activeSearch?.kind === 'origin' ? origin : activeSearch?.kind === 'destination' ? destination : activeSearch ? stops[activeSearch.index ?? -1] ?? '' : '';
   const localActiveSuggestions = useMemo(() => recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery]);
-  const activeSuggestions: Suggestion[] = [...localActiveSuggestions, ...remoteSuggestions.filter(remote => !localActiveSuggestions.some(local => normalizePlace(local.title) === normalizePlace(remote.title)))];
+  const activeUnit = addressUnit(activeQuery);
+  const remoteActiveSuggestions: Suggestion[] = remoteSuggestions.map(place => ({ ...place, title: titleWithUnit(place.title, activeUnit) }));
+  const activeSuggestions: Suggestion[] = [...remoteActiveSuggestions, ...localActiveSuggestions
+    .filter(local => !remoteActiveSuggestions.some(remote => normalizePlace(remote.title).startsWith(normalizePlace(local.title))))
+    .map(place => ({ ...place, title: titleWithUnit(place.title, activeUnit) }))];
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
@@ -268,12 +311,7 @@ export default function CustomerDiscoverSandbox() {
       setGeocoderState('loading');
       try {
         const endpoint = import.meta.env.VITE_GEOCODER_URL || 'https://nominatim.openstreetmap.org/search';
-        const requestedHouseNumber = houseNumber(query);
-        const withHouseNumber = (title: string) => {
-          if (!requestedHouseNumber) return title;
-          const escaped = requestedHouseNumber.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          return new RegExp(`(?:^|\\D)${escaped}(?:\\D|$)`).test(title) ? title : `${title}, n.º ${requestedHouseNumber}`;
-        };
+        const requestedUnit = addressUnit(query);
         const request = async (url: string) => {
           const requestController = new AbortController();
           let timedOut = false;
@@ -298,13 +336,13 @@ export default function CustomerDiscoverSandbox() {
           const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${candidate}, Portugal` });
           const response = await request(`${endpoint}?${params.toString()}`);
           if (!response?.ok) continue;
-          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string }>;
+          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string; address?: { house_number?: string } }>;
           next.push(...payload.flatMap(item => {
             const latitude = Number(item.lat);
             const longitude = Number(item.lon);
             if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
             const rawTitle = item.name?.trim() || item.display_name.split(',')[0]?.trim() || candidate;
-            const title = withHouseNumber(rawTitle);
+            const title = titleWithUnit(rawTitle || (item.address?.house_number ? `N.º ${item.address.house_number}` : candidate), requestedUnit);
             const detail = item.display_name.replace(`${rawTitle},`, '').trim() || item.display_name;
             const haystack = normalizePlace(`${title} ${detail}`);
             const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
@@ -323,8 +361,9 @@ export default function CustomerDiscoverSandbox() {
               const coordinates = feature.geometry?.coordinates;
               const properties = feature.properties ?? {};
               if (!coordinates || coordinates.length < 2 || !Number.isFinite(coordinates[0]) || !Number.isFinite(coordinates[1])) return [];
-              const rawTitle = properties.name?.trim() || [properties.street, properties.housenumber].filter(Boolean).join(' ') || query;
-              const title = withHouseNumber(rawTitle);
+              const streetTitle = [properties.street, properties.housenumber].filter(Boolean).join(' ');
+              const rawTitle = properties.name?.trim() && !/^\d+[A-Za-z]?$/.test(properties.name.trim()) ? properties.name.trim() : streetTitle || properties.name?.trim() || query;
+              const title = titleWithUnit(rawTitle, requestedUnit);
               const detail = [properties.street && properties.name !== properties.street ? properties.street : '', properties.housenumber && properties.name !== properties.housenumber ? properties.housenumber : '', properties.city, properties.state, properties.country].filter(Boolean).join(', ') || 'Portugal';
               const haystack = normalizePlace(`${title} ${detail}`);
               const score = originalTokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
