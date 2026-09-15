@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.62 — 2026-09-15
+
+- ícones dos cartões ficaram ligeiramente maiores e centralizados dentro de cada cartão;
+- “Para onde?” e a lupa passaram a usar uma escala mais discreta em cinza.
+
 ## 0.2.61 — 2026-09-15
 
 - a grelha inicial passa a mostrar três cartões por linha em telemóvel;

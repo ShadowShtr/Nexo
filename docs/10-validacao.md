@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.62 — 15/09/2026
+
+Os ícones dos cartões foram centralizados e aumentados ligeiramente. O botão “Para onde?” recebeu texto e lupa em cinza mais discreto, preservando contraste e foco visível.
+
 ## Incremento 0.2.61 — 15/09/2026
 
 Em telemóvel, a grelha de descoberta mostra três cartões por linha. O tamanho dos cartões, textos e ilustrações foi reduzido para eliminar espaço vazio e aproximar a referência visual da Bolt.
