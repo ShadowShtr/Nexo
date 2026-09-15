@@ -9,7 +9,7 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await page.goto('/?demo=1#/customer/discover');
   await expect(page.getByRole('heading', { name: 'Escolhe a tua aventura.', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pesquisar um tour' })).toBeVisible();
-  await expect(page.locator('.pm-client-category')).toHaveCount(4);
+  await expect(page.locator('.pm-client-category')).toHaveCount(6);
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
   await expect(page.locator('.pm-client-tour-promo img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
@@ -26,6 +26,16 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
   await expect(page).toHaveURL(/#\/customer\/booking$/);
   await expect(page.getByLabel('Serviço', { exact: true })).toHaveValue('tour');
+});
+
+test('customer discovery keeps tour cards readable and opens Porto', async ({ page }) => {
+  await page.setViewportSize({ width: 744, height: 900 });
+  await page.goto('/?demo=1#/customer/discover');
+  await expect(page.locator('.pm-client-category')).toHaveCount(6);
+  const widths = await page.locator('.pm-client-category').evaluateAll(nodes => nodes.map(node => Math.round(node.getBoundingClientRect().width)));
+  expect(widths.every(width => width >= 200)).toBeTruthy();
+  await page.getByRole('button', { name: /Tour no Porto/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Porto');
 });
 
 test('customer planner fills destination from recent places', async ({ page }) => {

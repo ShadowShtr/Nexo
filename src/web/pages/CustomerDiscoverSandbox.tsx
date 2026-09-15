@@ -9,12 +9,16 @@ import { searchAddresses } from '../services/address-search';
 const tourOptions = [
   { id: 'lisbon', icon: '✦', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
   { id: 'sintra', icon: '◈', pt: 'Sintra', en: 'Sintra', detailPt: 'Palácios, serra e mar', detailEn: 'Palaces, hills and sea' },
+  { id: 'porto', icon: '◒', pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
   { id: 'lisbon-sintra', icon: '↗', pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
   { id: 'custom', icon: '＋', pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
+  { id: 'custom-route', icon: '✧', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
 ];
 
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
+  { title: 'Porto', detail: 'Porto, Portugal' },
+  { title: 'Ribeira do Porto', detail: 'Cais da Ribeira, Porto' },
   { title: 'Quinta da Regaleira', detail: 'Rua Barbosa du Bocage, Sintra' },
   { title: 'Palácio Nacional da Pena', detail: 'Estrada da Pena, Sintra' },
   { title: 'Castelo dos Mouros', detail: 'Estrada da Pena, Sintra' },
@@ -61,6 +65,8 @@ const knownStreets: ReadonlyArray<{ aliases: string[]; street: string; detail: s
 const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly [number, number] }> = [
   { aliases: ['lisboa', 'centro de lisboa', 'a minha localizacao'], coordinates: [38.7223, -9.1393] },
   { aliases: ['sintra'], coordinates: [38.8029, -9.3817] },
+  { aliases: ['porto'], coordinates: [41.1496, -8.6109] },
+  { aliases: ['ribeira do porto', 'ribeira porto'], coordinates: [41.1406, -8.6110] },
   { aliases: ['quinta da regaleira', 'regaleira'], coordinates: [38.7967, -9.3977] },
   { aliases: ['palacio nacional da pena', 'palacio da pena', 'pena'], coordinates: [38.7876, -9.3906] },
   { aliases: ['castelo dos mouros'], coordinates: [38.7894, -9.3904] },
@@ -366,7 +372,7 @@ export default function CustomerDiscoverSandbox() {
     url.hash = '#/customer/booking';
     window.location.assign(url.toString());
   };
-  const chooseCategory = (id: string) => openPlanner(id === 'lisbon' ? 'Lisboa' : id === 'sintra' || id === 'lisbon-sintra' ? 'Sintra' : '', 'tour');
+  const chooseCategory = (id: string) => openPlanner(id === 'lisbon' ? 'Lisboa' : id === 'sintra' || id === 'lisbon-sintra' ? 'Sintra' : id === 'porto' ? 'Porto' : '', 'tour');
   const useLocation = () => {
     if (!navigator.geolocation) {
       setOrigin('Lisboa');

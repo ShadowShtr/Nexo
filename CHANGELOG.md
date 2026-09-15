@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.47 — 2026-09-15
+
+- UI-03: primeira tela do cliente ganhou seis cartões de tour, incluindo Porto e um segundo percurso personalizável.
+- UI-03: grelha responsiva, espaçamento interno e hierarquia tipográfica foram ajustados para manter os títulos e descrições legíveis em ecrãs estreitos.
+- 87 testes Node, 27 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.46 — 2026-09-15
 
 - PUB-01: lotes e números de porta ficam distintos; `Rua Pedro de Sintra, lote 86` sugere `Rua Pedro de Sintra, Lote 86`.
