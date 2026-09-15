@@ -14,8 +14,10 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).locator('img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
   await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' }).locator('img')).toHaveAttribute('src', '/porto-tour.png');
-  await expect(page.getByRole('button', { name: /Tour no Porto/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/route-landmark.png');
-  await expect(page.getByRole('button', { name: /Tour à medida/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.png');
+  await expect(page.getByRole('button', { name: /Tour no Porto/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/luggage.png');
+  await expect(page.getByRole('button', { name: /^Sintra/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.png');
+  const iconSources = await page.locator('.pm-client-category-art img').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
+  expect(new Set(iconSources).size).toBe(6);
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);

@@ -8,11 +8,11 @@ import { searchAddresses } from '../services/address-search';
 
 const tourOptions = [
   { id: 'lisbon', icon: '/route-landmark.png', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
-  { id: 'sintra', icon: '/route-landmark.png', pt: 'Sintra', en: 'Sintra', detailPt: 'Palácios, serra e mar', detailEn: 'Palaces, hills and sea' },
-  { id: 'porto', icon: '/route-landmark.png', pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
-  { id: 'lisbon-sintra', icon: '/route-landmark.png', pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
-  { id: 'custom', icon: '/compass.png', pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
-  { id: 'custom-route', icon: '/compass.png', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
+  { id: 'sintra', icon: '/compass.png', pt: 'Sintra', en: 'Sintra', detailPt: 'Palácios, serra e mar', detailEn: 'Palaces, hills and sea' },
+  { id: 'porto', icon: '/luggage.png', pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
+  { id: 'lisbon-sintra', icon: '/passengers.png', pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
+  { id: 'custom', icon: '/driver-illustration.png', pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
+  { id: 'custom-route', icon: '/vehicle-sedan.png', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
 ];
 
 const portoTourStops = ['Ribeira do Porto', 'Ponte Dom Luís I', 'Sé do Porto', 'Livraria Lello', 'Palácio da Bolsa', 'Foz do Douro'];

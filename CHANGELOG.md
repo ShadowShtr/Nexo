@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.60 — 2026-09-15
+
+- os ícones dos cartões foram reduzidos para uma escala compacta em telemóvel;
+- cada cartão inicial passou a usar uma ilustração 3D diferente.
+
 ## 0.2.59 — 2026-09-15
 
 - os cartões iniciais de tour agora usam as ilustrações 3D da aplicação;
