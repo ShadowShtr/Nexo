@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.53 — 2026-09-15
+
+- adicionados ícones contextuais aos botões de ação nos fluxos de cliente, proprietário, motorista, catálogo, agenda e autenticação;
+- adicionadas ilustrações 3D de motorista e viatura à seleção do serviço;
+- uniformizados o espaçamento e o alinhamento dos ícones em botões e cartões de seleção.
+
 ## 0.2.52 — 2026-09-15
 
 - PUB-01: a etapa de motorista e carro agora recebe a rota escolhida no planeador, incluindo origem, paragens, destino, distância e duração.

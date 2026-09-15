@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.53 — 15/09/2026
+
+Ícones contextuais foram aplicados aos botões de ação e as ilustrações 3D de motorista e viatura foram integradas na seleção do serviço. Build, testes e verificação visual foram executados após a alteração.
+
 ## Verificações
 
 - `node --test tests/*.test.ts`: suíte de regras puras, incluindo preços, 10.000 splits monetários, espera, limite exato de 24h, instantes com offset, conflitos de recursos e margem de 60 min, expiração e acertos.

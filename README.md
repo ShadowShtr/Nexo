@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.52
+# Plataforma de transporte premium — base web 0.2.53
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
