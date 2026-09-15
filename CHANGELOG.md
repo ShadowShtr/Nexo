@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.66 — 2026-09-15
+
+- ícones 3D de localização, relógio, calendário e carro foram aplicados ao fluxo do cliente;
+- o estilo dos banners foi limitado à foto principal para evitar que os ícones internos ocupem o cartão.
+
 ## 0.2.65 — 2026-09-15
 
 - o planeador agora apresenta uma lista de dias e horários para marcar a viagem;

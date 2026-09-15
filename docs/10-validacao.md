@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.66 — 15/09/2026
+
+O fluxo do cliente usa os assets 3D de localização, relógio, calendário e carro com sombra. Os banners aplicam o recorte de imagem apenas à foto principal, mantendo os ícones internos no tamanho correto.
+
 ## Incremento 0.2.65 — 15/09/2026
 
 Após calcular o percurso, o planeador mostra dias e horários disponíveis em uma lista compacta. A escolha é guardada no handoff e aparece na data/hora de recolha da etapa seguinte.
