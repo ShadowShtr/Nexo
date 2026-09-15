@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { CalendarDays, ChevronLeft, ChevronRight, Clock3, MapPinned, Search, Sparkles, Ticket, X } from 'lucide-react';
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, MapPinned, Search, Sparkles, Ticket, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { quote } from '../../domain/pricing';
 import { RouteMap } from '../components/RouteMap';
@@ -421,6 +421,23 @@ export default function CustomerDiscoverSandbox() {
     setStops(current => current.filter((_, stopIndex) => stopIndex !== index));
     setRouteReady(false);
   };
+  const moveStop = (index: number, offset: number) => {
+    const target = index + offset;
+    if (target < 0 || target >= stops.length) return;
+    setStops(current => {
+      if (index < 0 || target < 0 || index >= current.length || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+    setActiveSearch(current => {
+      if (!current || current.kind !== 'stop') return current;
+      if (current.index === index) return { ...current, index: target };
+      if (current.index === target) return { ...current, index };
+      return current;
+    });
+    setRouteReady(false);
+  };
   useEffect(() => {
     const query = activeQuery.trim();
     if (!activeSearch || query.length < 3 || localActiveSuggestions.length > 0) {
@@ -490,7 +507,7 @@ export default function CustomerDiscoverSandbox() {
       <div className="pm-client-planner-pills"><span><Clock3 size={17}/>{say('Mais tarde', 'Later')}</span><span><MapPinned size={17}/>{say('Para mim', 'For me')}</span></div>
       <div className="pm-client-address-card">
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-pickup-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Local de partida', 'Pickup location')}</small><input aria-label={say('Local de partida', 'Pickup location')} value={origin} onFocus={() => setActiveSearch({ kind: 'origin' })} onChange={event => { setOrigin(event.target.value); setActiveSearch({ kind: 'origin' }); setRouteReady(false); }} placeholder={say('De onde partimos?', 'Where should we pick you up?')} /></span></label>
-        {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
+        {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><span className="pm-client-stop-actions"><button type="button" className="pm-client-reorder-stop" onClick={() => moveStop(index, -1)} disabled={index === 0} aria-label={say(`Subir paragem ${index + 1}`, `Move stop ${index + 1} up`)}><ChevronUp size={15}/></button><button type="button" className="pm-client-reorder-stop" onClick={() => moveStop(index, 1)} disabled={index === stops.length - 1} aria-label={say(`Descer paragem ${index + 1}`, `Move stop ${index + 1} down`)}><ChevronDown size={15}/></button><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></span></label></Fragment>)}
         <div className="pm-client-address-divider" />
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onFocus={() => setActiveSearch({ kind: 'destination' })} onChange={event => { setDestination(event.target.value); setActiveSearch({ kind: 'destination' }); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
       </div>

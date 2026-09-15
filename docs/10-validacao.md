@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.51 — 15/09/2026
+
+Cada paragem do planeador passou a apresentar setas de subir e descer junto ao botão de remoção. Os limites ficam desativados na primeira e na última paragem, o destino continua fixo no fim e a nova sequência é refletida no mapa, na lista numerada e no cálculo. Resultado: 87 testes Node, 29 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.50 — 15/09/2026
 
 Os campos de rota foram reordenados para mostrar partida, paragens e destino na mesma sequência usada pelo mapa e pelo cálculo do percurso. Resultado: 87 testes Node, 28 testes Playwright, build TypeScript/Vite e validação documental aprovados.

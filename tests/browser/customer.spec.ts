@@ -204,6 +204,41 @@ test('customer adds a stop inline and hides recent places after choosing a desti
   await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveCount(0);
 });
 
+test('customer reorders stops with up and down controls while keeping destination last', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('Sintra');
+  await page.getByRole('option', { name: /Sintra Sintra, Lisboa/ }).click();
+
+  await page.getByRole('button', { name: 'Adicionar paragem' }).click();
+  await page.getByLabel('Paragem 1', { exact: true }).fill('ubbo');
+  await page.getByRole('option', { name: /UBBO Av\. Cruzeiro Seixas/ }).click();
+  await page.getByRole('button', { name: 'Adicionar paragem' }).click();
+  await page.getByLabel('Paragem 2', { exact: true }).fill('shopping vasco');
+  await page.getByRole('option', { name: /Vasco da Gama Shopping Av\. Dom João II/ }).click();
+
+  await expect(page.getByRole('button', { name: 'Subir paragem 1' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Descer paragem 2' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Subir paragem 2' }).click();
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('Vasco da Gama Shopping');
+  await expect(page.getByLabel('Paragem 2', { exact: true })).toHaveValue('UBBO');
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
+
+  await expect(page.locator('.pm-route-points li strong')).toHaveText([
+    'Lisboa',
+    'Vasco da Gama Shopping',
+    'UBBO',
+    'Sintra',
+  ]);
+  await expect(page.locator('.pm-route-points li small')).toHaveText(['Recolha', 'Paragem', 'Paragem', 'Destino']);
+
+  await page.getByRole('button', { name: 'Descer paragem 1' }).click();
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('UBBO');
+  await expect(page.getByLabel('Paragem 2', { exact: true })).toHaveValue('Vasco da Gama Shopping');
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
+});
+
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/booking');

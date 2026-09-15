@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.51 — 2026-09-15
+
+- PUB-01: cada paragem passou a ter controlos de subir e descer, com limites desativados nas extremidades; o destino mantém-se sempre no fim.
+- PUB-01: ao mover uma paragem, o mapa, a lista numerada e o cálculo passam a usar imediatamente a nova sequência.
+- 87 testes Node, 29 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.50 — 2026-09-15
 
 - PUB-01: campos de rota agora exibem a ordem real da viagem: partida, paragens e destino.
