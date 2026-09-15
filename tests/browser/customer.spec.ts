@@ -93,6 +93,27 @@ test('customer planner fills destination from recent places', async ({ page }) =
   await page.getByRole('button', { name: /Sintra/ }).click();
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await expect(page.getByRole('listbox', { name: 'Horários disponíveis' }).getByRole('option')).toHaveCount(24);
+});
+
+test('customer calendar hides a booked hour and its one-hour buffer', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    sessionStorage.setItem('pm.owner.calendar', JSON.stringify({
+      settings: { weekdays: [1, 2, 3, 4, 5, 6, 7], opensAt: '00:00', closesAt: '24:00', blockedDates: [] },
+      bookings: [{ id: 'CLIENT-BOOKED', driverId: '*', vehicleId: '*', startsAt: '2026-09-15T15:00:00+01:00', endsAt: '2026-09-15T16:00:00+01:00', status: 'requested', source: 'customer' }],
+    }));
+  });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByRole('button', { name: /Sintra/ }).click();
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await page.getByRole('option', { name: 'Terça-feira, 15 de setembro' }).click();
+  const times = page.getByRole('listbox', { name: 'Horários disponíveis' });
+  await expect(times.getByRole('option', { name: '15:00' })).toHaveCount(0);
+  await expect(times.getByRole('option', { name: '16:00' })).toHaveCount(0);
+  await expect(times.getByRole('option', { name: '17:00' })).toBeVisible();
 });
 
 test('customer planner redraws the map for a different destination', async ({ page }) => {

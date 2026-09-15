@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.71 — 15/09/2026
+
+O planeador apresenta as 24 horas publicadas pelo proprietário e retira os intervalos já ocupados, incluindo uma margem de 60 minutos após cada serviço. A criação, o reagendamento e o cancelamento de pedidos atualizam a agenda da sessão.
+
 ## Incremento 0.2.70 — 15/09/2026
 
 O CTA “Ver rota e preço” usa agora o asset de rota da marca (`/route-landmark.png`), mantendo sombra e proporção dos ícones 3D do fluxo do cliente.

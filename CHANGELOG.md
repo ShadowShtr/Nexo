@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.71 — 2026-09-15
+
+- o calendário do cliente mostra disponibilidade em todas as 24 horas;
+- horários ocupados pelo calendário do proprietário e a margem de 60 minutos deixam de ser oferecidos;
+- pedidos, cancelamentos e reagendamentos atualizam a disponibilidade da sessão.
+
 ## 0.2.70 — 2026-09-15
 
 - o botão “Ver rota e preço” passou a usar o ícone visual de rotas da marca, com sombra e escala consistente com os restantes ícones do cliente.

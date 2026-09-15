@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { checkSchedule, requiredGapMinutes, type Allocation } from '../../domain/calendar';
 import { Button } from '../../ui/components/Button';
 import { demoTrips } from './DemoPage';
+import { saveOwnerCalendarBookings } from '../customer-availability';
 
 const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
 const cars = ['Mercedes Classe E', 'Mercedes Classe V', 'BMW Série 5', 'Volvo XC90'];
@@ -42,7 +43,8 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(()=>{ if(draft) { formRef.current?.scrollIntoView({block:'start'}); formRef.current?.querySelector<HTMLElement>('h2')?.focus({preventScroll:true}); } },[draft?.id]);
   const margin = requiredGapMinutes(travel,{minimumGapMinutes:gap,delayAllowanceMinutes:15});
-  const save = (next:Entry[]) => { memory=next;setEntries(next); };
+  const save = (next:Entry[]) => { memory=next;setEntries(next);saveOwnerCalendarBookings(next); };
+  useEffect(() => { saveOwnerCalendarBookings(entries); }, []);
   const visible = entries.filter(e=>(filter==='all'||e.driverId===filter)&&(vehicle==='all'||e.vehicleId===vehicle));
   const active = visible.filter(e=>e.status!=='cancelled');
   const events = active.flatMap(e=>[
