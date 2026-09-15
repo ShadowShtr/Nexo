@@ -1,5 +1,15 @@
 # Regras de implementação
 
+## Continuidade obrigatória em qualquer PC
+
+Antes de trabalhar, ler [guia entre PCs](docs/21-continuidade-entre-pcs.md), [estado atual e limites](docs/22-estado-atual-e-limites.md) e, para o cliente, [decisões visuais](docs/23-decisoes-visuais-cliente.md). Não depender da conversa nem de ficheiros da máquina anterior.
+
+Verificar branch, remoto, histórico e alterações locais; sincronizar sem sobrescrever trabalho. No fim de cada tarefa, atualizar documentação específica, evidência, changelog e o estado atual quando aplicável; guardar código e assets no Git e comunicar se o push ficou pendente. A próxima máquina deve cumprir e manter estas mesmas instruções. Commit local não equivale a sincronização remota.
+
+Ler os relatórios antigos pela versão indicada. O documento de estado atual consolida limites recentes; em conflito com uma regra confirmada, registar a divergência em vez de alterar silenciosamente a regra. Nunca afirmar disponibilidade multiutilizador, pagamento real ou validação iOS apenas com testes da demonstração.
+
+## Implementação
+
 1. Ler README.md, docs/01-escopo.md, docs/03-regras.md e a tarefa em docs/tasks antes de alterar código.
 2. Manter a arquitetura modular de docs/02-arquitetura.md. A interface nunca é a fonte de verdade de preço, permissões ou disponibilidade.
 3. Trabalhar uma tarefa identificada de cada vez; atualizar estado, evidência e CHANGELOG. Não marcar uma aba concluída por ter apenas o desenho.

@@ -2,6 +2,12 @@
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
+## Continuar neste ou noutro computador
+
+Repositório: [ShadowShtr/Nexo](https://github.com/ShadowShtr/Nexo). Começar pelo [guia de instalação e continuidade](docs/21-continuidade-entre-pcs.md), [estado atual, mapa do código e limites](docs/22-estado-atual-e-limites.md) e [decisões visuais do cliente](docs/23-decisoes-visuais-cliente.md). [AGENTS.md](AGENTS.md) instrui qualquer assistente a manter a mesma rotina de documentação e Git.
+
+Aplicação de referência: v0.2.72. Os documentos antigos registam evidência por versão; a demonstração em sessionStorage não sincroniza reservas entre PCs. Assets necessários estão versionados em public.
+
 ## O que já existe
 
 - Especificação funcional, arquitetura, modelo de dados, matemática, calendário, configurações e plano de implementação por aba.
@@ -64,7 +70,7 @@ AGENTS.md             instruções para futuras implementações
 
 Cada tarefa tem dependências, trabalho, critérios de aceitação e evidência exigida. Supabase foi escolhido para persistência; Vercel é a preferência de hospedagem, com custo comercial por resolver. Ver estudo de viabilidade.
 
-BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). BAS-03 concluiu as migrações operacionais e o restauro local; ver [evidência do schema](docs/19-schema-operacional.md). O próximo bloco é concluir SEC-01 e ligar a interface autenticada.
+BAS-02 tem contratos e prova PostgreSQL local validados. Ver [persistência e testes](docs/16-prova-persistencia.md). BAS-03 concluiu as migrações operacionais e o restauro local; ver [evidência do schema](docs/19-schema-operacional.md). SEC-01 e a interface autenticada têm evidência local; a ligação operacional das abas aos casos de uso persistentes permanece pendente.
 
 Identidade, permissões, convite privado e login local: [evidência](docs/17-identidade-local.md). Nenhuma ligação à MO Limpezas ou a outro Supabase.
 

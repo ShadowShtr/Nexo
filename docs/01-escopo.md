@@ -72,6 +72,6 @@ Lista de espera, sugestão automática de motorista alternativo, programa de ind
 
 ## Fluxo principal alvo
 
-Idioma → perfil → motorista → carro compatível → serviço/tour → data, passageiros e percurso → disponibilidade e orçamento → dados de cliente → pedido → aceitação → sinal → confirmação → execução → saldo/extras → conclusão → acerto com proprietário.
+Idioma → Descobrir/perfil → percurso e serviço → estimativa e data/hora → motorista e carro compatíveis → dados e revisão → pedido → aceitação → sinal → confirmação → execução → saldo/extras → conclusão → acerto com proprietário. Sequência revista em [entrada do cliente](20-entrada-cliente.md).
 
 Carros devem ser revalidados após data e passageiros; mostrar um carro no perfil não garante disponibilidade. Reserva manual usa o mesmo motor de regras. Consultar marcação exige link seguro; referência curta isolada não autoriza acesso.

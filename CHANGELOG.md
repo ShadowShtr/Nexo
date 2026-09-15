@@ -1,5 +1,12 @@
 # Changelog
 
+## Documentação de continuidade — 2026-09-15
+
+- guia de instalação, testes, sincronização e passagem de contexto entre PCs;
+- mapa atual do código, limites da demonstração e decisões visuais consolidados;
+- AGENTS.md exige que cada máquina atualize documentação e Git;
+- corrigidas referências antigas ao remoto, SEC-01 e sequência de entrada do cliente; versão do app mantida em 0.2.72.
+
 ## 0.2.72 — 2026-09-15
 
 - adicionada a escolha de datas futuras através do calendário nativo do telemóvel;

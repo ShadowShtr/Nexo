@@ -2,6 +2,8 @@
 
 ## Direção
 
+Nota de continuidade (15/09/2026): a árvore abaixo inclui arquitetura alvo. As camadas application, contracts, identity e infrastructure já têm implementação parcial; consultar o [mapa atual](22-estado-atual-e-limites.md). BAS-03 e SEC-01 têm validação local concluída; referências a pendências nas secções históricas abaixo não anulam essa evidência.
+
 Monólito modular: uma aplicação e uma base de dados, com domínios separados. Isto simplifica a primeira operação e preserva pontos de separação para crescimento. Não começar com microserviços. TypeScript no domínio e futura aplicação web; contratos portáveis, independentes do framework.
 
 Na versão 0.2.0 existem src/domain, src/web e src/ui, além de testes e exemplos. src/web contém a pré-visualização React/Vite; a camada de aplicação, infraestrutura e módulos de dados abaixo continua planeada. Ver 15-base-web.md para os limites do scaffold.

@@ -4,7 +4,7 @@
 
 SemVer durante desenvolvimento: 0.1.0 fundação; 0.2.x infraestrutura/configurações; 0.3.x catálogo/agenda; 0.4.x reservas/CRM; 0.5.x cliente e motorista; 0.6.x financeiro/pagamentos; 0.7.x estabilização. São marcos propostos, não datas prometidas. 1.0.0 só após gates de lançamento.
 
-Branches curtas por tarefa: `feat/CAL-02-conflicts`, `fix/PAY-03-retry`. Commits pequenos com ID: `feat(CAL-02): validate shared vehicle conflicts`. Tag apenas após testes e changelog; nenhum push remoto está configurado nesta fundação.
+Branches curtas por tarefa: `feat/CAL-02-conflicts`, `fix/PAY-03-retry`. Commits pequenos com ID: `feat(CAL-02): validate shared vehicle conflicts`. Tag apenas após testes e changelog. Remoto atual: ShadowShtr/Nexo, com nome nexo neste PC e normalmente origin num clone. Seguir o [procedimento entre computadores](21-continuidade-entre-pcs.md).
 
 Releases de schema usam migrações progressivas. Para mudança incompatível: expandir schema → escrever/ler compatível → migrar dados → retirar formato antigo em versão posterior. Não alterar valor histórico para adequar o passado à regra nova.
 

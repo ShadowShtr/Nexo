@@ -1,5 +1,7 @@
 # Fundação técnica
 
+Continuidade documental de BAS-01/BAS-04 (15/09/2026): [instalação e rotina entre PCs](../21-continuidade-entre-pcs.md), [mapa e limites atuais](../22-estado-atual-e-limites.md) e [decisões visuais recentes](../23-decisoes-visuais-cliente.md). Entrega apenas documental; não conclui tarefas operacionais pendentes.
+
 Reutilização: BAS-04 deve aplicar a seleção de bibliotecas e a prova de compatibilidade descritas na pesquisa. Ver [pesquisa GitHub](../14-reutilizacao-github.md).
 
 Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pronto](../08-entrega.md) antes de implementar. Para trabalho de interface, aplicar o [sistema visual](../12-design-system.md) e o [mapa de abas](../13-mapa-visual-abas.md); os critérios UI-02/UI-03 complementam os critérios funcionais.
