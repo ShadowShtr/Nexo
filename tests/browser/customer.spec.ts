@@ -59,9 +59,10 @@ test('customer planner fills destination from recent places', async ({ page }) =
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);
   await expect(page.getByRole('heading', { name: 'Planear a sua viagem', exact: true })).toBeVisible();
+  await expect(page.locator('.pm-client-suggestion')).toHaveCount(3);
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Escolha um destino para calcular quilómetros e preço.');
-  await page.getByRole('button', { name: /Estação do Oriente/ }).click();
-  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Estação do Oriente');
+  await page.getByRole('button', { name: /Sintra/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
 });
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.49 — 2026-09-15
+
+- UI-03: a lista de locais recentes no planeador foi limitada às três entradas mais recentes para reduzir a rolagem.
+- PUB-01: endereços adicionais continuam acessíveis pela pesquisa e pelas sugestões filtradas do campo.
+- 87 testes Node, 28 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.48 — 2026-09-15
 
 - UI-03: a descoberta ganhou um destaque visual do Porto com seis paragens pré-selecionadas e rota editável no planeador.
