@@ -31,6 +31,17 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Cabo da Roca');
 });
 
+test('customer bottom navigation omits the duplicate booking entry', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/booking');
+  const nav = page.locator('.pm-bottom-nav');
+  await expect(nav).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Marcar viagem', exact: true })).toHaveCount(0);
+  await expect(nav.getByRole('link')).toHaveCount(2);
+  await expect(nav.getByRole('link', { name: 'Descobrir', exact: true })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Consultar reserva', exact: true })).toBeVisible();
+});
+
 test('customer discovery keeps tour cards readable and opens Porto', async ({ page }) => {
   await page.setViewportSize({ width: 744, height: 900 });
   await page.goto('/?demo=1#/customer/discover');

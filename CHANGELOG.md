@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.54 — 2026-09-15
+
+- removida a entrada duplicada “Marcar viagem” do menu inferior do cliente; o planeador continua disponível na primeira etapa.
+
 ## 0.2.53 — 2026-09-15
 
 - adicionados ícones contextuais aos botões de ação nos fluxos de cliente, proprietário, motorista, catálogo, agenda e autenticação;

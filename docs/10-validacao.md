@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.54 — 15/09/2026
+
+A entrada duplicada “Marcar viagem” foi removida do menu inferior da área de cliente. A página de marcação permanece acessível pelo fluxo principal. A verificação inclui teste de navegação móvel.
+
 ## Incremento 0.2.53 — 15/09/2026
 
 Ícones contextuais foram aplicados aos botões de ação e as ilustrações 3D de motorista e viatura foram integradas na seleção do serviço. Build, testes e verificação visual foram executados após a alteração.
