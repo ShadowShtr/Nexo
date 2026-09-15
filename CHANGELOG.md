@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.72 — 2026-09-15
+
+- adicionada a escolha de datas futuras através do calendário nativo do telemóvel;
+- cada data escolhida mostra apenas os horários disponíveis na agenda do proprietário.
+
 ## 0.2.71 — 2026-09-15
 
 - o calendário do cliente mostra disponibilidade em todas as 24 horas;

@@ -116,6 +116,21 @@ test('customer calendar hides a booked hour and its one-hour buffer', async ({ p
   await expect(times.getByRole('option', { name: '17:00' })).toBeVisible();
 });
 
+test('customer planner opens later dates with available times', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByRole('button', { name: /Sintra/ }).click();
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await page.getByRole('button', { name: 'Escolher outra data' }).click();
+  const customDates = page.locator('#pm-client-more-dates');
+  await customDates.getByLabel('Data para escolher', { exact: true }).fill('2026-09-20');
+  await customDates.getByRole('option', { name: '18:00', exact: true }).click();
+  await expect(page.locator('.pm-client-calendar-days').getByRole('option')).toHaveCount(5);
+  await expect(page.locator('.pm-client-calendar-days').getByRole('option').last()).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();
+});
+
 test('customer planner redraws the map for a different destination', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
