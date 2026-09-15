@@ -2,6 +2,18 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.58 — 15/09/2026
+
+Durante o fluxo de marcação do cliente, “Descobrir” permanece identificado como a área principal no menu inferior; “Marcar viagem” não é apresentado como separador.
+
+## Incremento 0.2.57 — 15/09/2026
+
+Os ícones dos cartões de tour passaram a usar apenas o traço cinza, sem fundo branco, com uma sombra suave para manter a leitura sobre o cartão cinza.
+
+## Incremento 0.2.56 — 15/09/2026
+
+A miniatura da viatura ficou ligeiramente maior e recebeu uma sombra suave no contorno, mantendo o fundo transparente sobre o campo branco.
+
 ## Incremento 0.2.55 — 15/09/2026
 
 A seleção de motorista e carro passou a mostrar uma miniatura da viatura junto de “Carro disponível”, sem o painel grande separado, e os nomes dos motoristas deixaram de ter o ícone de pessoa. A verificação inclui a presença da miniatura e a ausência dos ícones nos nomes.

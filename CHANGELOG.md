@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.58 — 2026-09-15
+
+- durante o fluxo de marcação do cliente, “Descobrir” permanece identificado como a área principal no menu.
+
+## 0.2.57 — 2026-09-15
+
+- os ícones dos cartões de tour agora aparecem sem fundo branco, em cinza e com sombra suave.
+
+## 0.2.56 — 2026-09-15
+
+- a miniatura da viatura ficou ligeiramente maior e recebeu uma sombra suave no contorno.
+
 ## 0.2.55 — 2026-09-15
 
 - a seleção de viatura agora mostra uma miniatura junto de “Carro disponível”;
