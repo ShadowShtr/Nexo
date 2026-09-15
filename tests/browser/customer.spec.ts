@@ -54,6 +54,8 @@ test('customer bottom navigation omits the duplicate booking entry', async ({ pa
   await expect(nav.getByRole('link')).toHaveCount(2);
   await expect(nav.getByRole('link', { name: 'Descobrir', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(nav.getByRole('link', { name: 'Consultar reserva', exact: true })).toBeVisible();
+  await page.goto('/?demo=1#/customer/lookup');
+  await expect(page.getByRole('link', { name: 'Marcar viagem', exact: true })).toHaveCount(0);
 });
 
 test('customer discovery keeps tour cards readable and opens Porto', async ({ page }) => {

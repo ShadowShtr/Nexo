@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.69 — 15/09/2026
+
+A página de consulta não mostra mais o CTA duplicado “Marcar viagem”; o fluxo continua acessível pela área principal Descobrir.
+
 ## Incremento 0.2.68 — 15/09/2026
 
 Os cartões de pré-visualização da rota e do pedido de teste têm agora separação vertical de 1,25rem, preservando a leitura no telemóvel.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.69 — 2026-09-15
+
+- removido o botão duplicado “Marcar viagem” da página de consulta de reservas.
+
 ## 0.2.68 — 2026-09-15
 
 - cartões de rota e pedido ganharam separação vertical clara no fluxo de confirmação.
