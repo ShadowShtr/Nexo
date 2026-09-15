@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.63 — 15/09/2026
+
+Ícones, títulos e descrições dos cartões iniciais ficam alinhados ao centro. Os ícones foram aumentados ligeiramente sem alterar a grelha de três colunas em telemóvel.
+
 ## Incremento 0.2.62 — 15/09/2026
 
 Os ícones dos cartões foram centralizados e aumentados ligeiramente. O botão “Para onde?” recebeu texto e lupa em cinza mais discreto, preservando contraste e foco visível.

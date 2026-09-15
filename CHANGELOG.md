@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.63 — 2026-09-15
+
+- conteúdo dos cartões iniciais passou a ficar alinhado ao centro;
+- ícones foram aumentados ligeiramente, mantendo a grelha compacta.
+
 ## 0.2.62 — 2026-09-15
 
 - ícones dos cartões ficaram ligeiramente maiores e centralizados dentro de cada cartão;
