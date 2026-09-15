@@ -32,10 +32,14 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('62 km');
   await expect(page.locator('.pm-client-route-quote')).toContainText('200,00 €');
+  await expect(page.getByRole('region', { name: 'Escolher data e hora' })).toBeVisible();
+  await page.getByRole('option', { name: 'Terça-feira, 15 de setembro' }).click();
+  await page.getByRole('option', { name: '14:00' }).click();
   await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();
   await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
   await expect(page).toHaveURL(/#\/customer\/booking$/);
   await expect(page.getByRole('heading', { name: 'Escolha o motorista e o carro', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Data e hora escolhidas')).toContainText('15/09/2026 · 14:00');
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Cabo da Roca');
   await expect(page.locator('.pm-vehicle-icon')).toHaveAttribute('src', '/vehicle-sedan.png');
   await expect(page.locator('.pm-option-content strong svg')).toHaveCount(0);

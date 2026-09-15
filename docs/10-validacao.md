@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.65 — 15/09/2026
+
+Após calcular o percurso, o planeador mostra dias e horários disponíveis em uma lista compacta. A escolha é guardada no handoff e aparece na data/hora de recolha da etapa seguinte.
+
 ## Incremento 0.2.64 — 15/09/2026
 
 O conteúdo descritivo dos banners de Lisboa–Sintra e Porto foi deslocado para a zona escura inferior do gradiente, com o botão mantido dentro do cartão.

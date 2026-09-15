@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.65 — 2026-09-15
+
+- o planeador agora apresenta uma lista de dias e horários para marcar a viagem;
+- a data e hora escolhidas seguem para a etapa de motorista e carro.
+
 ## 0.2.64 — 2026-09-15
 
 - descrições, metadados e ação dos banners foram posicionados junto à sombra escura inferior da imagem.

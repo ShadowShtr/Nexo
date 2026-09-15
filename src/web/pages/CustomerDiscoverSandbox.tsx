@@ -17,6 +17,14 @@ const tourOptions = [
 
 const portoTourStops = ['Ribeira do Porto', 'Ponte Dom Luís I', 'Sé do Porto', 'Livraria Lello', 'Palácio da Bolsa', 'Foz do Douro'];
 
+const bookingDates = [
+  { value: '2026-09-14', pt: 'Seg 14 set', en: 'Mon 14 Sep', ariaPt: 'Segunda-feira, 14 de setembro', ariaEn: 'Monday, 14 September' },
+  { value: '2026-09-15', pt: 'Ter 15 set', en: 'Tue 15 Sep', ariaPt: 'Terça-feira, 15 de setembro', ariaEn: 'Tuesday, 15 September' },
+  { value: '2026-09-16', pt: 'Qua 16 set', en: 'Wed 16 Sep', ariaPt: 'Quarta-feira, 16 de setembro', ariaEn: 'Wednesday, 16 September' },
+  { value: '2026-09-17', pt: 'Qui 17 set', en: 'Thu 17 Sep', ariaPt: 'Quinta-feira, 17 de setembro', ariaEn: 'Thursday, 17 September' },
+];
+const bookingTimes = ['09:00', '11:30', '14:00', '16:30', '18:00'];
+
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
   { title: 'Porto', detail: 'Porto, Portugal' },
@@ -338,6 +346,7 @@ export default function CustomerDiscoverSandbox() {
   const [origin, setOrigin] = useState('Lisboa');
   const [destination, setDestination] = useState('');
   const [stops, setStops] = useState<string[]>([]);
+  const [bookingStart, setBookingStart] = useState('2026-09-14T10:00');
   const [activeSearch, setActiveSearch] = useState<ActiveSearch>(null);
   const [remoteSuggestions, setRemoteSuggestions] = useState<GeocodedPlace[]>([]);
   const [geocoderState, setGeocoderState] = useState<'idle' | 'loading'>('idle');
@@ -375,6 +384,7 @@ export default function CustomerDiscoverSandbox() {
     setPlannerKind(kind);
     setDestination(preset);
     setStops([...presetStops]);
+    setBookingStart('2026-09-14T10:00');
     setActiveSearch(null);
     setRemoteSuggestions([]);
     setResolvedPlaces([]);
@@ -386,6 +396,7 @@ export default function CustomerDiscoverSandbox() {
         origin: origin.trim(),
         destination: destination.trim(),
         stops: stops.filter(stop => stop.trim()),
+        start: bookingStart,
         route: previewRoute,
       }));
     } catch {
@@ -527,7 +538,7 @@ export default function CustomerDiscoverSandbox() {
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
       {!destination.trim() && !routeReady && <div className="pm-client-suggestions"><div className="pm-client-suggestions-title"><strong>{say('Locais recentes', 'Recent places')}</strong><span>{say('Toque para preencher o destino', 'Tap to fill destination')}</span></div>{visibleRecentPlaces.map(place => <button type="button" className="pm-client-suggestion" key={place.title} onClick={() => { setDestination(place.title); setRouteReady(false); }}><span className="pm-client-suggestion-pin"><Clock3 size={17}/></span><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={17}/></button>)}</div>}
-      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim() && routeKnown))} disabled={!origin.trim() || !destination.trim() || !routeKnown}><Route size={19} aria-hidden="true" />{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{plannerKind === 'tour' ? say('Estimativa do tour', 'Tour estimate') : say('Estimativa do transfer', 'Transfer estimate')}</span><strong>{money(plannerPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{plannerKind === 'tour' ? say('2 dias', '2 days') : say('Transfer', 'Transfer')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(plannerPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{plannerKind === 'tour' ? say('Inclui até 2 pessoas. Cada pessoa adicional acrescenta 35,00 €. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. Each additional person adds €35. Driver availability is confirmed in the next step.') : say(`Cálculo de demonstração: ${money(1000)} de base + ${money(200)} por km. Paragens incluídas no percurso; a tarifa real será definida pelo proprietário.`, `Demo calculation: ${money(1000)} base + ${money(200)} per km. Stops are included in the route; the owner will define the live tariff.`)}</p><button type="button" className="pm-client-primary-action" onClick={chooseBooking}><CarFront size={19} aria-hidden="true" />{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
+      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim() && routeKnown))} disabled={!origin.trim() || !destination.trim() || !routeKnown}><Route size={19} aria-hidden="true" />{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{plannerKind === 'tour' ? say('Estimativa do tour', 'Tour estimate') : say('Estimativa do transfer', 'Transfer estimate')}</span><strong>{money(plannerPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{plannerKind === 'tour' ? say('2 dias', '2 days') : say('Transfer', 'Transfer')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(plannerPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{plannerKind === 'tour' ? say('Inclui até 2 pessoas. Cada pessoa adicional acrescenta 35,00 €. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. Each additional person adds €35. Driver availability is confirmed in the next step.') : say(`Cálculo de demonstração: ${money(1000)} de base + ${money(200)} por km. Paragens incluídas no percurso; a tarifa real será definida pelo proprietário.`, `Demo calculation: ${money(1000)} base + ${money(200)} per km. Stops are included in the route; the owner will define the live tariff.`)}</p><section className="pm-client-booking-calendar" aria-label={say('Escolher data e hora', 'Choose date and time')}><div className="pm-client-booking-calendar-head"><CalendarDays size={18} aria-hidden="true"/><div><strong>{say('Quando deseja viajar?', 'When would you like to travel?')}</strong><span>{say('Escolha um dia e um horário disponíveis.', 'Choose an available day and time.')}</span></div></div><div className="pm-client-calendar-days" role="listbox" aria-label={say('Dias disponíveis', 'Available days')}>{bookingDates.map(day => <button type="button" role="option" aria-selected={bookingStart.startsWith(day.value)} aria-label={say(day.ariaPt, day.ariaEn)} className={bookingStart.startsWith(day.value) ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${day.value}T${bookingStart.slice(11, 16)}`)} key={day.value}>{say(day.pt, day.en)}</button>)}</div><div className="pm-client-calendar-times" role="listbox" aria-label={say('Horários disponíveis', 'Available times')}>{bookingTimes.map(time => <button type="button" role="option" aria-selected={bookingStart.slice(11, 16) === time} aria-label={time} className={bookingStart.slice(11, 16) === time ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${bookingStart.slice(0, 10)}T${time}`)} key={time}>{time}</button>)}</div></section><button type="button" className="pm-client-primary-action" onClick={chooseBooking}><CarFront size={19} aria-hidden="true" />{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
     </section> : <>
       <section className="pm-client-categories" aria-labelledby="client-adventure-title">
         <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>

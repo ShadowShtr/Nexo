@@ -222,7 +222,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-planner-head h1 { margin:.15rem 0 0; font-size:clamp(1.65rem,6vw,2.2rem); line-height:1.05; letter-spacing:-.055em; }
 .pm-client-eyebrow { color:#777981; font-size:.75rem; font-weight:600; }
 .pm-client-back { display:grid; place-items:center; width:42px; height:42px; flex:0 0 auto; border:0; border-radius:50%; background:#f1f1f2; color:var(--pm-ink); }
-.pm-client-back:focus-visible,.pm-client-location-button:focus-visible,.pm-client-primary-action:focus-visible,.pm-client-suggestion:focus-visible,.pm-client-add-stop:focus-visible,.pm-client-reorder-stop:focus-visible,.pm-client-remove-stop:focus-visible { outline:2px solid var(--pm-focus); outline-offset:3px; }
+.pm-client-back:focus-visible,.pm-client-location-button:focus-visible,.pm-client-primary-action:focus-visible,.pm-client-suggestion:focus-visible,.pm-client-add-stop:focus-visible,.pm-client-reorder-stop:focus-visible,.pm-client-remove-stop:focus-visible,.pm-client-calendar-choice:focus-visible { outline:2px solid var(--pm-focus); outline-offset:3px; }
 .pm-client-planner-pills { display:flex; gap:.65rem; }
 .pm-client-planner-pills span { display:inline-flex; align-items:center; gap:.45rem; min-height:44px; padding:0 .9rem; border-radius:999px; background:#f2f2f3; color:#27282c; font-size:.82rem; font-weight:600; }
 .pm-client-address-card { padding:1rem 1.1rem; border:1px solid #17181b; border-radius:22px; background:#fff; box-shadow:0 5px 18px rgb(20 24 40 / 7%); }
@@ -285,11 +285,27 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-route-stats span { display:grid; gap:.18rem; padding:.65rem; border-radius:14px; background:#f4f4f5; color:#777981; font-size:.67rem; line-height:1.2; }
 .pm-client-route-stats strong { color:var(--pm-ink); font-size:.85rem; font-variant-numeric:tabular-nums; }
 .pm-client-route-quote p { margin:0; color:#686970; font-size:.76rem; line-height:1.45; }
+.pm-client-booking-calendar { display:grid; gap:.7rem; padding:.85rem; border:1px solid #dfe0e3; border-radius:18px; background:#f7f7f8; }
+.pm-client-booking-calendar-head { display:flex; align-items:flex-start; gap:.55rem; color:var(--pm-ink); }
+.pm-client-booking-calendar-head svg { margin-top:.1rem; color:#5f6068; flex:0 0 auto; }
+.pm-client-booking-calendar-head div { display:grid; gap:.15rem; }
+.pm-client-booking-calendar-head strong { font-size:.88rem; }
+.pm-client-booking-calendar-head span { color:#777981; font-size:.73rem; }
+.pm-client-calendar-days,.pm-client-calendar-times { display:grid; gap:.45rem; }
+.pm-client-calendar-days { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.pm-client-calendar-times { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.pm-client-calendar-choice { display:grid; place-items:center; min-height:40px; padding:.35rem .25rem; border:1px solid #d7d8dc; border-radius:11px; background:#fff; color:#5f6068; font-size:.7rem; font-weight:600; }
+.pm-client-calendar-choice:hover { border-color:#9b9da6; }
+.pm-client-calendar-choice-active { border-color:var(--pm-ink); background:var(--pm-ink); color:#fff; }
+.pm-booking-slot { display:flex; align-items:center; gap:.4rem; margin:-.35rem 0 .1rem; color:#686970; font-size:.78rem; }
+.pm-booking-slot svg { color:#5558bf; flex:0 0 auto; }
+.pm-booking-slot strong { color:var(--pm-ink); font-variant-numeric:tabular-nums; }
 @media (max-width:359px) {
   .pm-client-planner-pills span { padding-inline:.7rem; }
   .pm-client-route-stats { grid-template-columns:1fr; }
   .pm-client-route-stats span { grid-template-columns:1fr auto; align-items:center; }
   .pm-client-route-stats strong { text-align:right; }
+  .pm-client-calendar-times { grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
 .pm-client-app .pm-bottom-nav { position:fixed; bottom:calc(.75rem + env(safe-area-inset-bottom,0px)); left:50%; z-index:20; display:flex; width:calc(100% - 32px); max-width:470px; transform:translateX(-50%); justify-content:space-between; gap:.2rem; padding:.4rem; border-radius:var(--pm-radius-nav); background:rgb(255 255 255 / 92%); box-shadow:0 8px 28px rgb(20 24 40 / 15%); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
 .pm-client-app .pm-bottom-nav .pm-nav-link { flex:1; justify-content:center; padding:.65rem .55rem; gap:.3rem; border-radius:var(--pm-radius-pill); font-size:.72rem; }
