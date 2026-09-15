@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.61 — 15/09/2026
+
+Em telemóvel, a grelha de descoberta mostra três cartões por linha. O tamanho dos cartões, textos e ilustrações foi reduzido para eliminar espaço vazio e aproximar a referência visual da Bolt.
+
 ## Incremento 0.2.60 — 15/09/2026
 
 Os cartões iniciais usam seis ilustrações 3D diferentes, com ícones reduzidos para cerca de 40–42 px em ecrãs móveis, mantendo fundo transparente e sombra discreta.

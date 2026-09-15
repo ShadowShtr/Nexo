@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.61 — 2026-09-15
+
+- a grelha inicial passa a mostrar três cartões por linha em telemóvel;
+- cartões, textos e ícones foram compactados para reduzir espaço vazio.
+
 ## 0.2.60 — 2026-09-15
 
 - os ícones dos cartões foram reduzidos para uma escala compacta em telemóvel;

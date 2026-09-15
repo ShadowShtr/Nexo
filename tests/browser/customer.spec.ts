@@ -10,6 +10,8 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('heading', { name: 'Escolhe a tua aventura.', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pesquisar um tour' })).toBeVisible();
   await expect(page.locator('.pm-client-category')).toHaveCount(6);
+  const mobileGridColumns = await page.locator('.pm-client-category-grid').evaluate(node => getComputedStyle(node).gridTemplateColumns.split(' ').length);
+  expect(mobileGridColumns).toBe(3);
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).locator('img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
