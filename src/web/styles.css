@@ -328,7 +328,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-calendar-choice-active { border-color:var(--pm-ink); background:var(--pm-ink); color:#fff; }
 .pm-booking-slot { display:flex; align-items:center; gap:.4rem; margin:-.35rem 0 .1rem; color:#686970; font-size:.78rem; }
 .pm-booking-calendar-icon { width:2rem; height:2rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
-.pm-client-action-car { width:2.5rem; height:2.5rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
+.pm-client-action-car,.pm-client-action-route { width:2.5rem; height:2.5rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-booking-slot strong { color:var(--pm-ink); font-variant-numeric:tabular-nums; }
 @media (max-width:359px) {
   .pm-client-planner-pills span { padding-inline:.7rem; }

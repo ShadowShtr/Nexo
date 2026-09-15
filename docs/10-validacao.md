@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.70 — 15/09/2026
+
+O CTA “Ver rota e preço” usa agora o asset de rota da marca (`/route-landmark.png`), mantendo sombra e proporção dos ícones 3D do fluxo do cliente.
+
 ## Incremento 0.2.69 — 15/09/2026
 
 A página de consulta não mostra mais o CTA duplicado “Marcar viagem”; o fluxo continua acessível pela área principal Descobrir.

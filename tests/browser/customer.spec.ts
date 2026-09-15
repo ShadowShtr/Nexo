@@ -29,6 +29,7 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Lisboa');
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' }).locator('.pm-client-action-route')).toHaveAttribute('src', '/route-landmark.png');
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('62 km');
   await expect(page.locator('.pm-client-route-quote')).toContainText('200,00 €');

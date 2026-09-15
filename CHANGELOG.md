@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.70 — 2026-09-15
+
+- o botão “Ver rota e preço” passou a usar o ícone visual de rotas da marca, com sombra e escala consistente com os restantes ícones do cliente.
+
 ## 0.2.69 — 2026-09-15
 
 - removido o botão duplicado “Marcar viagem” da página de consulta de reservas.
