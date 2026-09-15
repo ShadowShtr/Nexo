@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.52 — 2026-09-15
+
+- PUB-01: a etapa de motorista e carro agora recebe a rota escolhida no planeador, incluindo origem, paragens, destino, distância e duração.
+- PUB-01: o mapa da seleção e da revisão usa o mesmo percurso entregue pelo cliente; a rota antiga só aparece quando a marcação é aberta diretamente.
+- 87 testes Node, 29 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.51 — 2026-09-15
 
 - PUB-01: cada paragem passou a ter controlos de subir e descer, com limites desativados nas extremidades; o destino mantém-se sempre no fim.

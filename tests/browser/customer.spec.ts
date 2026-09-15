@@ -27,7 +27,8 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();
   await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
   await expect(page).toHaveURL(/#\/customer\/booking$/);
-  await expect(page.getByLabel('Serviço', { exact: true })).toHaveValue('tour');
+  await expect(page.getByRole('heading', { name: 'Escolha o motorista e o carro', exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Cabo da Roca');
 });
 
 test('customer discovery keeps tour cards readable and opens Porto', async ({ page }) => {
@@ -237,6 +238,17 @@ test('customer reorders stops with up and down controls while keeping destinatio
   await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('UBBO');
   await expect(page.getByLabel('Paragem 2', { exact: true })).toHaveValue('Vasco da Gama Shopping');
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
+
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
+  await expect(page).toHaveURL(/#\/customer\/booking$/);
+  await expect(page.getByRole('heading', { name: 'Escolha o motorista e o carro', exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' }).locator('.pm-route-points li strong')).toHaveText([
+    'Lisboa',
+    'UBBO',
+    'Vasco da Gama Shopping',
+    'Sintra',
+  ]);
 });
 
 test('customer chooses route, car, checks conflicts and submits and cancels a test request', async ({ page }) => {

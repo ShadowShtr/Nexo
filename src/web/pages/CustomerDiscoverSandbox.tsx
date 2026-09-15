@@ -380,6 +380,17 @@ export default function CustomerDiscoverSandbox() {
     setResolvedPlaces([]);
   };
   const chooseBooking = () => {
+    try {
+      window.sessionStorage.setItem('pm.customer.route-handoff', JSON.stringify({
+        kind: plannerKind,
+        origin: origin.trim(),
+        destination: destination.trim(),
+        stops: stops.filter(stop => stop.trim()),
+        route: previewRoute,
+      }));
+    } catch {
+      // A blocked session store should not prevent the demo navigation.
+    }
     const url = new URL(window.location.href);
     if (plannerKind === 'tour') url.searchParams.set('tour', '1');
     else url.searchParams.delete('tour');
