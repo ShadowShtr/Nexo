@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Escolha de inglês traduz navegação e conteúdo publicado; deep link Instagram mantém motorista; nenhuma etapa regressa silenciosamente a português.
 
-**Evidência:** `src/web/pages/CustomerDiscoverSandbox.tsx`, `src/web/pages/CustomerSandbox.tsx` e `tests/browser/customer.spec.ts` cobrem entrada bilingue e sequência de teste. Perfil vindo de Instagram e publicação persistente continuam pendentes.
+**Evidência:** `src/web/pages/CustomerDiscoverSandbox.tsx`, `src/web/services/address-search.ts`, `src/web/pages/CustomerSandbox.tsx` e `tests/browser/customer.spec.ts` cobrem entrada bilingue, autocomplete substituível, lote/número e sequência de teste. Geoapify requer configuração; Photon serve apenas o desenvolvimento sem SLA. Perfil vindo de Instagram e publicação persistente continuam pendentes.
 
 ## PUB-02 — Seleção e formulário de reserva
 

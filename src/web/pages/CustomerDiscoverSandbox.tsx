@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { quote } from '../../domain/pricing';
 import { RouteMap } from '../components/RouteMap';
 import { tourRoute, type DemoRoute } from '../demo-routes';
+import { searchAddresses } from '../services/address-search';
 
 const tourOptions = [
   { id: 'lisbon', icon: '✦', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
@@ -52,9 +53,9 @@ type Suggestion = { title: string; detail: string; coordinates?: readonly [numbe
 type AddressUnit = { value: string; marker: 'number' | 'lot' };
 type AddressUnitPrefix = { marker: AddressUnit['marker'] };
 
-const knownStreetUnits: ReadonlyArray<{ aliases: string[]; street: string; detail: string; coordinates: readonly [number, number]; units: string[] }> = [
-  { aliases: ['rua pedro de sintra', 'rua pedro sintra'], street: 'Rua Pedro de Sintra', detail: 'Carregado e Cadafais, Alenquer', coordinates: [39.0230, -8.9750], units: ['40', '84'] },
-  { aliases: ['avenida cabo da boa esperanca', 'avenida cabo da boa esperanca l65'], street: 'Avenida Cabo da Boa Esperança', detail: 'Carregado, Alenquer', coordinates: [39.0218561, -8.9748176], units: ['65'] },
+const knownStreets: ReadonlyArray<{ aliases: string[]; street: string; detail: string; coordinates: readonly [number, number]; unitKind?: AddressUnit['marker'] }> = [
+  { aliases: ['rua pedro de sintra', 'rua pedro sintra'], street: 'Rua Pedro de Sintra', detail: 'Carregado e Cadafais, Alenquer', coordinates: [39.0224941, -8.9707512], unitKind: 'lot' },
+  { aliases: ['avenida cabo da boa esperanca', 'avenida cabo da boa esperanca l65'], street: 'Avenida Cabo da Boa Esperança', detail: 'Carregado, Alenquer', coordinates: [39.0218561, -8.9748176], unitKind: 'lot' },
 ];
 
 const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly [number, number] }> = [
@@ -144,19 +145,17 @@ function similarAddressTerm(value: string, term: string) {
   return normalizePlace(value).split(/[^a-z0-9]+/).some(word => word.length >= 4 && editDistance(word, term) <= maxDistance);
 }
 
-function knownUnitSuggestions(query: string): Suggestion[] {
+function streetUnitFallbackSuggestions(query: string): Suggestion[] {
   const street = knownStreetForQuery(query);
   if (!street) return [];
   const requestedUnit = addressUnit(query);
-  if (!requestedUnit && !addressUnitPrefix(query)) return [];
-  const values = requestedUnit
-    ? street.units.filter(value => value.toLocaleLowerCase() === requestedUnit.value.toLocaleLowerCase())
-    : street.units;
-  return (values.length ? values : street.units).map(value => ({
-    title: `${street.street}, n.º ${value}`,
-    detail: `${street.detail} · Número reconhecido no mapa`,
+  if (!requestedUnit) return [];
+  const unit = street.unitKind ? { ...requestedUnit, marker: street.unitKind } : requestedUnit;
+  return [{
+    title: titleWithUnit(street.street, unit),
+    detail: `${street.detail} · ${unit.marker === 'lot' ? 'Lote' : 'Número'} indicado · ponto aproximado na rua`,
     coordinates: street.coordinates,
-  }));
+  }];
 }
 
 function geocoderRelevance(query: string, title: string, detail: string, requestedUnit?: AddressUnit, rawTitle = title) {
@@ -203,13 +202,15 @@ function addressUnitPrefix(value: string): AddressUnitPrefix | undefined {
 
 function knownStreetForQuery(query: string) {
   const terms = addressSearchTerms(query);
-  return knownStreetUnits.find(street => terms.length > 0 && terms.every(term => street.aliases.some(alias => similarAddressTerm(alias, term))));
+  return knownStreets.find(street => terms.length > 0 && terms.every(term => street.aliases.some(alias => similarAddressTerm(alias, term))));
 }
 
 function titleWithUnit(title: string, unit?: AddressUnit) {
   if (!unit) return title;
   const escaped = unit.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(`(?:^|\\D)${escaped}(?:\\D|$)`).test(title) ? title : `${title}, n.º ${unit.value}`;
+  const alreadyHasUnit = new RegExp(`(?:lote|lt|n(?:\\s*[.ºo°]){0,2}|numero|num)\\s*${escaped}(?:\\D|$)`, 'i').test(title);
+  if (alreadyHasUnit) return title;
+  return `${title}, ${unit.marker === 'lot' ? 'Lote' : 'n.º'} ${unit.value}`;
 }
 
 function runningAddressQuery(value: string) {
@@ -326,7 +327,7 @@ export default function CustomerDiscoverSandbox() {
   const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en', resolvedPlaces), [origin, destination, plannerKind, stops, i18n.language, resolvedPlaces]);
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
   const activeQuery = activeSearch?.kind === 'origin' ? origin : activeSearch?.kind === 'destination' ? destination : activeSearch ? stops[activeSearch.index ?? -1] ?? '' : '';
-  const localUnitSuggestions = useMemo(() => knownUnitSuggestions(activeQuery), [activeQuery]);
+  const localUnitSuggestions = useMemo(() => streetUnitFallbackSuggestions(activeQuery), [activeQuery]);
   const localActiveSuggestions = useMemo(() => localUnitSuggestions.length ? localUnitSuggestions : recentPlaces.filter(place => placeMatches(place, activeQuery)), [activeQuery, localUnitSuggestions]);
   const activeUnit = addressUnit(activeQuery);
   const activeUnitPrefix = addressUnitPrefix(activeQuery);
@@ -408,69 +409,24 @@ export default function CustomerDiscoverSandbox() {
     const timer = window.setTimeout(async () => {
       setGeocoderState('loading');
       try {
-        const endpoint = import.meta.env.VITE_GEOCODER_URL || 'https://nominatim.openstreetmap.org/search';
         const requestedUnit = addressUnit(query);
-        const request = async (url: string) => {
-          const requestController = new AbortController();
-          let timedOut = false;
-          const relayAbort = () => requestController.abort();
-          controller.signal.addEventListener('abort', relayAbort, { once: true });
-          const timeout = window.setTimeout(() => { timedOut = true; requestController.abort(); }, 2500);
-          try {
-            return await fetch(url, { headers: { Accept: 'application/json' }, signal: requestController.signal });
-          } catch (error) {
-            // Um pedido lento não pode bloquear as variantes seguintes nem o
-            // segundo provedor. O cancelamento do efeito continua a propagar.
-            if (timedOut) return null;
-            throw error;
-          } finally {
-            window.clearTimeout(timeout);
-            controller.signal.removeEventListener('abort', relayAbort);
-          }
-        };
-        const next: Array<{ place: GeocodedPlace; score: number }> = [];
-        for (const candidate of geocoderQueries(query)) {
-          const params = new URLSearchParams({ format: 'jsonv2', addressdetails: '1', limit: '6', countrycodes: 'pt', 'accept-language': i18n.language === 'en' ? 'en' : 'pt-PT', q: `${candidate}, Portugal` });
-          const response = await request(`${endpoint}?${params.toString()}`);
-          if (!response?.ok) continue;
-          const payload = await response.json() as Array<{ display_name?: string; name?: string; lat?: string; lon?: string; address?: { house_number?: string; road?: string; pedestrian?: string; residential?: string; street?: string } }>;
-          next.push(...payload.flatMap(item => {
-            const latitude = Number(item.lat);
-            const longitude = Number(item.lon);
-            if (!item.display_name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
-            const providerName = item.name?.trim();
-            const providerStreet = [item.address?.road, item.address?.pedestrian, item.address?.residential, item.address?.street].find(Boolean)?.trim();
-            const rawTitle = providerName && !/^\d+[A-Za-z]?$/.test(providerName)
-              ? providerName
-              : providerStreet || item.display_name.split(',')[0]?.trim() || candidate;
-            const providerUnit = item.address?.house_number ? { value: item.address.house_number, marker: 'number' as const } : undefined;
-            const title = titleWithUnit(rawTitle || candidate, requestedUnit ?? providerUnit);
-            const detail = item.display_name.replace(`${rawTitle},`, '').trim() || item.display_name;
-            const relevance = geocoderRelevance(query, title, detail, requestedUnit, rawTitle);
-            return [{ place: { title, detail, coordinates: [latitude, longitude] as const }, score: relevance }];
-          }));
-        }
-        // Photon é uma segunda fonte pública sem chave para o caso de o
-        // Nominatim não responder ou não reconhecer a frase completa.
-        if (!next.length) {
-          const fallback = import.meta.env.VITE_GEOCODER_FALLBACK_URL || 'https://photon.komoot.io/api/';
-          const params = new URLSearchParams({ q: `${query}, Portugal`, limit: '6', lang: i18n.language === 'en' ? 'en' : 'pt' });
-          const response = await request(`${fallback}?${params.toString()}`);
-          if (response?.ok) {
-            const payload = await response.json() as { features?: Array<{ properties?: { name?: string; street?: string; housenumber?: string; city?: string; state?: string; country?: string }; geometry?: { coordinates?: [number, number] } }> };
-            next.push(...(payload.features ?? []).flatMap(feature => {
-              const coordinates = feature.geometry?.coordinates;
-              const properties = feature.properties ?? {};
-              if (!coordinates || coordinates.length < 2 || !Number.isFinite(coordinates[0]) || !Number.isFinite(coordinates[1])) return [];
-              const streetTitle = [properties.street, properties.housenumber].filter(Boolean).join(' ');
-              const rawTitle = properties.name?.trim() && !/^\d+[A-Za-z]?$/.test(properties.name.trim()) ? properties.name.trim() : streetTitle || properties.name?.trim() || query;
-              const title = titleWithUnit(rawTitle, requestedUnit);
-              const detail = [properties.street && properties.name !== properties.street ? properties.street : '', properties.housenumber && properties.name !== properties.housenumber ? properties.housenumber : '', properties.city, properties.state, properties.country].filter(Boolean).join(', ') || 'Portugal';
-              const score = geocoderRelevance(query, title, detail, requestedUnit, rawTitle);
-              return [{ place: { title, detail, coordinates: [coordinates[1], coordinates[0]] as const }, score }];
-            }));
-          }
-        }
+        const providerResults = await searchAddresses({
+          queries: geocoderQueries(query),
+          language: i18n.language === 'en' ? 'en' : 'pt',
+          signal: controller.signal,
+          geoapifyKey: import.meta.env.VITE_GEOAPIFY_API_KEY?.trim(),
+          geoapifyUrl: import.meta.env.VITE_GEOAPIFY_URL?.trim() || undefined,
+          photonUrl: import.meta.env.VITE_PHOTON_URL?.trim() || undefined,
+        });
+        const next = providerResults.map(result => {
+          const knownStreet = knownStreetForQuery(query);
+          const effectiveUnit = requestedUnit && knownStreet?.unitKind ? { ...requestedUnit, marker: knownStreet.unitKind } : requestedUnit;
+          const title = titleWithUnit(result.title, effectiveUnit);
+          const detail = effectiveUnit && normalizePlace(title) !== normalizePlace(result.title)
+            ? `${result.detail} · ${effectiveUnit.marker === 'lot' ? 'Lote' : 'Número'} indicado · ponto aproximado na rua`
+            : result.detail;
+          return { place: { title, detail, coordinates: result.coordinates }, score: geocoderRelevance(query, title, detail, effectiveUnit, result.title) };
+        });
         const unique = next
           .sort((left, right) => right.score - left.score)
           .map(item => item.place)
@@ -482,7 +438,7 @@ export default function CustomerDiscoverSandbox() {
       } finally {
         if (!controller.signal.aborted) setGeocoderState('idle');
       }
-    }, 350);
+    }, 450);
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, [activeQuery, activeSearch?.kind, activeSearch?.index, i18n.language, localActiveSuggestions.length]);
   const selectPlace = (place: Suggestion) => {
@@ -515,7 +471,7 @@ export default function CustomerDiscoverSandbox() {
         <label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-destination-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say('Destino', 'Destination')}</small><input list="pm-client-destination-options" aria-label={say('Destino', 'Destination')} value={destination} onFocus={() => setActiveSearch({ kind: 'destination' })} onChange={event => { setDestination(event.target.value); setActiveSearch({ kind: 'destination' }); setRouteReady(false); }} placeholder={say('Para onde?', 'Where to?')} /><datalist id="pm-client-destination-options">{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-add-stop" onClick={addStop} aria-label={say('Adicionar paragem', 'Add stop')}>＋</button></label>
         {stops.map((stop, index) => <Fragment key={`stop-${index}`}><div className="pm-client-address-divider" /><label className="pm-client-address-row"><span className="pm-client-address-icon pm-client-stop-icon"><MapPinned size={19}/></span><span className="pm-client-address-field"><small>{say(`Paragem ${index + 1}`, `Stop ${index + 1}`)}</small><input list={`pm-client-stop-options-${index}`} aria-label={say(`Paragem ${index + 1}`, `Stop ${index + 1}`)} value={stop} onFocus={() => setActiveSearch({ kind: 'stop', index })} onChange={event => { updateStop(index, event.target.value); setActiveSearch({ kind: 'stop', index }); }} placeholder={say('Adicionar uma morada', 'Add an address')} /><datalist id={`pm-client-stop-options-${index}`}>{recentPlaces.map(place => <option value={place.title} key={place.title}>{place.detail}</option>)}</datalist></span><button type="button" className="pm-client-remove-stop" onClick={() => removeStop(index)} aria-label={say(`Remover paragem ${index + 1}`, `Remove stop ${index + 1}`)}><X size={17}/></button></label></Fragment>)}
       </div>
-      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeUnitPrefix && activeSuggestions.length > 0 && <div className="pm-client-suggestions-title"><strong>{say('Números desta rua', 'Numbers on this street')}</strong><span>{say('Escolha um lote ou número', 'Choose a lot or number')}</span></div>}{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={`${place.title}-${place.detail}`} onClick={() => selectPlace(place)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{geocoderState === 'loading' ? say('A procurar moradas…', 'Searching addresses…') : say('Nenhum resultado encontrado. Tente escrever a morada completa.', 'No result found. Try the full address.')}</p>}</div>}
+      {activeSearch && activeQuery.trim() && <div className="pm-client-inline-suggestions" role="listbox" aria-label={say('Sugestões de morada', 'Address suggestions')}>{activeUnitPrefix && activeSuggestions.length > 0 && <div className="pm-client-suggestions-title"><strong>{say('Arruamento encontrado', 'Street found')}</strong><span>{say('Escreva o lote ou número', 'Enter the lot or number')}</span></div>}{activeSuggestions.length ? activeSuggestions.map(place => <button type="button" role="option" className="pm-client-inline-suggestion" key={`${place.title}-${place.detail}`} onClick={() => selectPlace(place)}><MapPinned size={17}/><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={16}/></button>) : <p>{geocoderState === 'loading' ? say('A procurar moradas…', 'Searching addresses…') : say('Nenhum resultado encontrado. Verifique a localidade ou experimente só o nome da rua.', 'No result found. Check the town or try only the street name.')}</p>}</div>}
       <RouteMap route={destination.trim() && routeKnown ? previewRoute : originPreviewRoute} language={i18n.language === 'en' ? 'en' : 'pt'} mode={destination.trim() && routeKnown ? 'full' : 'preview'} previewMessage={destination.trim() && !routeKnown ? say('Escolha um endereço sugerido para calcular quilómetros e preço.', 'Choose a suggested address to calculate distance and price.') : say('Escolha um destino para calcular quilómetros e preço.', 'Choose a destination to calculate distance and price.')}/>
       <button type="button" className="pm-client-location-button" onClick={useLocation}><MapPinned size={18}/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>

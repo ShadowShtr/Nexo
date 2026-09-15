@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.46 — 15/09/2026
+
+A pesquisa passou a distinguir `Lote` de `n.º`, removeu a lista local de números não comprovados e preserva o lote escrito pelo cliente quando o fornecedor só devolve o arruamento. Nessa situação, a interface declara “ponto aproximado na rua”. Geoapify fica preparado como fonte principal mediante chave e Photon é o fallback sem chave no desenvolvimento; o parâmetro `lang=pt`, não suportado pelo Photon, foi removido. O Nominatim público deixou de alimentar o autocomplete. Resultado: 87 testes Node, 26 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.45 — 14/09/2026
 
 Quando o utilizador escreve apenas o marcador `lote` ou `n.º`, a interface apresenta os números conhecidos do arruamento e identifica a lista. Ao escrever um valor não cadastrado, mantém apenas opções existentes e não fabrica uma morada. Resultados remotos são filtrados pelos termos da rua. Resultado: 85 testes Node, 26 testes Playwright, build TypeScript/Vite e validação documental aprovados.

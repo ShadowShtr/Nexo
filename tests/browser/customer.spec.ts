@@ -79,47 +79,47 @@ test('customer planner suggests tourist places and shopping centres', async ({ p
 });
 
 test('customer planner geocodes an address outside the curated catalogue', async ({ page }) => {
-  await page.route('https://nominatim.openstreetmap.org/search**', async route => {
+  await page.route('https://photon.komoot.io/api/**', async route => {
     await route.fulfill({
       contentType: 'application/json',
-      body: JSON.stringify([{ name: 'Rua do Alecrim, 10', display_name: 'Rua do Alecrim, 10, Misericórdia, Lisboa, Portugal', lat: '38.7095', lon: '-9.1434' }]),
+      body: JSON.stringify({ features: [{ properties: { name: 'Rua do Alecrim', street: 'Rua do Alecrim', housenumber: '10', city: 'Lisboa', country: 'Portugal' }, geometry: { coordinates: [-9.1434, 38.7095] } }] }),
     });
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Destino', { exact: true }).fill('Rua do Alecrim 10');
-  await expect(page.getByRole('option', { name: /Rua do Alecrim, 10 Misericórdia/ })).toBeVisible();
-  await page.getByRole('option', { name: /Rua do Alecrim, 10 Misericórdia/ }).click();
-  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Rua do Alecrim, 10');
+  await expect(page.getByRole('option', { name: /Rua do Alecrim, n\.º 10.*Lisboa/ })).toBeVisible();
+  await page.getByRole('option', { name: /Rua do Alecrim, n\.º 10.*Lisboa/ }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Rua do Alecrim, n.º 10');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
-  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Rua do Alecrim, 10');
+  await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Rua do Alecrim, n.º 10');
 });
 
 test('customer planner relaxes an over-specified street search', async ({ page }) => {
   const queries: string[] = [];
-  await page.route('https://nominatim.openstreetmap.org/search**', async route => {
+  await page.route('https://photon.komoot.io/api/**', async route => {
     const query = new URL(route.request().url()).searchParams.get('q') ?? '';
     queries.push(query);
     if (!query.toLocaleLowerCase().includes('rua pedro 40 centro')) {
-      await route.fulfill({ contentType: 'application/json', body: '[]' });
+      await route.fulfill({ contentType: 'application/json', body: '{"features":[]}' });
       return;
     }
     await route.fulfill({
       contentType: 'application/json',
-      body: JSON.stringify([{ name: 'Rua Pedro de Sintra', display_name: 'Rua Pedro de Sintra, Carregado e Cadafais, Alenquer, Lisboa, Portugal', lat: '39.0230', lon: '-8.9750' }]),
+      body: JSON.stringify({ features: [{ properties: { name: 'Rua Pedro de Sintra', city: 'Alenquer', postcode: '2580-510', country: 'Portugal' }, geometry: { coordinates: [-8.9707512, 39.0224941] } }] }),
     });
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lt 40 centro');
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
-  await page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ }).click();
-  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, n.º 40');
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 40/ })).toBeVisible();
+  await page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 40/ }).click();
+  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, Lote 40');
   expect(queries.some(query => query.toLocaleLowerCase().includes('rua pedro 40 centro'))).toBeTruthy();
   await page.getByLabel('Local de partida', { exact: true }).fill('ruapedrodesintralt40');
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 40 Carregado e Cadafais/ })).toBeVisible();
 });
 
 test('customer planner prioritises the matching street over nearby numeric results', async ({ page }) => {
@@ -127,7 +127,7 @@ test('customer planner prioritises the matching street over nearby numeric resul
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra n 40');
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40 Carregado e Cadafais/ })).toBeVisible();
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 40 Carregado e Cadafais/ })).toBeVisible();
   await expect(page.locator('.pm-client-inline-suggestion')).toHaveCount(1);
   await expect(page.locator('.pm-client-inline-suggestion', { hasText: /Lawrence|^40/ })).toHaveCount(0);
 });
@@ -137,24 +137,25 @@ test('customer planner corrects a close street typo and preserves the lot number
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sinta lote 84');
-  const suggestion = page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 84 Carregado e Cadafais/ });
+  const suggestion = page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 84 Carregado e Cadafais/ });
   await expect(suggestion).toBeVisible();
   await suggestion.click();
-  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, n.º 84');
+  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, Lote 84');
 });
 
-test('customer planner lists known street numbers when a lot marker has no value yet', async ({ page }) => {
+test('customer planner keeps lots distinct from house numbers and marks street-level precision', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lote');
-  await expect(page.getByText('Números desta rua', { exact: true })).toBeVisible();
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40/ })).toBeVisible();
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 84/ })).toBeVisible();
-  await expect(page.locator('.pm-client-inline-suggestion')).toHaveCount(2);
-  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lote 999');
-  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra, n\.º 40/ })).toBeVisible();
-  await expect(page.getByRole('option', { name: /n\.º 999/ })).toHaveCount(0);
+  await expect(page.getByText('Arruamento encontrado', { exact: true })).toBeVisible();
+  await expect(page.getByRole('option', { name: /Rua Pedro de Sintra Carregado e Cadafais/ })).toBeVisible();
+  await page.getByLabel('Local de partida', { exact: true }).fill('rua pedro sintra lote 86');
+  const lot = page.getByRole('option', { name: /Rua Pedro de Sintra, Lote 86.*ponto aproximado na rua/ });
+  await expect(lot).toBeVisible();
+  await expect(page.locator('.pm-client-inline-suggestion')).toHaveCount(1);
+  await lot.click();
+  await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Rua Pedro de Sintra, Lote 86');
 });
 
 test('customer adds a stop inline and hides recent places after choosing a destination', async ({ page }) => {

@@ -1,6 +1,6 @@
 # 11 — Viabilidade de custo base zero e cálculo rodoviário
 
-Pesquisa em fontes oficiais em 09/09/2026. Versão 0.1.1. Preços/quotas podem mudar; verificar novamente antes de contratar/publicar. Nenhuma conta criada, cartão adicionado, API paga ativada ou projeto remoto alterado. Este estudo não é teste de integração real.
+Pesquisa em fontes oficiais em 09/09/2026, revista em 15/09/2026. Versão 0.1.2. Preços/quotas podem mudar; verificar novamente antes de contratar/publicar. Nenhuma conta criada, cartão adicionado, API paga ativada ou projeto remoto alterado. Este estudo não é teste de integração autenticada.
 
 ## Decisões do utilizador
 
@@ -44,6 +44,18 @@ Geocoding e autocomplete custam 1 crédito por pedido; rota custa 1 por par de w
 Routing aceita paragens e devolve distância/tempo. Modelo de tráfego pode ser free_flow ou approximated; este último reduz velocidades em vias potencialmente congestionadas. Não apresentar como trânsito observado em tempo real. [Routing API](https://apidocs.geoapify.com/docs/routing/).
 
 Proposta: começar com routing e pesquisa de endereço no mesmo fornecedor, attribution nos resultados e um adaptador substituível. Testar rotas locais antes de aprovar a qualidade; ainda não houve chamada autenticada nem confirmação de precisão nas zonas do negócio.
+
+### Pesquisa de moradas aplicada no protótipo
+
+Geoapify Address Autocomplete permanece a recomendação para o piloto. Aceita texto parcial, filtro por país, proximidade, locais de interesse, rua e número, além de devolver níveis de confiança. Requer chave; o plano gratuito divulgado em 15/09/2026 inclui 3.000 créditos/dia, até 5 pedidos/segundo e uso comercial limitado com atribuição. A chave do browser deve ficar restrita aos domínios do app; em produção, chamadas sensíveis e limites pertencem ao servidor.
+
+Photon foi ligado como fallback de desenvolvimento sem chave. O projeto é aberto, suporta pesquisa durante a escrita, tolerância a erros e viés por localização. O servidor público é apenas demonstração: aceita uso razoável, pode limitar pedidos, não garante disponibilidade e atualmente só aceita idioma default, `de`, `en` ou `fr`. Para português, o app omite o parâmetro de idioma e conserva os nomes locais.
+
+O Nominatim público não é usado no autocomplete. A política da OpenStreetMap limita o serviço a um pedido por segundo e proíbe autocomplete no cliente. Pode continuar como referência para consultas pontuais próprias ou através de uma instância/fornecedor compatível, mas não como o campo de pesquisa desta aplicação.
+
+Nenhum geocoder consegue enumerar lotes ou portas ausentes da sua fonte. Na verificação da Rua Pedro de Sintra, os dados OpenStreetMap devolveram o arruamento e o código postal, mas não uma lista de lotes. O protótipo preserva `Lote 86`, corrige o nome da rua e ancora o resultado no arruamento, mostrando “ponto aproximado na rua”. Um ponto de recolha exato exigirá resultado por edifício, confirmação manual do pino ou uma fonte cadastral/endereço autorizada; não serão inventados lotes para preencher a lista.
+
+Fontes: [Geoapify autocomplete](https://apidocs.geoapify.com/docs/geocoding/address-autocomplete/), [Geoapify pricing](https://www.geoapify.com/pricing/), [Photon](https://github.com/komoot/photon), [política pública Nominatim](https://operations.osmfoundation.org/policies/nominatim/).
 
 ### B — Google Routes: alternativa com franquia
 

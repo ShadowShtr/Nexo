@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.46 — 2026-09-15
+
+- PUB-01: lotes e números de porta ficam distintos; `Rua Pedro de Sintra, lote 86` sugere `Rua Pedro de Sintra, Lote 86`.
+- PUB-01: Geoapify pode ser configurado como autocomplete principal e Photon funciona como fallback de desenvolvimento com idioma suportado; o Nominatim público deixou de ser usado para autocomplete.
+- PUB-01: quando a fonte só conhece a rua, o lote digitado é preservado com aviso de ponto aproximado, sem afirmar uma porta exata nem inventar listas de unidades.
+- 87 testes Node, 26 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.45 — 2026-09-14
 
 - PUB-01: ao escrever `lote` ou `n.º` sem valor, a morada mostra a lista de números conhecidos do arruamento.
