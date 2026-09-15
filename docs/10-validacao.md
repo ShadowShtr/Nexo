@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.68 — 15/09/2026
+
+Os cartões de pré-visualização da rota e do pedido de teste têm agora separação vertical de 1,25rem, preservando a leitura no telemóvel.
+
 ## Incremento 0.2.67 — 15/09/2026
 
 A confirmação do pedido foi reorganizada em blocos com espaçamento, ações responsivas e instruções de pagamento demonstrativas por MB WAY e WhatsApp. Os pins de localização do planeador foram reduzidos para 32px. Não existe cobrança real.

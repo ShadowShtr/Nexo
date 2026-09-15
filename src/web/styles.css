@@ -43,7 +43,7 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
 .pm-route-points div { display:grid; }.pm-route-points small { color:var(--pm-ink-secondary); }
 .pm-route-preview>.pm-secondary { padding:0 1.25rem 1rem; }
 .pm-demo-record>.pm-button { display:inline-flex; margin-top:1rem; }
-.pm-booking-record { display:grid; gap:1rem; padding:1.25rem; border:1px solid var(--pm-line); border-radius:22px; }
+.pm-booking-record { display:grid; gap:1rem; margin-top:1.25rem; padding:1.25rem; border:1px solid var(--pm-line); border-radius:22px; }
 .pm-booking-record-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
 .pm-booking-record-head h2 { margin:.15rem 0 0; }
 .pm-booking-status { flex:0 0 auto; padding:.4rem .65rem; border-radius:999px; background:var(--pm-surface-muted); color:var(--pm-ink-secondary); font-size:.72rem; font-weight:700; text-align:right; }

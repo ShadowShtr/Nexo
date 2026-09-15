@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.68 — 2026-09-15
+
+- cartões de rota e pedido ganharam separação vertical clara no fluxo de confirmação.
+
 ## 0.2.67 — 2026-09-15
 
 - pins 3D do planeador foram reduzidos para uma escala mais equilibrada;
