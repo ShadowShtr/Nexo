@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.67 — 2026-09-15
+
+- pins 3D do planeador foram reduzidos para uma escala mais equilibrada;
+- a confirmação da reserva ganhou hierarquia, ações espaçadas e instruções de pagamento por MB WAY e WhatsApp em modo de demonstração.
+
 ## 0.2.66 — 2026-09-15
 
 - ícones 3D de localização, relógio, calendário e carro foram aplicados ao fluxo do cliente;

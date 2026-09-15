@@ -316,6 +316,11 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await page.screenshot({ path: 'artifacts/customer-review-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Enviar pedido de teste' }).click();
   await expect(page.getByRole('status')).toContainText('A aguardar aceitação');
+  const payment = page.getByRole('region', { name: 'Pagamento após aceitação' });
+  await expect(payment).toBeVisible();
+  await expect(payment).toContainText('MB WAY');
+  await expect(payment).toContainText('+351 910 000 000');
+  await expect(payment.getByRole('link', { name: 'Enviar comprovativo' })).toHaveAttribute('href', /wa\.me\/351910000000/);
   await page.getByRole('link', { name: 'Consultar pedidos', exact: true }).click();
   await expect(page.getByRole('heading', { name: /CLIENT-/ })).toBeVisible();
   const reference = (await page.getByRole('heading', { name: /CLIENT-/ }).first().textContent())!;

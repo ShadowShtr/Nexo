@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.67 — 15/09/2026
+
+A confirmação do pedido foi reorganizada em blocos com espaçamento, ações responsivas e instruções de pagamento demonstrativas por MB WAY e WhatsApp. Os pins de localização do planeador foram reduzidos para 32px. Não existe cobrança real.
+
 ## Incremento 0.2.66 — 15/09/2026
 
 O fluxo do cliente usa os assets 3D de localização, relógio, calendário e carro com sombra. Os banners aplicam o recorte de imagem apenas à foto principal, mantendo os ícones internos no tamanho correto.
