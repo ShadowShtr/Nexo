@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.50 — 2026-09-15
+
+- PUB-01: campos de rota agora exibem a ordem real da viagem: partida, paragens e destino.
+- PUB-01: o mapa e a lista numerada mantêm a mesma sequência usada no cálculo do percurso.
+- 87 testes Node, 28 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.49 — 2026-09-15
 
 - UI-03: a lista de locais recentes no planeador foi limitada às três entradas mais recentes para reduzir a rolagem.
