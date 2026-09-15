@@ -85,7 +85,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-option-selected { display:inline-flex; align-items:center; gap:.3rem; color:var(--pm-success); font-size:.75rem; font-weight:700; }
 .pm-select-with-icon { display:grid; gap:.5rem; }
 .pm-select-with-icon>span { display:flex; align-items:center; gap:.4rem; }
-.pm-vehicle-preview { display:block; width:100%; height:150px; object-fit:contain; object-position:center; border-radius:1rem; background:linear-gradient(135deg,#f6f6f7,#ececef); }
+.pm-vehicle-icon { width:2rem; height:2rem; object-fit:contain; flex:0 0 auto; border-radius:.45rem; background:linear-gradient(135deg,#f6f6f7,#ececef); }
 .pm-status[data-tone="positive"] { color:var(--pm-success); background:var(--pm-success-bg); }
 .pm-fieldset { display:grid; gap:.5rem; margin:0; padding:1rem 0 0; border:0; border-top:1px solid var(--pm-line); }
 .pm-fieldset legend { padding:0; color:var(--pm-ink-secondary); font-size:.8rem; font-weight:600; }

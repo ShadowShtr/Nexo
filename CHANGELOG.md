@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.55 — 2026-09-15
+
+- a seleção de viatura agora mostra uma miniatura junto de “Carro disponível”;
+- removidos os ícones de pessoa dos nomes dos motoristas.
+
 ## 0.2.54 — 2026-09-15
 
 - removida a entrada duplicada “Marcar viagem” do menu inferior do cliente; o planeador continua disponível na primeira etapa.

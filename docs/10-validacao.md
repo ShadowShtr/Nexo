@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.55 — 15/09/2026
+
+A seleção de motorista e carro passou a mostrar uma miniatura da viatura junto de “Carro disponível”, sem o painel grande separado, e os nomes dos motoristas deixaram de ter o ícone de pessoa. A verificação inclui a presença da miniatura e a ausência dos ícones nos nomes.
+
 ## Incremento 0.2.54 — 15/09/2026
 
 A entrada duplicada “Marcar viagem” foi removida do menu inferior da área de cliente. A página de marcação permanece acessível pelo fluxo principal. A verificação inclui teste de navegação móvel.

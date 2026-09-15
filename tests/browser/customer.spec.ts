@@ -29,6 +29,8 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page).toHaveURL(/#\/customer\/booking$/);
   await expect(page.getByRole('heading', { name: 'Escolha o motorista e o carro', exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Cabo da Roca');
+  await expect(page.locator('.pm-vehicle-icon')).toHaveAttribute('src', '/vehicle-sedan.png');
+  await expect(page.locator('.pm-option-content strong svg')).toHaveCount(0);
 });
 
 test('customer bottom navigation omits the duplicate booking entry', async ({ page }) => {
