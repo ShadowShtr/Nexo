@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.59 — 2026-09-15
+
+- os cartões iniciais de tour agora usam as ilustrações 3D da aplicação;
+- a bússola enviada foi integrada nos cartões de tour personalizável, com sombra discreta e fundo transparente.
+
 ## 0.2.58 — 2026-09-15
 
 - durante o fluxo de marcação do cliente, “Descobrir” permanece identificado como a área principal no menu.

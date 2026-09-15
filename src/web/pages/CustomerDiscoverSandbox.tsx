@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { Building2, CalendarDays, CarFront, Castle, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, Compass, MapPinned, Plus, Route, Search, Sparkles, Ticket, X } from 'lucide-react';
+import { CalendarDays, CarFront, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock3, MapPinned, Plus, Route, Search, Sparkles, Ticket, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { quote } from '../../domain/pricing';
 import { RouteMap } from '../components/RouteMap';
@@ -7,12 +7,12 @@ import { tourRoute, type DemoRoute } from '../demo-routes';
 import { searchAddresses } from '../services/address-search';
 
 const tourOptions = [
-  { id: 'lisbon', icon: <Building2 size={26} strokeWidth={1.8} />, pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
-  { id: 'sintra', icon: <Castle size={26} strokeWidth={1.8} />, pt: 'Sintra', en: 'Sintra', detailPt: 'Palácios, serra e mar', detailEn: 'Palaces, hills and sea' },
-  { id: 'porto', icon: <Compass size={26} strokeWidth={1.8} />, pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
-  { id: 'lisbon-sintra', icon: <Route size={26} strokeWidth={1.8} />, pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
-  { id: 'custom', icon: <Plus size={28} strokeWidth={1.8} />, pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
-  { id: 'custom-route', icon: <MapPinned size={26} strokeWidth={1.8} />, pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
+  { id: 'lisbon', icon: '/route-landmark.png', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
+  { id: 'sintra', icon: '/route-landmark.png', pt: 'Sintra', en: 'Sintra', detailPt: 'Palácios, serra e mar', detailEn: 'Palaces, hills and sea' },
+  { id: 'porto', icon: '/route-landmark.png', pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
+  { id: 'lisbon-sintra', icon: '/route-landmark.png', pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
+  { id: 'custom', icon: '/compass.png', pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
+  { id: 'custom-route', icon: '/compass.png', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
 ];
 
 const portoTourStops = ['Ribeira do Porto', 'Ponte Dom Luís I', 'Sé do Porto', 'Livraria Lello', 'Palácio da Bolsa', 'Foz do Douro'];
@@ -531,7 +531,7 @@ export default function CustomerDiscoverSandbox() {
     </section> : <>
       <section className="pm-client-categories" aria-labelledby="client-adventure-title">
         <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>
-        <div className="pm-client-category-grid">{tourOptions.map(option => <button type="button" className="pm-client-category" key={option.id} onClick={() => chooseCategory(option.id)}><span className="pm-client-category-art" aria-hidden="true">{option.icon}</span><strong>{say(option.pt, option.en)}</strong><span>{say(option.detailPt, option.detailEn)}</span></button>)}</div>
+        <div className="pm-client-category-grid">{tourOptions.map(option => <button type="button" className="pm-client-category" key={option.id} onClick={() => chooseCategory(option.id)}><span className="pm-client-category-art" aria-hidden="true"><img src={option.icon} alt="" /></span><strong>{say(option.pt, option.en)}</strong><span>{say(option.detailPt, option.detailEn)}</span></button>)}</div>
       </section>
       <div className="pm-client-promo-list">
         <button type="button" className="pm-client-tour-promo" onClick={() => openPlanner('Sintra', 'tour')} aria-label={say('Abrir tour Lisboa Sintra', 'Open Lisbon Sintra tour')}><img src="/lisbon-sintra-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Lisboa <span>→</span> Sintra</strong><span>{say('Do centro histórico aos palácios da serra.', 'From the historic centre to the hilltop palaces.')}</span><span className="pm-client-tour-meta"><Clock3 size={15}/> {say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
