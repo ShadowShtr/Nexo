@@ -20,6 +20,8 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('button', { name: /^Sintra/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.png');
   const iconSources = await page.locator('.pm-client-category-art img').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   expect(new Set(iconSources).size).toBe(6);
+  const promoCopyBottom = await page.locator('.pm-client-tour-copy').first().evaluate(node => Number.parseFloat(getComputedStyle(node).bottom));
+  expect(promoCopyBottom).toBeLessThanOrEqual(24);
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);

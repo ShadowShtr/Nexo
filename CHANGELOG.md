@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.64 — 2026-09-15
+
+- descrições, metadados e ação dos banners foram posicionados junto à sombra escura inferior da imagem.
+
 ## 0.2.63 — 2026-09-15
 
 - conteúdo dos cartões iniciais passou a ficar alinhado ao centro;
