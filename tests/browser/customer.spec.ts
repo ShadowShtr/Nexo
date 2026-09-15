@@ -11,7 +11,9 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('button', { name: 'Pesquisar um tour' })).toBeVisible();
   await expect(page.locator('.pm-client-category')).toHaveCount(6);
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
-  await expect(page.locator('.pm-client-tour-promo img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
+  await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).locator('img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
+  await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' }).locator('img')).toHaveAttribute('src', '/porto-tour.png');
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);
@@ -36,6 +38,19 @@ test('customer discovery keeps tour cards readable and opens Porto', async ({ pa
   expect(widths.every(width => width >= 200)).toBeTruthy();
   await page.getByRole('button', { name: /Tour no Porto/ }).click();
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Porto');
+  await expect(page.locator('.pm-client-address-field input[aria-label^="Paragem "]')).toHaveCount(6);
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('Ribeira do Porto');
+  await expect(page.getByLabel('Paragem 6', { exact: true })).toHaveValue('Foz do Douro');
+});
+
+test('customer discovery Porto promo preloads its six stops', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' }).click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Porto');
+  await expect(page.locator('.pm-client-address-field input[aria-label^="Paragem "]')).toHaveCount(6);
+  await expect(page.getByLabel('Paragem 1', { exact: true })).toHaveValue('Ribeira do Porto');
+  await expect(page.getByLabel('Paragem 6', { exact: true })).toHaveValue('Foz do Douro');
 });
 
 test('customer planner fills destination from recent places', async ({ page }) => {

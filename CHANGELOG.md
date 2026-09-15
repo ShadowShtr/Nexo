@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.48 — 2026-09-15
+
+- UI-03: a descoberta ganhou um destaque visual do Porto com seis paragens pré-selecionadas e rota editável no planeador.
+- UI-03: o título dos cartões recebeu maior respiro vertical e a lista de destaques mantém distância consistente entre fotografias.
+- 87 testes Node, 28 testes de navegador, build e validação documental aprovados.
+
 ## 0.2.47 — 2026-09-15
 
 - UI-03: primeira tela do cliente ganhou seis cartões de tour, incluindo Porto e um segundo percurso personalizável.

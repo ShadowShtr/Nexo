@@ -11,6 +11,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Resultado final desta execução: 31 testes aprovados, zero falhas. Validação documental aprovada. A execução TypeScript por Node remove tipos, mas não substitui compilador/typecheck; BAS-04 inclui essa ferramenta.
 
+## Incremento 0.2.48 — 15/09/2026
+
+A descoberta ganhou um destaque fotográfico do Porto com seis paragens pré-selecionadas, todas editáveis no planeador, e mais espaço entre o título, a grelha e os destaques. Resultado: 87 testes Node, 28 testes Playwright, build TypeScript/Vite e validação documental aprovados.
+
 ## Incremento 0.2.47 — 15/09/2026
 
 A primeira tela do cliente passou a apresentar seis opções de tour, com Porto e um percurso personalizável adicional. A grelha usa três colunas a partir de 600px e duas em ecrãs menores; cartões, cabeçalho e pesquisa receberam ritmo tipográfico e espaçamento revistos. Resultado: 87 testes Node, 27 testes Playwright, build TypeScript/Vite e validação documental aprovados.

@@ -15,10 +15,17 @@ const tourOptions = [
   { id: 'custom-route', icon: '✧', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
 ];
 
+const portoTourStops = ['Ribeira do Porto', 'Ponte Dom Luís I', 'Sé do Porto', 'Livraria Lello', 'Palácio da Bolsa', 'Foz do Douro'];
+
 const recentPlaces = [
   { title: 'Sintra', detail: 'Sintra, Lisboa' },
   { title: 'Porto', detail: 'Porto, Portugal' },
   { title: 'Ribeira do Porto', detail: 'Cais da Ribeira, Porto' },
+  { title: 'Ponte Dom Luís I', detail: 'Av. de Vímara Peres, Porto' },
+  { title: 'Sé do Porto', detail: 'Terreiro da Sé, Porto' },
+  { title: 'Livraria Lello', detail: 'Rua das Carmelitas, Porto' },
+  { title: 'Palácio da Bolsa', detail: 'Rua Ferreira Borges, Porto' },
+  { title: 'Foz do Douro', detail: 'Foz do Douro, Porto' },
   { title: 'Quinta da Regaleira', detail: 'Rua Barbosa du Bocage, Sintra' },
   { title: 'Palácio Nacional da Pena', detail: 'Estrada da Pena, Sintra' },
   { title: 'Castelo dos Mouros', detail: 'Estrada da Pena, Sintra' },
@@ -67,6 +74,11 @@ const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly
   { aliases: ['sintra'], coordinates: [38.8029, -9.3817] },
   { aliases: ['porto'], coordinates: [41.1496, -8.6109] },
   { aliases: ['ribeira do porto', 'ribeira porto'], coordinates: [41.1406, -8.6110] },
+  { aliases: ['ponte dom luis i', 'ponte dom luis'], coordinates: [41.1403, -8.6093] },
+  { aliases: ['se do porto', 'sé do porto'], coordinates: [41.1429, -8.6110] },
+  { aliases: ['livraria lello'], coordinates: [41.1468, -8.6149] },
+  { aliases: ['palacio da bolsa', 'palácio da bolsa'], coordinates: [41.1406, -8.6158] },
+  { aliases: ['foz do douro', 'foz'], coordinates: [41.1512, -8.6763] },
   { aliases: ['quinta da regaleira', 'regaleira'], coordinates: [38.7967, -9.3977] },
   { aliases: ['palacio nacional da pena', 'palacio da pena', 'pena'], coordinates: [38.7876, -9.3906] },
   { aliases: ['castelo dos mouros'], coordinates: [38.7894, -9.3904] },
@@ -355,12 +367,12 @@ export default function CustomerDiscoverSandbox() {
   const km = new Intl.NumberFormat(i18n.language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(previewRoute.meters / 1000);
   const money = (cents: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(cents / 100);
 
-  const openPlanner = (preset = '', kind: PlannerKind = 'transfer') => {
+  const openPlanner = (preset = '', kind: PlannerKind = 'transfer', presetStops: readonly string[] = []) => {
     setPlanning(true);
     setRouteReady(false);
     setPlannerKind(kind);
     setDestination(preset);
-    setStops([]);
+    setStops([...presetStops]);
     setActiveSearch(null);
     setRemoteSuggestions([]);
     setResolvedPlaces([]);
@@ -372,7 +384,10 @@ export default function CustomerDiscoverSandbox() {
     url.hash = '#/customer/booking';
     window.location.assign(url.toString());
   };
-  const chooseCategory = (id: string) => openPlanner(id === 'lisbon' ? 'Lisboa' : id === 'sintra' || id === 'lisbon-sintra' ? 'Sintra' : id === 'porto' ? 'Porto' : '', 'tour');
+  const chooseCategory = (id: string) => {
+    const preset = id === 'lisbon' ? 'Lisboa' : id === 'sintra' || id === 'lisbon-sintra' ? 'Sintra' : id === 'porto' ? 'Porto' : '';
+    openPlanner(preset, 'tour', id === 'porto' ? portoTourStops : []);
+  };
   const useLocation = () => {
     if (!navigator.geolocation) {
       setOrigin('Lisboa');
@@ -488,7 +503,10 @@ export default function CustomerDiscoverSandbox() {
         <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>
         <div className="pm-client-category-grid">{tourOptions.map(option => <button type="button" className="pm-client-category" key={option.id} onClick={() => chooseCategory(option.id)}><span className="pm-client-category-art" aria-hidden="true">{option.icon}</span><strong>{say(option.pt, option.en)}</strong><span>{say(option.detailPt, option.detailEn)}</span></button>)}</div>
       </section>
-      <button type="button" className="pm-client-tour-promo" onClick={() => openPlanner('Sintra', 'tour')} aria-label={say('Abrir tour Lisboa Sintra', 'Open Lisbon Sintra tour')}><img src="/lisbon-sintra-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Lisboa <span>→</span> Sintra</strong><span>{say('Do centro histórico aos palácios da serra.', 'From the historic centre to the hilltop palaces.')}</span><span className="pm-client-tour-meta"><Clock3 size={15}/> {say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
+      <div className="pm-client-promo-list">
+        <button type="button" className="pm-client-tour-promo" onClick={() => openPlanner('Sintra', 'tour')} aria-label={say('Abrir tour Lisboa Sintra', 'Open Lisbon Sintra tour')}><img src="/lisbon-sintra-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Lisboa <span>→</span> Sintra</strong><span>{say('Do centro histórico aos palácios da serra.', 'From the historic centre to the hilltop palaces.')}</span><span className="pm-client-tour-meta"><Clock3 size={15}/> {say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
+        <button type="button" className="pm-client-tour-promo pm-client-tour-promo-porto" onClick={() => openPlanner('Porto', 'tour', portoTourStops)} aria-label={say('Abrir tour do Porto com seis paragens', 'Open Porto tour with six stops')}><img src="/porto-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Porto <span>·</span> 6 paragens</strong><span>{say('Ribeira, centro histórico e Douro num percurso privado.', 'Ribeira, historic centre and Douro on a private route.')}</span><span className="pm-client-tour-meta"><Clock3 size={15}/> {say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
+      </div>
       <p className="pm-client-note">{say('Valores e disponibilidade são confirmados antes do pedido.', 'Prices and availability are confirmed before your request.')}</p>
     </>}
   </div>;

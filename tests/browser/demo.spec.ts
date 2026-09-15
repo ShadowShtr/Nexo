@@ -12,7 +12,7 @@ test('test data can be searched, translated and removed', async ({ page }) => {
     await page.goto(`/?demo=1&lang=en#/${route}`);
     if (route === 'customer/discover') {
       await expect(page.getByRole('heading', { name: 'Choose your adventure.', exact: true })).toBeVisible();
-      await expect(page.locator('.pm-client-tour-promo img')).toBeVisible();
+      await expect(page.locator('.pm-client-tour-promo img').first()).toBeVisible();
     } else {
       await expect(page.locator('.pm-demo-record').first()).toBeVisible();
     }
