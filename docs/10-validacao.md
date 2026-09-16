@@ -38,6 +38,10 @@ Removido o segundo resumo de valores duplicado na etapa de escolha do motorista 
 
 O teste de browser passou a garantir que a etapa de escolha de motorista e carro apresenta exatamente um resumo de valores.
 
+## Incremento 0.2.82 — 16/09/2026
+
+Foi adicionado espaçamento entre o mapa, o bloco de revisão e o cartão de pagamento na etapa final, evitando cartões colados.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.

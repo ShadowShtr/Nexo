@@ -1,6 +1,6 @@
 # Continuidade entre computadores
 
-Atualizado em 16/09/2026. Código de referência: v0.2.81. A documentação acompanha as alterações visuais do calendário, do planeador e do resumo de booking; o fluxo continua em demonstração.
+Atualizado em 16/09/2026. Código de referência: v0.2.82. A documentação acompanha as alterações visuais do calendário, do planeador e do resumo de booking; o fluxo continua em demonstração.
 
 ## Repositório e ponto de partida
 

@@ -131,6 +131,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-route-metrics strong { font-size:1rem; font-variant-numeric:tabular-nums; }
 .pm-review-grid { display:grid; gap:0; padding:.5rem 1rem; border-radius:var(--pm-radius-input); background:var(--pm-surface-muted); }
 .pm-review-grid .pm-setting-row { min-height:48px; }
+.pm-route-preview + .pm-review-grid,.pm-review-grid + .pm-payment-card { margin-top:1rem; }
 .pm-selection-step>.pm-demo-grid { margin:.25rem 0; }
 @media (max-width:767px) {
   .pm-route-options { grid-template-columns:1fr 1fr; gap:.75rem; }
