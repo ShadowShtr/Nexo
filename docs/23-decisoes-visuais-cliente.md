@@ -14,7 +14,7 @@ Consolidado em 15/09/2026 a partir das revisões do utilizador até v0.2.72. Com
 - Promoções Lisboa–Sintra e Porto: texto na parte inferior escura do gradiente, legível sobre a foto.
 - Separar cartões e ações no final do pedido; hierarquia de referência, estado, percurso, valores, pagamento e ações. Botões não podem ficar colados.
 - Pagamento apresenta sinal, instruções MB WAY e WhatsApp para comprovativo após aceitação. Os contactos atuais são fictícios; não inventar contactos reais.
-- Calendário 24h com horas indisponíveis ocultas e botão para datas futuras. Aspeto nativo do seletor varia pelo dispositivo.
+- Calendário 24h com horas indisponíveis ocultas. A data atual e os horários ficam na grelha principal; “Escolher outra data” abre apenas um pop-up compacto de dia, mês e ano. Aspeto nativo do seletor varia pelo dispositivo.
 
 Referências Uber/Bolt são direção de composição, não medidas/fontes oficiais verificadas. Usar CSS existente como base e validar em largura móvel, sem aumentar arbitrariamente os cartões.
 

@@ -1,6 +1,6 @@
 # Estado atual e limites de continuidade
 
-Referência: v0.2.73, 16/09/2026. Alteração mais recente: barra inicial compacta (52 px); regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
+Referência: v0.2.74, 16/09/2026. Alterações mais recentes: barra inicial compacta (52 px) e calendário principal com pop-up de data sem horários duplicados; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
 
 ## Produto e regras que ligam os módulos
 

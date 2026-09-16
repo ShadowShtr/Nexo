@@ -1,6 +1,6 @@
 # Continuidade entre computadores
 
-Atualizado em 15/09/2026. Código de referência: v0.2.72, b5fedb7. Esta entrega acrescenta documentação; não altera a versão da aplicação.
+Atualizado em 16/09/2026. Código de referência: v0.2.74. A documentação acompanha a alteração visual do calendário; o fluxo continua em demonstração.
 
 ## Repositório e ponto de partida
 
@@ -87,4 +87,3 @@ Seguir [persistência](16-prova-persistencia.md), [identidade local](17-identida
 Se houver commits diferentes nos dois PCs, guardar primeiro o trabalho local numa branch. Comparar histórico e integrar numa branch de trabalho, executando os testes antes de integrar em main. Não copiar ficheiros por cima do clone para resolver conflitos.
 
 Para reproduzir uma versão antiga sem mexer na branch ativa: git worktree add --detach ../Nexo-v0.2.72 v0.2.72. Instalar dependências nessa pasta. Git recupera código e assets versionados; dados de produção futuros exigem backup próprio e restauro testado.
-

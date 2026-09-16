@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.74 — 2026-09-16
+
+- calendário principal mantém a data atual e os horários disponíveis em grelha;
+- botão “Escolher outra data” abre apenas um pop-up compacto de dia, mês e ano, sem duplicar os horários.
+
 ## 0.2.73 — 2026-09-16
 
 - barra “Para onde?” reduzida de 64 para 52 px, com ícones e opção “Mais tarde” proporcionais;

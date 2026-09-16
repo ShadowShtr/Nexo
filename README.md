@@ -1,4 +1,4 @@
-# Plataforma de transporte premium — base web 0.2.73
+# Plataforma de transporte premium — base web 0.2.74
 
 Base para um proprietário/motorista que gere a operação e atribui serviços a parceiros. O nome é provisório. Entrega por etapas: primeiro regras e contratos, depois persistência, serviços e telas, finalmente integrações e lançamento.
 
@@ -6,7 +6,7 @@ Base para um proprietário/motorista que gere a operação e atribui serviços a
 
 Repositório: [ShadowShtr/Nexo](https://github.com/ShadowShtr/Nexo). Começar pelo [guia de instalação e continuidade](docs/21-continuidade-entre-pcs.md), [estado atual, mapa do código e limites](docs/22-estado-atual-e-limites.md) e [decisões visuais do cliente](docs/23-decisoes-visuais-cliente.md). [AGENTS.md](AGENTS.md) instrui qualquer assistente a manter a mesma rotina de documentação e Git.
 
-Aplicação de referência: v0.2.73. Os documentos antigos registam evidência por versão; a demonstração em sessionStorage não sincroniza reservas entre PCs. Assets necessários estão versionados em public.
+Aplicação de referência: v0.2.74. Os documentos antigos registam evidência por versão; a demonstração em sessionStorage não sincroniza reservas entre PCs. Assets necessários estão versionados em public.
 
 ## O que já existe
 

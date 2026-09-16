@@ -315,7 +315,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-route-stats span { display:grid; gap:.18rem; padding:.65rem; border-radius:14px; background:#f4f4f5; color:#777981; font-size:.67rem; line-height:1.2; }
 .pm-client-route-stats strong { color:var(--pm-ink); font-size:.85rem; font-variant-numeric:tabular-nums; }
 .pm-client-route-quote p { margin:0; color:#686970; font-size:.76rem; line-height:1.45; }
-.pm-client-booking-calendar { display:grid; gap:.7rem; padding:.85rem; border:1px solid #dfe0e3; border-radius:18px; background:#f7f7f8; }
+.pm-client-booking-calendar { position:relative; display:grid; gap:.7rem; padding:.85rem; border:1px solid #dfe0e3; border-radius:18px; background:#f7f7f8; }
 .pm-client-booking-calendar-head { display:flex; align-items:flex-start; gap:.55rem; color:var(--pm-ink); }
 .pm-client-booking-calendar-head img { margin-top:-.15rem; width:2.5rem; height:2.5rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-client-booking-calendar-head div { display:grid; gap:.15rem; }
@@ -330,10 +330,11 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-calendar-more { display:flex; align-items:center; justify-content:center; gap:.45rem; min-height:40px; padding:.45rem .7rem; border:1px solid #d7d8dc; border-radius:11px; background:#fff; color:var(--pm-ink); font-size:.74rem; font-weight:700; }
 .pm-client-calendar-more img { width:1.6rem; height:1.6rem; object-fit:contain; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-client-calendar-more:hover { border-color:#9b9da6; }
-.pm-client-more-dates { display:grid; gap:.65rem; padding:.7rem; border:1px solid #dfe0e3; border-radius:14px; background:#fff; }
+.pm-client-more-dates { position:absolute; right:0; bottom:calc(100% + .55rem); z-index:30; display:grid; gap:.55rem; width:min(280px,calc(100vw - 48px)); padding:.7rem; border:1px solid #dfe0e3; border-radius:16px; background:#fff; box-shadow:0 12px 30px rgb(20 24 40 / 16%); }
+.pm-client-more-dates::before { content:""; position:absolute; right:16px; bottom:-6px; width:11px; height:11px; border-right:1px solid #dfe0e3; border-bottom:1px solid #dfe0e3; background:#fff; transform:rotate(45deg); }
 .pm-client-more-dates label { display:grid; gap:.3rem; color:#686970; font-size:.72rem; font-weight:700; }
 .pm-client-more-dates input[type="date"] { width:100%; min-height:40px; padding:.45rem .6rem; border:1px solid #cfd0d5; border-radius:10px; background:#fff; color:var(--pm-ink); font:inherit; font-size:.78rem; }
-.pm-client-more-times { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.45rem; }
+.pm-client-more-times { display:none; }
 .pm-client-more-dates>p { margin:0; color:#777981; font-size:.72rem; }
 .pm-booking-slot { display:flex; align-items:center; gap:.4rem; margin:-.35rem 0 .1rem; color:#686970; font-size:.78rem; }
 .pm-booking-calendar-icon { width:2rem; height:2rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }

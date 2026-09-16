@@ -6,6 +6,10 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 Barra inicial compacta com 52 px. Build TypeScript/Vite aprovado; inspeção visual no browser a 495 px confirmou altura de 52 px e ausência de overflow horizontal. Referência Uber usada como direção visual, sem medida oficial publicada. Sem nova validação em iPhone físico.
 
+## Incremento 0.2.74 — 16/09/2026
+
+O calendário principal do cliente continua a apresentar a data atual e os horários disponíveis. O botão para outra data abre apenas o seletor compacto de data; os horários continuam na grelha principal e não são repetidos no pop-up. Build, testes unitários e browser focados aprovados.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.
