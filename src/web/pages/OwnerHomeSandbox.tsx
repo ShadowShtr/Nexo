@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Bell, BellRing, CalendarPlus, ChevronRight, MessageCircle } from 'lucide-react';
+import { ChevronRight, Clock3, UsersRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { demoTrips } from './DemoPage';
 import { readDemoCustomerRequests, subscribeToDemoCustomerRequests, type DemoCustomerRequest } from '../demo-request-store';
@@ -21,29 +21,112 @@ function dateKey(value: Date | string) {
   return `${values.year}-${values.month}-${values.day}`;
 }
 
+type UpcomingItem = {
+  id: string;
+  name: string;
+  date: string;
+  route: string;
+  detail: string;
+  value: number;
+  incoming: boolean;
+};
+
 export function OwnerHomeSandbox() {
   const { i18n } = useTranslation();
   const en = i18n.language === 'en';
   const say = (pt: string, english: string) => en ? english : pt;
   const [incoming, setIncoming] = useState<DemoCustomerRequest[]>(() => readDemoCustomerRequests());
   useEffect(() => { const refresh = () => setIncoming(readDemoCustomerRequests()); return subscribeToDemoCustomerRequests(refresh); }, []);
+
   const locale = en ? 'en-GB' : 'pt-PT';
-  const today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+  const shortToday = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date());
   const activeRequests = incoming.filter(request => !request.cancelled);
   const todayKey = dateKey(new Date());
   const todayTrips = demoTrips.filter(trip => trip.day === todayKey);
   const todayRequests = activeRequests.filter(request => dateKey(request.allocation.startsAt) === todayKey);
-  const scheduled = todayTrips.length + todayRequests.length;
-  const revenue = todayTrips.reduce((sum, trip) => sum + trip.cents, 0) + todayRequests.reduce((sum, request) => sum + request.total, 0);
-  const attention = useMemo(() => [
-    ...activeRequests.map(request => ({ id: request.id, name: request.name, date: request.allocation.startsAt, route: `${request.origin} → ${request.destination}`, detail: request.email, incoming: true })),
-    ...demoTrips.slice(0, 4).map(trip => ({ id: trip.id, name: ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example', 'Tom Example'][trip.customer], date: `${trip.day}T${trip.time}:00+01:00`, route: `${trip.from} → ${trip.to}`, detail: `${trip.time} · ${cars[trip.car]}`, incoming: false })),
-  ], [activeRequests]);
+  const scheduledToday = todayTrips.length + todayRequests.length;
+  const revenueToday = todayTrips.reduce((sum, trip) => sum + trip.cents, 0) + todayRequests.reduce((sum, request) => sum + request.total, 0);
+
+  const upcoming = useMemo<UpcomingItem[]>(() => [
+    ...activeRequests.map(request => ({
+      id: request.id,
+      name: request.name,
+      date: request.allocation.startsAt,
+      route: `${request.origin} → ${request.destination}`,
+      detail: `${request.people} ${say('passageiros', 'passengers')}`,
+      value: request.total,
+      incoming: true,
+    })),
+    ...demoTrips.map(trip => ({
+      id: trip.id,
+      name: ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example', 'Tom Example'][trip.customer],
+      date: `${trip.day}T${trip.time}:00+01:00`,
+      route: `${trip.from} → ${trip.to}`,
+      detail: `${trip.time} · ${cars[trip.car]}`,
+      value: trip.cents,
+      incoming: false,
+    })),
+  ], [activeRequests, en]);
+
+  const nextService = upcoming[0] ?? {
+    id: 'next-service',
+    name: say('Sem serviço agendado', 'No service scheduled'),
+    date: new Date().toISOString(),
+    route: say('As próximas viagens aparecerão aqui', 'Upcoming trips will appear here'),
+    detail: '',
+    value: 0,
+    incoming: false,
+  };
+
+  const formatDate = (value: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date(value));
+  const formatTime = (value: string) => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+  const upcomingIcon = (route: string) => route.toLocaleLowerCase().includes('aeroporto') ? '/owner-icon-plane.png' : route.includes('→') ? '/owner-icon-pin.png' : '/owner-icon-car-front.png';
+
   return <div className="pm-owner-dashboard">
-    <header className="pm-owner-dashboard-header"><div><p className="pm-owner-greeting">{say('Olá, Vitor! 👋', 'Hello, Vitor! 👋')}</p><p className="pm-owner-date">{today}</p></div><button type="button" className="pm-owner-notification" aria-label={say('Notificações', 'Notifications')}><Bell size={21}/><span aria-hidden="true"/></button></header>
-    <section className="pm-owner-next-card"><div><span className="pm-owner-kicker">{say('Próxima operação', 'Next operation')}</span>{activeRequests[0] ? <><h2>{activeRequests[0].origin} → {activeRequests[0].destination}</h2><p>{activeRequests[0].name} · {new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date(activeRequests[0].allocation.startsAt))}</p></> : <><h2>{say('Sem marcações para hoje', 'No bookings for today')}</h2><p>{say('As próximas viagens aparecerão aqui assim que forem recebidas.', 'Upcoming trips will appear here as soon as they arrive.')}</p></>}</div><a className="pm-owner-outline-action" href="#/owner/bookings"><CalendarPlus size={17}/>{say('Criar marcação', 'Create booking')}</a></section>
-    <section className="pm-owner-section"><div className="pm-owner-section-heading"><h2>{say('Resumo do dia', 'Today at a glance')}</h2><a href="#/owner/calendar">{say('Abrir agenda', 'Open calendar')}<ChevronRight size={16}/></a></div><div className="pm-owner-metrics"><article><span className="pm-owner-metric-icon pm-owner-metric-pink"><AssetIcon src="/owner-icon-calendar.png" /></span><div><strong>{scheduled}</strong><span>{say('Marcações', 'Bookings')}</span><small>{say('Hoje', 'Today')}</small></div></article><article><span className="pm-owner-metric-icon pm-owner-metric-green"><AssetIcon src="/owner-icon-wallet.png" /></span><div><strong>{money(revenue, i18n.language)}</strong><span>{say('Faturação prevista', 'Expected revenue')}</span><small>{say('Hoje', 'Today')}</small></div></article><article><span className="pm-owner-metric-icon pm-owner-metric-amber"><BellRing size={20}/></span><div><strong>{attention.length}</strong><span>{say('Lembretes', 'Reminders')}</span><small>{say('A acompanhar', 'To follow up')}</small></div></article><article><span className="pm-owner-metric-icon pm-owner-metric-blue"><AssetIcon src="/owner-icon-person.png" /></span><div><strong>{activeRequests.length}</strong><span>{say('Pedidos pendentes', 'Pending requests')}</span><small>{say('Vindos do cliente', 'From customers')}</small></div></article></div></section>
-    <section className="pm-owner-section"><div className="pm-owner-section-heading"><h2>{say('Precisa da sua atenção', 'Needs your attention')}</h2><a href="#/owner/bookings">{say('Ver todos', 'View all')}<ChevronRight size={16}/></a></div><div className="pm-owner-attention-list">{attention.length ? attention.map(item => <a className="pm-owner-attention-row pm-demo-record" href="#/owner/bookings" key={item.id}><span className="pm-owner-row-icon"><AssetIcon src={item.incoming ? '/owner-icon-person.png' : '/owner-icon-car-front.png'} /></span><span className="pm-owner-row-copy"><strong>{item.name}</strong><small>{new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date(item.date))} · {item.route}</small><small>{item.detail}</small></span><span className="pm-owner-row-message" aria-label={say('Abrir pedido', 'Open request')}><MessageCircle size={17}/></span><ChevronRight className="pm-owner-row-chevron" size={18}/></a>) : <p className="pm-owner-empty">{say('Nenhum pedido pendente.', 'No pending requests.')}</p>}</div></section>
-    <section className="pm-owner-section"><div className="pm-owner-section-heading"><h2>{say('Atalhos rápidos', 'Quick shortcuts')}</h2></div><div className="pm-owner-shortcuts"><a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-calendar.png" /></span><strong>{say('Nova marcação', 'New booking')}</strong><small>{say('Registar um pedido por telefone ou WhatsApp', 'Record a phone or WhatsApp request')}</small><ChevronRight size={17}/></a><a href="#/customer/discover"><span><AssetIcon src="/owner-icon-search.png" /></span><strong>{say('Link da página', 'Page link')}</strong><small>{say('Abrir a experiência pública do cliente', 'Open the customer experience')}</small><ChevronRight size={17}/></a><a href="#/owner/settings"><span><AssetIcon src="/owner-icon-card.png" /></span><strong>{say('Configurar operação', 'Configure operation')}</strong><small>{say('Valores, regras e publicação', 'Prices, rules and publishing')}</small><ChevronRight size={17}/></a></div></section>
+    <header className="pm-owner-dashboard-header">
+      <div>
+        <h1 className="pm-owner-page-title">{say('Início', 'Home')}</h1>
+        <p className="pm-owner-greeting">{say('Bom dia, Vitor', 'Good morning, Vitor')}</p>
+        <p className="pm-owner-subtitle">{say('Onde o podemos levar hoje?', 'Where can we take you today?')}</p>
+      </div>
+      <button type="button" className="pm-owner-profile" aria-label={say('Perfil', 'Profile')}><AssetIcon src="/owner-icon-person.png" /></button>
+    </header>
+
+    <section className="pm-owner-summary-card">
+      <div className="pm-owner-summary-heading"><div><h2>{say('Resumo de hoje', 'Today at a glance')}</h2><p>{shortToday}</p></div><button type="button" className="pm-owner-summary-menu" aria-label={say('Mais opções', 'More options')}>•••</button></div>
+      <div className="pm-owner-summary-metrics">
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-car-front.png" /></span><strong>{scheduledToday}</strong><span>{say('viagens', 'trips')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-wallet.png" /></span><strong>{money(revenueToday, i18n.language)}</strong><span>{say('faturação hoje', 'revenue today')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-calendar.png" /></span><strong>{upcoming.length}</strong><span>{say('próximas', 'upcoming')}</span></article>
+      </div>
+    </section>
+
+    <section className="pm-owner-section">
+      <div className="pm-owner-section-heading"><h2>{say('Próximas marcações', 'Upcoming bookings')}</h2><a href="#/owner/bookings">{say('Ver todas', 'View all')}<ChevronRight size={16} /></a></div>
+      <div className="pm-owner-upcoming-list">
+        {upcoming.slice(0, 2).map(item => <a className="pm-owner-upcoming-row pm-demo-record" href="#/owner/bookings" key={item.id}>
+          <span className="pm-owner-upcoming-icon"><AssetIcon src={upcomingIcon(item.route)} /></span>
+          <span className="pm-owner-upcoming-copy"><strong>{item.route}</strong><small>{formatDate(item.date)} · {formatTime(item.date)}</small><small><UsersRound size={14} /> {item.detail}</small></span>
+          <span className="pm-owner-upcoming-value"><span className={`pm-owner-status ${item.incoming ? 'is-pending' : ''}`}>{item.incoming ? say('A aguardar', 'Pending') : say('Agendada', 'Scheduled')}</span><strong>{money(item.value, i18n.language)}</strong></span>
+          <ChevronRight className="pm-owner-row-chevron" size={18} />
+        </a>)}
+        {!upcoming.length && <p className="pm-owner-empty">{say('Nenhuma marcação agendada.', 'No bookings scheduled.')}</p>}
+      </div>
+    </section>
+
+    <section className="pm-owner-section">
+      <div className="pm-owner-section-heading"><h2>{say('Ações rápidas', 'Quick actions')}</h2></div>
+      <div className="pm-owner-shortcuts">
+        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-calendar.png" /></span><strong>{say('Agendar', 'Schedule')}</strong><small>{say('Nova viagem', 'New trip')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-car-front.png" /></span><strong>{say('As minhas viagens', 'My trips')}</strong><small>{say('Histórico e próximas', 'History and upcoming')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/tours"><span><AssetIcon src="/owner-icon-tours.png" /></span><strong>{say('Tours', 'Tours')}</strong><small>{say('Destinos exclusivos', 'Exclusive destinations')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/finance"><span><AssetIcon src="/owner-icon-card.png" /></span><strong>{say('Pagamento', 'Payment')}</strong><small>{say('Cartões e métodos', 'Cards and methods')}</small><ChevronRight size={17} /></a>
+      </div>
+    </section>
+
+    <section className="pm-owner-section">
+      <div className="pm-owner-section-heading"><h2>{say('Próximo serviço', 'Next service')}</h2></div>
+      <a className="pm-owner-next-service pm-demo-record" href="#/owner/bookings"><span className="pm-owner-upcoming-icon"><AssetIcon src="/owner-icon-car-front.png" /></span><span className="pm-owner-upcoming-copy"><strong>{nextService.route}</strong><small><UsersRound size={14} /> {nextService.name}</small><small><Clock3 size={14} /> {nextService.detail || say('Aguardando nova marcação', 'Waiting for a new booking')}</small></span><ChevronRight className="pm-owner-row-chevron" size={18} /></a>
+    </section>
   </div>;
 }

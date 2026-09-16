@@ -2,7 +2,7 @@
 
 ## 0.2.89 — 2026-09-16
 
-- painel inicial do proprietário redesenhado para telemóvel, com saudação, próxima operação, resumo do dia, lista de atenção e atalhos rápidos;
+- painel inicial do proprietário redesenhado para telemóvel seguindo a referência, com título Início, saudação, resumo em três métricas, próximas marcações, ações rápidas e próximo serviço, sem a barra “Para onde?”;
 - direção visual compacta inspirada em apps de mobilidade, com a paleta neutra preta, branca e cinza do produto;
 - ícones pretos fornecidos para calendário, carteira, carro, perfil, tours, pesquisa e cartão entram nas áreas móveis do proprietário;
 - páginas internas do proprietário usam o mesmo sistema móvel de cartões brancos arredondados, módulos de ícone, pesquisa compacta, botões pill e espaçamento da referência;
