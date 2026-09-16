@@ -30,6 +30,14 @@ As caixas de origem e destino foram compactadas novamente para o padrão visual 
 
 Os pins de origem/destino e o botão “+” foram alinhados ao centro vertical das respetivas barras de pesquisa. Build e browser visual aprovados.
 
+## Incremento 0.2.80 — 16/09/2026
+
+Removido o segundo resumo de valores duplicado na etapa de escolha do motorista e carro. Mantido um único bloco de estimativa, com as ações de navegação abaixo.
+
+## Incremento 0.2.81 — 16/09/2026
+
+O teste de browser passou a garantir que a etapa de escolha de motorista e carro apresenta exatamente um resumo de valores.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.

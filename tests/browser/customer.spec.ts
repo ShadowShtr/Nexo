@@ -349,6 +349,7 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await page.getByLabel('Passageiros', { exact: true }).selectOption('4');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByLabel('Carro', { exact: true }).selectOption('1');
+  await expect(page.locator('.pm-summary')).toHaveCount(1);
   await expect(page.locator('.pm-summary').first()).toContainText('270,00');
   await expect(page.locator('.pm-summary').first()).toContainText('67,50');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
