@@ -96,6 +96,11 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
   .pm-calendar-controls .pm-actions { flex-wrap:wrap; }
 }
 
+/* Use a recognizable US flag in the English language selector. */
+.pm-language-flag-en { position:relative; background:repeating-linear-gradient(to bottom,#b22234 0 7.69%,#fff 7.69% 15.38%); }
+.pm-language-flag-en::before { content:""; position:absolute; inset:0 auto auto 0; width:52%; height:54%; background:#3c3b6e; }
+.pm-language-flag-en::after { content:""; position:absolute; left:.16rem; top:.13rem; width:.12rem; height:.12rem; border-radius:50%; background:#fff; box-shadow:.26rem 0 #fff,.52rem 0 #fff,.78rem 0 #fff,.13rem .25rem #fff,.39rem .25rem #fff,.65rem .25rem #fff,.91rem .25rem #fff,.26rem .5rem #fff,.52rem .5rem #fff,.78rem .5rem #fff; }
+
 .pm-app textarea { width:100%; box-sizing:border-box; min-height:7rem; padding:.65rem 1rem; border:1px solid var(--pm-control-border); border-radius:var(--pm-radius-input); background:var(--pm-surface); color:var(--pm-ink); resize:vertical; }
 .pm-demo-record { border:1px solid transparent; color:var(--pm-ink); text-align:left; }
 button.pm-demo-record { appearance:none; font:inherit; cursor:pointer; }
