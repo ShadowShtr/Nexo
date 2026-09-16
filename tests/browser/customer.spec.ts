@@ -124,8 +124,9 @@ test('customer planner opens later dates with available times', async ({ page })
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
   await page.getByRole('button', { name: 'Escolher outra data' }).click();
   const customDates = page.locator('#pm-client-more-dates');
-  await customDates.getByLabel('Data para escolher', { exact: true }).fill('2026-09-20');
-  await expect(customDates.getByRole('option')).toHaveCount(0);
+  await expect(customDates.getByRole('listbox')).toHaveCount(0);
+  await customDates.getByRole('gridcell', { name: /20 de setembro de 2026/ }).click();
+  await expect(customDates).toHaveCount(0);
   await expect(page.locator('.pm-client-calendar-days').getByRole('option')).toHaveCount(5);
   await expect(page.locator('.pm-client-calendar-days').getByRole('option').last()).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();

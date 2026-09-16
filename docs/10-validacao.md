@@ -10,6 +10,10 @@ Barra inicial compacta com 52 px. Build TypeScript/Vite aprovado; inspeção vis
 
 O calendário principal do cliente continua a apresentar a data atual e os horários disponíveis. O botão para outra data abre apenas o seletor compacto de data; os horários continuam na grelha principal e não são repetidos no pop-up. Build, testes unitários e browser focados aprovados.
 
+## Incremento 0.2.75 — 16/09/2026
+
+O seletor de outra data deixou o controlo nativo quadrado e passou a usar um pop-up arredondado próprio, com mês/ano, setas, dias livres, destaque da data atual e atalho “Hoje”. Continua sem horários duplicados no pop-up. Build e testes browser focados aprovados.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.
