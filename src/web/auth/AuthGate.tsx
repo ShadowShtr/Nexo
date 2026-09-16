@@ -38,7 +38,7 @@ export function AuthGate({area,demo,children}:{area:Area;demo:boolean;children:R
   },[area,bypass,client]);
 
   if (bypass) return children;
-  const language = <label className="pm-language"><Globe2 size={17}/><span className={`pm-language-flag pm-language-flag-${i18n.language === 'en' ? 'en' : 'pt'}`} aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={event=>void i18n.changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
+  const language = <label className="pm-language"><Globe2 size={17}/><img className="pm-language-flag" src={i18n.language === 'en' ? '/flag-usa.png' : '/flag-portugal.png'} alt="" aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={event=>void i18n.changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
   const shell = (body:ReactNode) => <main className="pm-theme pm-auth-shell"><section className="pm-card pm-auth-card"><div className="pm-auth-heading"><span className="pm-logo">pm.</span>{language}</div>{body}</section></main>;
   if (state === 'allowed' && !inviteMode) return children;
   if (state === 'allowed' && inviteMode) {
