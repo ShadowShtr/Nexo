@@ -253,8 +253,9 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-eyebrow { color:#777981; font-size:.75rem; font-weight:600; }
 .pm-client-back { display:grid; place-items:center; width:42px; height:42px; flex:0 0 auto; border:0; border-radius:50%; background:#f1f1f2; color:var(--pm-ink); }
 .pm-client-back:focus-visible,.pm-client-location-button:focus-visible,.pm-client-primary-action:focus-visible,.pm-client-suggestion:focus-visible,.pm-client-add-stop:focus-visible,.pm-client-reorder-stop:focus-visible,.pm-client-remove-stop:focus-visible,.pm-client-calendar-choice:focus-visible { outline:2px solid var(--pm-focus); outline-offset:3px; }
-.pm-client-planner-pills { display:flex; gap:.65rem; }
-.pm-client-planner-pills span { display:inline-flex; align-items:center; gap:.45rem; min-height:44px; padding:0 .9rem; border-radius:999px; background:#f2f2f3; color:#27282c; font-size:.82rem; font-weight:600; }
+.pm-client-planner-pills { display:flex; gap:.45rem; }
+.pm-client-planner-pills span { display:inline-flex; align-items:center; gap:.35rem; min-height:36px; padding:0 .65rem; border-radius:999px; background:#f2f2f3; color:#27282c; font-size:.74rem; font-weight:600; }
+.pm-client-planner-pills .pm-client-pill-icon { width:1.55rem; height:1.55rem; }
 .pm-client-address-card { padding:1rem 1.1rem; border:1px solid #17181b; border-radius:22px; background:#fff; box-shadow:0 5px 18px rgb(20 24 40 / 7%); }
 .pm-client-address-row { display:grid; grid-template-columns:34px minmax(0,1fr) auto; align-items:center; gap:.75rem; cursor:text; }
 .pm-client-address-icon { display:grid; place-items:center; width:32px; height:32px; }
@@ -352,7 +353,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-action-car,.pm-client-action-route { width:2.5rem; height:2.5rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-booking-slot strong { color:var(--pm-ink); font-variant-numeric:tabular-nums; }
 @media (max-width:359px) {
-  .pm-client-planner-pills span { padding-inline:.7rem; }
+  .pm-client-planner-pills span { padding-inline:.55rem; }
   .pm-client-route-stats { grid-template-columns:1fr; }
   .pm-client-route-stats span { grid-template-columns:1fr auto; align-items:center; }
   .pm-client-route-stats strong { text-align:right; }
