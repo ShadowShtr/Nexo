@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.90 — 16/09/2026
+
+A aba Reservas do proprietário passou a oferecer uma marcação manual com o mesmo modelo de entrada de rota do cliente: localização atual, origem e destino editáveis, paragens, rota completa no mapa, data/hora, passageiros, motorista e carro. A criação continua em modo demo e respeita a validação de disponibilidade e margem de uma hora. Build e testes browser aprovados; a sincronização real entre computadores continua pendente.
+
 ## Incremento 0.2.89 — 16/09/2026
 
 O início do proprietário em modo demo foi redesenhado para uma leitura operacional móvel seguindo a referência: título Início, saudação, resumo em três métricas, próximas marcações, ações rápidas e próximo serviço, sem a barra “Para onde?”. A direção compacta segue apps de mobilidade, mantendo a paleta neutra preta, branca e cinza do produto; os ícones fornecidos foram incorporados com tamanho pequeno e sombra leve. As páginas internas seguem o mesmo padrão de cartões brancos arredondados, módulos de ícone, pesquisa compacta, botões pill e espaçamento responsivo, mantendo a barra inferior Início, Agenda e Reservas. Pedidos recebidos do cliente alimentam as marcações e os indicadores através do mesmo armazenamento demo. Build TypeScript/Vite aprovado e inspeção browser das rotas do proprietário aprovada. A consulta operacional real, autenticação, notificações e sincronização entre PCs continuam pendentes.

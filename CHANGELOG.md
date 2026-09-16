@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.90 — 2026-09-16
+
+- criação manual de marcações do proprietário estruturada como o fluxo do cliente, com origem, localização atual, destino, paragens, rota completa no mapa, data/hora, passageiros, motorista e carro;
+- formulário manual recebeu hierarquia de cartões, métricas de rota e controles responsivos no padrão visual neutro do produto.
+
 ## 0.2.89 — 2026-09-16
 
 - painel inicial do proprietário redesenhado para telemóvel seguindo a referência, com título Início, saudação, resumo em três métricas, próximas marcações, ações rápidas e próximo serviço, sem a barra “Para onde?”;
