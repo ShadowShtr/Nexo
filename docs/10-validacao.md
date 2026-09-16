@@ -26,6 +26,10 @@ As caixas de origem e destino do planeador foram reduzidas para uma escala móve
 
 As caixas de origem e destino foram compactadas novamente para o padrão visual móvel pedido, com altura aproximada de 40 px e padding menor. Build e browser visual aprovados.
 
+## Incremento 0.2.79 — 16/09/2026
+
+Os pins de origem/destino e o botão “+” foram alinhados ao centro vertical das respetivas barras de pesquisa. Build e browser visual aprovados.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.

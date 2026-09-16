@@ -258,7 +258,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-planner-pills .pm-client-pill-icon { width:1.55rem; height:1.55rem; }
 .pm-client-address-card { padding:.6rem .7rem; border:1px solid #17181b; border-radius:17px; background:#fff; box-shadow:0 5px 18px rgb(20 24 40 / 7%); }
 .pm-client-address-row { display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:.55rem; cursor:text; }
-.pm-client-address-icon { display:grid; place-items:center; width:28px; height:28px; }
+.pm-client-address-icon { display:grid; place-items:center; align-self:end; width:28px; height:28px; margin-bottom:.3rem; }
 .pm-client-address-art { display:block; width:1.7rem; height:1.7rem; object-fit:contain; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-client-address-field { display:grid; min-width:0; gap:.15rem; }
 .pm-client-address-field small { color:#777981; font-size:.7rem; font-weight:600; }
@@ -266,7 +266,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-app .pm-client-address-field input { min-height:40px; padding:.25rem .6rem; border-color:#d8d9de; border-radius:10px; font-size:.88rem; }
 .pm-client-address-field input::placeholder { color:#6c6d72; font-weight:500; }
 .pm-client-address-divider { height:1px; margin:.45rem 0 .45rem 34px; background:#e7e7e9; }
-.pm-client-add-stop { display:grid; place-items:center; width:38px; height:38px; border:0; border-radius:50%; background:#f0f0f1; color:var(--pm-ink); font-size:1.35rem; }
+.pm-client-add-stop { display:grid; place-items:center; align-self:end; width:38px; height:38px; margin-bottom:0; border:0; border-radius:50%; background:#f0f0f1; color:var(--pm-ink); font-size:1.35rem; }
 .pm-client-stop-actions { display:flex; align-items:center; gap:.2rem; flex:0 0 auto; }
 .pm-client-reorder-stop { display:grid; place-items:center; width:30px; height:30px; padding:0; border:0; border-radius:50%; background:#f4f4f5; color:#4f5056; }
 .pm-client-reorder-stop:not(:disabled):hover { background:#e9e9eb; color:var(--pm-ink); }

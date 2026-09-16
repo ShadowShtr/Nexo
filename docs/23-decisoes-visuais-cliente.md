@@ -1,6 +1,6 @@
 # Decisões visuais do cliente
 
-Consolidado em 16/09/2026 a partir das revisões do utilizador até v0.2.78. Complementa [sistema visual](12-design-system.md), [mapa das abas](13-mapa-visual-abas.md) e [fluxo do cliente](20-entrada-cliente.md). Mudanças abaixo orientam a área do cliente; não redesenhar áreas internas silenciosamente.
+Consolidado em 16/09/2026 a partir das revisões do utilizador até v0.2.79. Complementa [sistema visual](12-design-system.md), [mapa das abas](13-mapa-visual-abas.md) e [fluxo do cliente](20-entrada-cliente.md). Mudanças abaixo orientam a área do cliente; não redesenhar áreas internas silenciosamente.
 
 ## Composição aprovada
 
