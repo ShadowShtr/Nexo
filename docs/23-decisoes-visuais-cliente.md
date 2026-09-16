@@ -5,7 +5,7 @@ Consolidado em 15/09/2026 a partir das revisões do utilizador até v0.2.72. Com
 ## Composição aprovada
 
 - Descobrir é a entrada principal. Marcar viagem é etapa do percurso e não deve reaparecer como aba inicial ou botão duplicado de navegação.
-- “Para onde?” e lupa discretos, cinzentos.
+- “Para onde?” e lupa discretos, cinzentos. Desde v0.2.73: barra de 52 px, lupa de 20 px, calendário de 24 px e opção “Mais tarde” de 36 px; sem sombra na barra. Referência visual Uber, não uma medida oficial.
 - Categorias em três colunas no telemóvel, cartões compactos; ícones, títulos e descrições centrados.
 - Usar os ícones 3D fornecidos, variar entre categorias; sem quadrado de fundo adicional, com sombra suave. Não substituir todos por símbolos cinzentos genéricos.
 - O carro ao lado de “Carro disponível” tem fundo livre e sombra leve. Retirar o pequeno símbolo de pessoa ao lado do nome do motorista; a ilustração própria de motorista é outro elemento.

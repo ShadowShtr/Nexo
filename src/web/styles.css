@@ -216,10 +216,11 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-wordmark { display:flex; align-items:center; gap:.6rem; font-size:.875rem; letter-spacing:-.015em; }
 .pm-client-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:var(--pm-ink); color:var(--pm-inverse); font-size:1rem; font-weight:700; letter-spacing:-.08em; }
 .pm-client-language select { min-height:40px; padding:.4rem .65rem; border:0; border-radius:999px; background:#f2f2f3; color:var(--pm-ink); font-size:.8rem; }
-.pm-client-search { display:flex; align-items:center; gap:.65rem; width:100%; min-height:64px; padding:.5rem .65rem .5rem 1.1rem; border:1px solid #dedee3; border-radius:999px; background:#f5f5f6; color:#62646d; text-align:left; box-shadow:0 3px 14px rgb(20 24 40 / 5%); }
-.pm-client-search strong { flex:1; color:#62646d; font-size:1.05rem; font-weight:600; line-height:1.3; letter-spacing:-.02em; }
-.pm-client-search svg { width:21px; height:21px; color:#7a7c84; flex-shrink:0; }
-.pm-client-later { display:inline-flex; align-items:center; gap:.45rem; min-height:48px; padding:0 .9rem; border-radius:999px; background:#fff; font-size:.8rem; font-weight:600; white-space:nowrap; box-shadow:0 2px 10px rgb(20 24 40 / 6%); }
+.pm-client-search { display:flex; align-items:center; gap:.5rem; width:100%; min-height:52px; padding:.375rem .5rem .375rem .875rem; border:1px solid #dedee3; border-radius:999px; background:#f5f5f6; color:#62646d; text-align:left; box-shadow:none; }
+.pm-client-search strong { flex:1; color:#62646d; font-size:1rem; font-weight:600; line-height:1.3; letter-spacing:-.02em; }
+.pm-client-search svg { width:20px; height:20px; color:#7a7c84; flex-shrink:0; }
+.pm-client-later { display:inline-flex; align-items:center; gap:.35rem; min-height:36px; padding:0 .65rem; border-radius:999px; background:#fff; font-size:.75rem; font-weight:600; white-space:nowrap; box-shadow:none; }
+.pm-client-search .pm-client-pill-icon { width:24px; height:24px; }
 .pm-client-pill-icon { width:2rem; height:2rem; object-fit:contain; flex:0 0 auto; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-client-categories { display:grid; gap:1rem; }
 .pm-client-section-title { display:flex; align-items:center; justify-content:space-between; gap:1rem; }

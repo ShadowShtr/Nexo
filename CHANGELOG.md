@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.73 — 2026-09-16
+
+- barra “Para onde?” reduzida de 64 para 52 px, com ícones e opção “Mais tarde” proporcionais;
+- mantidos os tons cinzentos discretos e removida a sombra da barra.
+
 ## Documentação de continuidade — 2026-09-15
 
 - guia de instalação, testes, sincronização e passagem de contexto entre PCs;

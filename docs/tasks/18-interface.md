@@ -48,3 +48,5 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 
 
 Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.
+
+Evidência parcial 0.2.73: barra inicial de pesquisa compacta; build aprovado e verificação visual a 495 px sem overflow. Ver docs/10-validacao.md. UI-02 permanece em curso.
