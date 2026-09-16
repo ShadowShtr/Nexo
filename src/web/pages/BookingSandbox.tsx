@@ -189,8 +189,12 @@ export function BookingSandbox() {
       if (!isCustomerSlotAvailable(bookingDate, time, durationMinutes, agendaBookings, ownerCalendar.settings, [{ driverId: String(driver), vehicleId: String(car) }])) return false;
       const slot = DateTime.fromISO(`${bookingDate}T${time}`, { zone });
       if (!slot.isValid) return false;
-      const allocation: Allocation = { id: 'PREVIEW-MANUAL', driverId: String(driver), vehicleId: String(car), startsAt: slot.toUTC().toISO()!, endsAt: slot.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested' };
-      return checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30).available;
+      try {
+        const allocation: Allocation = { id: 'PREVIEW-MANUAL', driverId: String(driver), vehicleId: String(car), startsAt: slot.toUTC().toISO()!, endsAt: slot.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested' };
+        return checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30).available;
+      } catch {
+        return false;
+      }
     });
   }, [agendaBookings, bookingDate, car, driver, durationMinutes, ownerCalendar.settings]);
   const scheduleAvailable = dateValid && availableTimes.includes(bookingTime);
@@ -223,7 +227,13 @@ export function BookingSandbox() {
     if (people > cars[car].capacity) { setError(say('O carro escolhido não tem capacidade para todos os passageiros.', 'The selected vehicle cannot carry all passengers.')); return; }
     if (!scheduleAvailable) { setError(say('Este horário está indisponível na agenda. Escolha outra data, hora ou recurso.', 'This time is unavailable in the calendar. Choose another date, time or resource.')); return; }
     const allocation: Allocation & { from: string; to: string; stops: string[] } = { id: `MAN-${crypto.randomUUID().slice(0, 8)}`, driverId: String(driver), vehicleId: String(car), startsAt: selectedDate.toUTC().toISO()!, endsAt: selectedDate.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested', holdExpiresAt: DateTime.fromISO(clock).plus({ minutes: 30 }).toISO()!, from: origin.trim(), to: destination.trim(), stops: [...stops] };
-    const availability = checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
+    let availability: ReturnType<typeof checkSchedule>;
+    try {
+      availability = checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
+    } catch {
+      setError(say('Verifique a data e hora escolhidas na agenda.', 'Check the selected date and time against the calendar.'));
+      return;
+    }
     if (!availability.available) { setError(say('Horário indisponível para o motorista ou carro escolhido.', 'The selected driver or vehicle is unavailable at this time.')); return; }
     const currentCalendar = readOwnerCalendar();
     saveOwnerCalendarBookings([...currentCalendar.bookings.filter(booking => booking.source !== 'customer' && booking.id !== allocation.id), allocation]);

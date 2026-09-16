@@ -4,7 +4,7 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 ## Incremento 0.2.90 — 16/09/2026
 
-A aba Reservas do proprietário passou a oferecer uma marcação manual com o mesmo modelo de entrada de rota do cliente: localização atual, origem e destino editáveis, pesquisa de moradas novas, paragens, rota completa no mapa, tours ativos do catálogo, data, hora inteira, passageiros, motorista e carro. A hora é escolhida numa grelha ligada à agenda; minutos não são editáveis e horários indisponíveis desaparecem. A data/hora e o recurso escolhido são validados contra a agenda do proprietário; a marcação guardada permanece visível na agenda e respeita a margem de uma hora. Build e 9 testes browser aprovados; a sincronização real entre computadores continua pendente.
+A aba Reservas do proprietário passou a oferecer uma marcação manual com o mesmo modelo de entrada de rota do cliente: localização atual, origem e destino editáveis, pesquisa de moradas novas, paragens, rota completa no mapa, tours ativos do catálogo, data, hora inteira, passageiros, motorista e carro. A hora é escolhida numa grelha ligada à agenda; minutos não são editáveis e horários indisponíveis desaparecem. A troca de data é tolerante a datas passadas ou dados antigos inválidos e mantém o formulário visível. A data/hora e o recurso escolhido são validados contra a agenda do proprietário; a marcação guardada permanece visível na agenda e respeita a margem de uma hora. Build e 9 testes browser aprovados; a sincronização real entre computadores continua pendente.
 
 ## Incremento 0.2.89 — 16/09/2026
 

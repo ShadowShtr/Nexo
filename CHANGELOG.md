@@ -8,6 +8,7 @@
 - pesquisa de locais aceita moradas novas com sugestões locais e consulta remota, e o serviço lista os tours ativos do catálogo;
 - data/hora e recurso escolhido são validados contra a agenda do proprietário, com margem de uma hora, e a marcação manual guardada aparece na agenda.
 - seleção de data e hora do proprietário separa o dia da grelha de horas inteiras; minutos deixam de ser editáveis e os horários indisponíveis desaparecem.
+- troca de data tornou-se tolerante a datas passadas ou dados de agenda inválidos, mantendo o formulário visível e indicando indisponibilidade.
 
 ## 0.2.89 — 2026-09-16
 
