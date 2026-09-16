@@ -612,6 +612,16 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-owner-calendar-status.is-unavailable { background:#fff0ed; color:#a54032; }
 .pm-owner-calendar-status.is-invalid { background:var(--pm-surface-muted); color:var(--pm-ink-secondary); }
 .pm-owner-calendar-status a { margin-left:auto; color:inherit; font-size:.74rem; font-weight:750; text-decoration:underline!important; white-space:nowrap; }
+.pm-owner-bookings-page .pm-owner-form-icon>svg,.pm-owner-bookings-page .pm-owner-location-action>svg,.pm-owner-bookings-page .pm-owner-address-suggestions button>svg,.pm-owner-bookings-page .pm-owner-calendar-status>svg,.pm-owner-bookings-page .pm-owner-stop-input button>svg,.pm-owner-bookings-page .pm-owner-stop-list button>svg,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button>svg,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button>svg,.pm-owner-bookings-page .pm-demo-record .pm-button>svg { display:none; }
+.pm-owner-bookings-page .pm-owner-form-icon::before,.pm-owner-bookings-page .pm-owner-location-action::before,.pm-owner-bookings-page .pm-owner-address-suggestions button::before,.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { content:""; display:block; flex:0 0 auto; width:24px; height:24px; background:url('/owner-icon-pin.png') center / contain no-repeat; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
+.pm-owner-bookings-page .pm-owner-form-icon::before { width:30px; height:30px; }
+.pm-owner-bookings-page .pm-owner-address-suggestions button::before { width:20px; height:20px; }
+.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/owner-icon-calendar.png'); }
+.pm-owner-bookings-page .pm-owner-stop-input button::before { content:"+"; font-size:1.2rem; line-height:1; }
+.pm-owner-bookings-page .pm-owner-stop-list button::before { content:"×"; font-size:1.1rem; line-height:1; }
+.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button { display:inline-flex; align-items:center; gap:.45rem; }
+.pm-owner-bookings-page .pm-demo-record .pm-button::before { content:"×"; font-size:1.1rem; line-height:1; }
+.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button:has(svg.lucide-x)::before { content:"×"; background-image:none; font-size:1.1rem; line-height:1; }
 @media (max-width:767px) {
   .pm-owner-bookings-intro { align-items:stretch; flex-direction:column; }
   .pm-owner-bookings-intro>.pm-button { width:100%; }
