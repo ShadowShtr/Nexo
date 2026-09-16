@@ -589,6 +589,25 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-owner-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.85rem; }
 .pm-owner-form-grid label:first-child { grid-column:1 / -1; }
 .pm-owner-manual-form>.pm-actions { margin-top:.1rem; }
+.pm-owner-address-field { position:relative; min-width:0; }
+.pm-owner-address-field>label { display:grid; gap:.4rem; color:var(--pm-ink-secondary); font-size:.8rem; font-weight:650; }
+.pm-owner-address-field>label:empty { display:block; height:0; }
+.pm-owner-address-field input { width:100%; box-sizing:border-box; min-height:44px; padding:.55rem .75rem; border:1px solid var(--pm-control-border); border-radius:14px; background:var(--pm-surface); color:var(--pm-ink); }
+.pm-owner-address-suggestions { position:absolute; z-index:30; top:calc(100% + .3rem); left:0; right:0; display:grid; gap:.2rem; max-height:250px; overflow:auto; padding:.35rem; border:1px solid var(--pm-line); border-radius:15px; background:var(--pm-surface); box-shadow:0 14px 32px rgb(20 24 40 / 16%); }
+.pm-owner-address-suggestions button { display:grid; grid-template-columns:22px minmax(0,1fr); align-items:center; gap:.45rem; width:100%; padding:.55rem; border:0; border-radius:10px; background:transparent; color:var(--pm-ink); text-align:left; }
+.pm-owner-address-suggestions button:hover,.pm-owner-address-suggestions button:focus-visible { background:var(--pm-surface-muted); }
+.pm-owner-address-suggestions button>svg { color:var(--pm-ink-secondary); }
+.pm-owner-address-suggestions button>span { display:grid; gap:.12rem; min-width:0; }
+.pm-owner-address-suggestions strong,.pm-owner-address-suggestions small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-owner-address-suggestions strong { font-size:.78rem; }
+.pm-owner-address-suggestions small { color:var(--pm-ink-secondary); font-size:.68rem; }
+.pm-owner-address-suggestions p { margin:.45rem .55rem; color:var(--pm-ink-secondary); font-size:.74rem; }
+.pm-owner-stop-input .pm-owner-address-field>label { display:block; }
+.pm-owner-stop-input .pm-owner-address-field input { min-height:42px; }
+.pm-owner-calendar-status { display:flex; align-items:center; gap:.5rem; padding:.7rem .8rem; border-radius:14px; background:#e5f7ee; color:#147446; font-size:.78rem; font-weight:650; }
+.pm-owner-calendar-status.is-unavailable { background:#fff0ed; color:#a54032; }
+.pm-owner-calendar-status.is-invalid { background:var(--pm-surface-muted); color:var(--pm-ink-secondary); }
+.pm-owner-calendar-status a { margin-left:auto; color:inherit; font-size:.74rem; font-weight:750; text-decoration:underline!important; white-space:nowrap; }
 @media (max-width:767px) {
   .pm-owner-bookings-intro { align-items:stretch; flex-direction:column; }
   .pm-owner-bookings-intro>.pm-button { width:100%; }
@@ -599,4 +618,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-owner-form-grid label:first-child { grid-column:auto; }
   .pm-owner-manual-form .pm-route-map { height:220px; }
   .pm-owner-manual-form .pm-route-summary { flex-wrap:wrap; }
+  .pm-owner-address-suggestions { max-height:210px; }
+  .pm-owner-calendar-status { align-items:flex-start; flex-wrap:wrap; }
+  .pm-owner-calendar-status a { margin-left:auto; }
 }

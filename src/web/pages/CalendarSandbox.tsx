@@ -12,11 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { checkSchedule, requiredGapMinutes, type Allocation } from '../../domain/calendar';
 import { Button } from '../../ui/components/Button';
 import { demoTrips } from './DemoPage';
-import { saveOwnerCalendarBookings } from '../customer-availability';
+import { readOwnerCalendar, saveOwnerCalendarBookings, type CalendarBooking } from '../customer-availability';
 
 const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
 const cars = ['Mercedes Classe E', 'Mercedes Classe V', 'BMW Série 5', 'Volvo XC90'];
-type Entry = Allocation & { from: string; to: string };
+type Entry = Allocation & { from: string; to: string; stops?: string[] };
 const zone = 'Europe/Lisbon';
 const toISO = (value: string) => {
   const date = DateTime.fromISO(value, { zone });
@@ -24,8 +24,22 @@ const toISO = (value: string) => {
   return date.toUTC().toISO()!;
 };
 const initial = (): Entry[] => demoTrips.map(trip => ({id:trip.id,driverId:String(trip.driver),vehicleId:String(trip.car),startsAt:toISO(`${trip.day}T${trip.time}`),endsAt:toISO(`${trip.day}T${trip.end}`),status:'confirmed',from:trip.from,to:trip.to}));
+const hydrate = (): Entry[] => {
+  const byId = new Map(initial().map(entry => [entry.id, entry]));
+  readOwnerCalendar().bookings.filter(booking => booking.source !== 'customer').forEach((booking: CalendarBooking) => {
+    const current = byId.get(booking.id);
+    byId.set(booking.id, {
+      ...(current ?? { id: booking.id, from: booking.from ?? 'Marcação manual', to: booking.to ?? 'Reserva', driverId: booking.driverId, vehicleId: booking.vehicleId, startsAt: booking.startsAt, endsAt: booking.endsAt }),
+      ...booking,
+      status: (booking.status ?? current?.status ?? 'requested') as Allocation['status'],
+      from: booking.from ?? current?.from ?? 'Marcação manual',
+      to: booking.to ?? current?.to ?? 'Reserva',
+    });
+  });
+  return [...byId.values()];
+};
 // Deliberately memory-only. Reset/reload restores the fictional scenario.
-let memory = initial();
+let memory = hydrate();
 export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: boolean }) {
   const { i18n } = useTranslation();
   const say = (p:string,e:string) => i18n.language === 'en' ? e : p;
@@ -53,7 +67,7 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
   ]);
   const local = (value:string) => DateTime.fromISO(value).setZone(zone).toFormat("yyyy-MM-dd'T'HH:mm");
   return <div className="pm-agenda-workspace">
-    <p className="pm-note">{say('Agenda de teste · 11–13 setembro 2026. Alterações apenas em memória. Sem reservas ou pagamentos reais. Relógio simulado: 10/09/2026.','Test calendar · 11–13 September 2026. Changes are memory-only. No real bookings or payments. Simulated clock: 10 September 2026.')}</p>
+    <p className="pm-note">{say('Agenda de teste · horários de Lisboa. As marcações do proprietário ficam ligadas a esta agenda nesta sessão. Sem reservas ou pagamentos reais.','Test calendar · Lisbon times. Owner bookings stay linked to this calendar in this session. No real bookings or payments.')}</p>
     <div className="pm-calendar-toolbar pm-agenda-filters">
       <label>{say('Data','Date')}<input type="date" value={date} onChange={e=>{setDate(e.target.value);if(e.target.value)calendar.current?.getApi().gotoDate(e.target.value);}}/></label>
       <label>{say('Motorista','Driver')}<select aria-label={say('Motorista','Driver')} value={filter} disabled={driverOnly} onChange={e=>setFilter(e.target.value)}><option value="all">{say('Todos','All')}</option>{drivers.map((d,i)=><option key={d} value={i}>{d}</option>)}</select></label>

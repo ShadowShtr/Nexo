@@ -13,6 +13,9 @@ export type CalendarBooking = {
   endsAt: string;
   status?: string;
   source?: 'owner' | 'customer';
+  from?: string;
+  to?: string;
+  stops?: string[];
 };
 
 export type OwnerCalendarSettings = {

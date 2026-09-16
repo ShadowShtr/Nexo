@@ -5,6 +5,8 @@
 - criação manual de marcações do proprietário estruturada como o fluxo do cliente, com origem, localização atual, destino, paragens, rota completa no mapa, data/hora, passageiros, motorista e carro;
 - formulário manual recebeu hierarquia de cartões, métricas de rota e controles responsivos no padrão visual neutro do produto.
 - removido o seletor redundante de “Rota de referência”; destinos demo reconhecidos atualizam a rota automaticamente.
+- pesquisa de locais aceita moradas novas com sugestões locais e consulta remota, e o serviço lista os tours ativos do catálogo;
+- data/hora e recurso escolhido são validados contra a agenda do proprietário, com margem de uma hora, e a marcação manual guardada aparece na agenda.
 
 ## 0.2.89 — 2026-09-16
 
