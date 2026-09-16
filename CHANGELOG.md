@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.89 — 2026-09-16
+
+- painel inicial do proprietário redesenhado para telemóvel, com saudação, próxima operação, resumo do dia, lista de atenção e atalhos rápidos;
+- direção visual compacta inspirada em apps de mobilidade, com a paleta neutra preta, branca e cinza do produto;
+- pedidos demo recebidos do cliente entram no destaque e nos indicadores do proprietário;
+- navegação do painel mantém links diretos para agenda, reservas, página pública e configurações;
+- integração Supabase/API entre computadores continua pendente.
+
 ## 0.2.88 — 2026-09-16
 
 - pedidos enviados pelo cliente passam a ficar guardados no navegador e aparecem ao proprietário com contacto, NIF, percurso, motorista, carro, data e valores;

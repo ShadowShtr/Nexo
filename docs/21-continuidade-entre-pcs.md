@@ -1,6 +1,6 @@
 # Continuidade entre computadores
 
-Atualizado em 16/09/2026. Código de referência: v0.2.88. A documentação acompanha as alterações visuais do calendário, do planeador, do resumo de booking e do seletor de idioma, além do handoff demo de pedidos para o proprietário e da configuração local de tarifas e tours; o fluxo continua em demonstração.
+Atualizado em 16/09/2026. Código de referência: v0.2.89. A documentação acompanha o painel inicial responsivo do proprietário, com direção visual neutra inspirada em apps de mobilidade, as alterações visuais do calendário, do planeador, do resumo de booking e do seletor de idioma, além do handoff demo de pedidos para o proprietário e da configuração local de tarifas e tours; o fluxo continua em demonstração.
 
 ## Repositório e ponto de partida
 

@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.89 — 16/09/2026
+
+O início do proprietário em modo demo foi redesenhado para uma leitura operacional móvel: saudação, próxima operação, métricas do dia, pedidos que precisam de atenção e atalhos. A direção compacta segue apps de mobilidade, mantendo a paleta neutra preta, branca e cinza do produto. Pedidos recebidos do cliente alimentam o destaque e os indicadores através do mesmo armazenamento demo. Build TypeScript/Vite aprovado e inspeção browser da rota `#/owner/home` aprovada. A consulta operacional real, autenticação, notificações e sincronização entre PCs continuam pendentes.
+
 ## Incremento 0.2.88 — 16/09/2026
 
 O pedido completo enviado pelo cliente passa a ser persistido em `localStorage` no modo demo e aparece na aba do proprietário com contacto, NIF, percurso, data, recursos e valores. O CRM importa o cliente recebido. A aba de configurações guarda a tarifa demo e o cálculo do cliente passa a ouvi-la. O editor de tours permite área/local, foto principal e novas áreas, também persistidas no navegador. Teste Playwright cobre a caixa de entrada do proprietário e os campos de área/foto; build aprovado. Isto continua limitado ao mesmo navegador: a integração Supabase/API, autenticação operacional, notificações e sincronização entre PCs não estão concluídas.
