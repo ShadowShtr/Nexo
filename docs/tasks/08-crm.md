@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## CRM-01 — Cadastro e pesquisa de clientes
 
-**Estado:** EM CURSO — CRM demo com cadastro, validação de NIF e pesquisa
+**Estado:** EM CURSO — CRM demo com cadastro, validação de NIF, pesquisa e importação do pedido público
 
 **Dependências:** SEC-01, BAS-03
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Partner não lista CRM; não fundir pessoas só por telefone automaticamente; NIF de turista não recebe validação portuguesa arbitrária; entrada inválida mostra erro localizado.
 
-**Evidência:** `src/contracts/customer.ts` valida nome, email, telefone e NIF de 9 dígitos; `CustomerCrmSandbox.tsx` permite cadastrar e pesquisar clientes. Testes Node e Playwright cobrem os limites. Persistência, deduplicação e ligação ao pedido do servidor continuam pendentes.
+**Evidência:** `src/contracts/customer.ts` valida nome, email, telefone e NIF de 9 dígitos; `CustomerCrmSandbox.tsx` permite cadastrar, pesquisar e receber clientes de `demo-request-store.ts`. Testes Node e Playwright cobrem os limites. Persistência operacional, deduplicação e ligação ao pedido do servidor continuam pendentes.
 
 ## CRM-02 — Histórico, moradas e notas internas
 

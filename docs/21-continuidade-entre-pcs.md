@@ -1,6 +1,6 @@
 # Continuidade entre computadores
 
-Atualizado em 16/09/2026. Código de referência: v0.2.87. A documentação acompanha as alterações visuais do calendário, do planeador, do resumo de booking e do seletor de idioma; o fluxo continua em demonstração.
+Atualizado em 16/09/2026. Código de referência: v0.2.88. A documentação acompanha as alterações visuais do calendário, do planeador, do resumo de booking e do seletor de idioma, além do handoff demo de pedidos para o proprietário e da configuração local de tarifas e tours; o fluxo continua em demonstração.
 
 ## Repositório e ponto de partida
 
@@ -48,7 +48,7 @@ A demonstração funciona sem .env. Se necessário, copiar .env.example para .en
 
 Os dois últimos nomes existem no código, mas não no .env.example atual. Reiniciar Vite após alterar variáveis. A ausência de credenciais deve manter as áreas autenticadas num estado seguro.
 
-O Git não transporta node_modules, dist, relatórios em artifacts/test-results/playwright-report, sessões do navegador, .env nem volumes Docker. Instalar dependências de novo. Pedidos de demonstração em memória e pm.owner.calendar em sessionStorage não são backup de reservas nem sincronização entre PCs. Os ficheiros de imagem utilizados pela aplicação já estão em public; não dependem da pasta Downloads do utilizador.
+O Git não transporta node_modules, dist, relatórios em artifacts/test-results/playwright-report, sessões do navegador, .env nem volumes Docker. Instalar dependências de novo. Os pedidos demo e configurações em localStorage, tal como pm.owner.calendar em sessionStorage, não são backup de reservas nem sincronização entre PCs. Os ficheiros de imagem utilizados pela aplicação já estão em public; não dependem da pasta Downloads do utilizador.
 
 ## Testes e ambientes locais opcionais
 

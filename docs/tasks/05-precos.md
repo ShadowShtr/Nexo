@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## PRC-01 — Resolver tarifas e produzir orçamentos persistentes
 
-**Estado:** EM CURSO — preparação server-side, snapshot e seam de rota implementados; resolução persistente de tarifa e adaptador HTTP pendentes
+**Estado:** EM CURSO — preparação server-side, snapshot, seam de rota e configuração de tarifa demo; resolução persistente de tarifa e adaptador HTTP pendentes
 
 **Dependências:** CFG-01, CAT-02, TOUR-01
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Exemplos de 03-regras passam; início/fim da noite e meia-noite testados; servidor ignora total enviado pelo browser; regras novas não alteram quote válido antigo.
 
-**Evidência:** `src/application/prepare-quote.ts` e `tests/prepare-quote.test.ts` validam capacidade, rota obrigatória, ordem dos pontos, split 25/75%, versão de tarifa, validade e isolamento da organização. A função não aceita total do navegador e não cria snapshot quando o provedor de rota falha. Falta ligar o gateway a uma Edge Function/adaptador Supabase e completar a faixa noturna por timezone local.
+**Evidência:** `src/application/prepare-quote.ts` e `tests/prepare-quote.test.ts` validam capacidade, rota obrigatória, ordem dos pontos, split 25/75%, versão de tarifa, validade e isolamento da organização. `src/web/demo-config.ts` permite ao proprietário guardar tarifa demo e `CustomerDiscoverSandbox`/`CustomerSandbox` passam a usá-la. A função não aceita total do navegador e não cria snapshot quando o provedor de rota falha. Falta ligar o gateway a uma Edge Function/adaptador Supabase e completar a faixa noturna por timezone local.
 
 ## PRC-02 — Paragens, espera e extras discriminados
 

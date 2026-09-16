@@ -4,7 +4,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 ## TOUR-01 — Editor bilingue de tours
 
-**Estado:** EM CURSO — editor demo bilingue com duração de dois dias
+**Estado:** EM CURSO — editor demo bilingue com duração de dois dias, área/local e foto
 
 **Dependências:** SEC-01, CFG-01
 
@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** 1 e 2 pessoas partilham preço base; sem texto inglês ou duração não publica; preço e roteiro antigos permanecem no snapshot da reserva.
 
-**Evidência:** `src/contracts/tour.ts` exige nomes/descritivos PT/EN, duração de 2 dias, base e adicional; `TourSandbox.tsx` permite inserir pacotes em memória. Teste Node e Playwright cobrem a regra de dois dias. Persistência e publicação autenticada continuam pendentes.
+**Evidência:** `src/contracts/tour.ts` exige nomes/descritivos PT/EN, duração de 2 dias, base e adicional; `TourSandbox.tsx` permite inserir pacotes com área/local e foto principal, guardando a configuração demo no navegador. Teste Node e Playwright cobrem a regra de dois dias e os novos campos. Persistência e publicação autenticada continuam pendentes.
 
 ## TOUR-02 — Vincular tours a motoristas/carros e disponibilidade
 

@@ -362,7 +362,12 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await expect(payment).toContainText('MB WAY');
   await expect(payment).toContainText('+351 910 000 000');
   await expect(payment.getByRole('link', { name: 'Enviar comprovativo' })).toHaveAttribute('href', /wa\.me\/351910000000/);
-  await page.getByRole('link', { name: 'Consultar pedidos', exact: true }).click();
+  await page.goto('/?demo=1#/owner/bookings');
+  const received = page.locator('.pm-owner-request').filter({ hasText: 'Ana Exemplo' });
+  await expect(received).toContainText('cliente@example.invalid');
+  await expect(received).toContainText('123456789');
+  await expect(received).toContainText('Lisboa → Cabo da Roca');
+  await page.goto('/?demo=1#/customer/lookup');
   await expect(page.getByRole('heading', { name: /CLIENT-/ })).toBeVisible();
   const reference = (await page.getByRole('heading', { name: /CLIENT-/ }).first().textContent())!;
   await page.getByLabel('Código de confirmação').fill(`  ${reference.toLowerCase()} `);

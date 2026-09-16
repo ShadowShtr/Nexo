@@ -13,6 +13,8 @@ import { demoTrips } from './DemoPage';
 import { RouteMap } from '../components/RouteMap';
 import { tourRoute, transferRoutes, type DemoRoute } from '../demo-routes';
 import { isCustomerSlotAvailable, ownerCalendarZone, readOwnerCalendar, saveCustomerCalendarBooking } from '../customer-availability';
+import { readDemoCustomerRequests, saveDemoCustomerRequest, subscribeToDemoCustomerRequests, updateDemoCustomerRequest, type DemoCustomerRequest } from '../demo-request-store';
+import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
 
 const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
 const cars = [
@@ -24,29 +26,8 @@ const cars = [
 const clock = '2026-09-10T08:00:00Z';
 type ServiceKind = 'transfer' | 'tour';
 type CustomerRouteHandoff = { kind: ServiceKind; origin: string; destination: string; stops: string[]; route: DemoRoute; start?: string };
-type Request = {
-  id: string;
-  allocation: Allocation;
-  driver: number;
-  car: number;
-  service: ServiceKind;
-  routeIndex: number;
-  origin: string;
-  destination: string;
-  stops: string[];
-  customRoute?: DemoRoute;
-  people: number;
-  name: string;
-  email: string;
-  phone: string;
-  nif: string;
-  total: number;
-  deposit: number;
-  balance: number;
-  cancelled: boolean;
-  rescheduled: boolean;
-};
-let requests: Request[] = [];
+type Request = DemoCustomerRequest;
+let requests: Request[] = readDemoCustomerRequests();
 const seed: Allocation[] = demoTrips.map(trip => ({ id: trip.id, driverId: String(trip.driver), vehicleId: String(trip.car), startsAt: `${trip.day}T${trip.time}:00+01:00`, endsAt: `${trip.day}T${trip.end}:00+01:00`, status: 'confirmed' }));
 
 function readCustomerRouteHandoff(): CustomerRouteHandoff | null {
@@ -111,15 +92,23 @@ export default function CustomerSandbox({ page }: { page: string }) {
   const [lookupCode, setLookupCode] = useState('');
   const [lookupResult, setLookupResult] = useState<Request | null>(null);
   const [lookupError, setLookupError] = useState('');
-  const [history, setHistory] = useState(requests);
+  const [history, setHistory] = useState<Request[]>(requests);
+  const [tariff, setTariff] = useState(readDemoTariff);
+  useEffect(() => {
+    const refresh = () => { requests = readDemoCustomerRequests(); setHistory(requests); };
+    refresh();
+    return subscribeToDemoCustomerRequests(refresh);
+  }, []);
+  useEffect(() => subscribeToDemoTariff(() => setTariff(readDemoTariff())), []);
 
   const baseRoute = customRoute ?? (service === 'tour' ? tourRoute : transferRoutes[route]);
   const previewRoute = customRoute ?? labelledRoute(baseRoute, origin || baseRoute.points[0].label, destination || baseRoute.points[baseRoute.points.length - 1].label);
   const price = quote({
     passengers: people,
     passengerCapacity: Math.max(cars[car].capacity, people),
-    service: service === 'tour' ? { kind: 'tour', baseCents: 20000, extraPassengerCents: 3500 } : { kind: 'transfer', baseCents: 1000, distanceMeters: baseRoute.meters, centsPerKm: 200 },
-    extras: [{ code: 'waiting', cents: waitingCents(wait, 0, 15, 2400) }],
+    service: service === 'tour' ? { kind: 'tour', baseCents: tariff.tourBaseCents, extraPassengerCents: tariff.tourExtraPassengerCents } : { kind: 'transfer', baseCents: tariff.transferBaseCents, distanceMeters: baseRoute.meters, centsPerKm: tariff.transferCentsPerKm },
+    nightSurchargeBps: tariff.nightSurchargeBps,
+    extras: [{ code: 'waiting', cents: waitingCents(wait, 0, 15, tariff.waitingCentsPerHour) }],
   });
   const line = (code: string) => price.lines.find(item => item.code === code)?.cents ?? 0;
   const km = new Intl.NumberFormat(i18n.language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(baseRoute.meters / 1000);
@@ -199,6 +188,7 @@ export default function CustomerSandbox({ page }: { page: string }) {
     const next = { ...request, allocation, rescheduled: true };
     saveCustomerCalendarBooking(allocation);
     requests = requests.map(item => item.id === request.id ? next : item);
+    updateDemoCustomerRequest(request.id, () => next);
     setHistory([...requests]);
     if (current?.id === request.id) setCurrent(next);
     if (lookupResult?.id === request.id) setLookupResult(next);
@@ -221,14 +211,14 @@ export default function CustomerSandbox({ page }: { page: string }) {
       <p className="pm-payment-note">{say('Dados de demonstração — não faça pagamentos reais.', 'Demo details — do not make real payments.')}</p>
     </section>}
     {request.cancelled && <p className="pm-booking-cancelled-note">{say('Este pedido foi cancelado e não tem pagamento pendente.', 'This request was cancelled and has no payment due.')}</p>}
-    {!request.cancelled && <div className="pm-record-actions"><Button variant="secondary" onClick={() => { const next = { ...request, cancelled: true, allocation: { ...request.allocation, status: 'cancelled' as const } }; saveCustomerCalendarBooking(next.allocation); requests = requests.map(item => item.id === request.id ? next : item); setHistory([...requests]); if (current?.id === request.id) setCurrent(next); if (lookupResult?.id === request.id) setLookupResult(next); }}><Ban size={17} aria-hidden="true" />{say('Cancelar pedido de teste', 'Cancel test request')}</Button><Button variant="secondary" disabled={!changeEligibility(clock, request.allocation.startsAt, request.allocation.startsAt).rescheduleEligible} onClick={() => reschedule(request)}><RefreshCw size={17} aria-hidden="true" />{say('Pedir reagendamento (+1h)', 'Request reschedule (+1h)')}</Button></div>}
+    {!request.cancelled && <div className="pm-record-actions"><Button variant="secondary" onClick={() => { const next = { ...request, cancelled: true, allocation: { ...request.allocation, status: 'cancelled' as const } }; saveCustomerCalendarBooking(next.allocation); requests = requests.map(item => item.id === request.id ? next : item); updateDemoCustomerRequest(request.id, () => next); setHistory([...requests]); if (current?.id === request.id) setCurrent(next); if (lookupResult?.id === request.id) setLookupResult(next); }}><Ban size={17} aria-hidden="true" />{say('Cancelar pedido de teste', 'Cancel test request')}</Button><Button variant="secondary" disabled={!changeEligibility(clock, request.allocation.startsAt, request.allocation.startsAt).rescheduleEligible} onClick={() => reschedule(request)}><RefreshCw size={17} aria-hidden="true" />{say('Pedir reagendamento (+1h)', 'Request reschedule (+1h)')}</Button></div>}
   </article>;
 
   return <>
     <p className="pm-note">{say('Experiência de cliente — dados fictícios. Relógio de teste: 10/09/2026, 09:00 Lisboa. Distâncias e preços de exemplo; não existe cobrança.', 'Customer experience — fictional data. Test clock: 10 September 2026, 09:00 Lisbon. Example distances and prices; no charges.')}</p>
     {page === 'lookup' ? <><form className="pm-card pm-demo-form" aria-label={say('Consultar reserva', 'Find booking')} onSubmit={event => { event.preventDefault(); const normalized = normalizeBookingReference(lookupCode); const found = normalized ? history.find(item => item.id === normalized) : null; if (!found) { setLookupError(say('Código não encontrado nesta sessão de teste.', 'Code not found in this test session.')); setLookupResult(null); return; } setLookupError(''); setLookupResult(found); }}><label>{say('Código de confirmação', 'Confirmation code')}<input value={lookupCode} onChange={event => setLookupCode(event.target.value)} placeholder="CLIENT-XXXXXXXX" autoComplete="off"/></label>{lookupError && <p role="alert">{lookupError}</p>}<div className="pm-actions"><Button type="submit"><Search size={17} aria-hidden="true" />{say('Consultar', 'Look up')}</Button>{lookupResult && <Button type="button" variant="secondary" onClick={() => { setLookupResult(null); setLookupCode(''); setLookupError(''); }}><X size={17} aria-hidden="true" />{say('Limpar consulta', 'Clear lookup')}</Button>}</div></form>{lookupResult && <><RouteMap route={requestRoute(lookupResult)} language={i18n.language === 'en' ? 'en' : 'pt'}/>{record(lookupResult)}</>}<h2>{say('Os meus pedidos de teste', 'My test requests')}</h2>{history.length ? history.map(record) : <p>{say('Ainda não criou pedidos nesta sessão.', 'No requests created in this session yet.')}</p>}</> : current ? <><RouteMap route={requestRoute(current)} language={i18n.language === 'en' ? 'en' : 'pt'}/>{record(current)}<div className="pm-current-actions"><Button asChild><a href="#/customer/lookup"><Search size={17} aria-hidden="true" />{say('Consultar pedidos', 'View requests')}</a></Button></div></> : <>
       <p className="pm-step-progress"><span>{say('Passo', 'Step')} {step}/4</span><span aria-hidden="true">·</span><strong>{['', say('Percurso', 'Route'), say('Motorista e carro', 'Driver and vehicle'), say('Os seus dados', 'Your details'), say('Rever pedido', 'Review request')][step]}</strong></p>
-      <form className="pm-card pm-demo-form pm-customer-booking" onSubmit={event => { event.preventDefault(); if (step === 4) { const allocation = validateAllocation(); if (!allocation) return; const request: Request = { id: allocation.id, allocation, driver, car, service, routeIndex: route, origin: origin.trim(), destination: destination.trim(), stops: [...stops], customRoute: customRoute ?? undefined, people, name, email, phone, nif, total: price.totalCents, deposit: price.depositCents, balance: price.balanceCents, cancelled: false, rescheduled: false }; saveCustomerCalendarBooking(allocation); requests = [...requests, request]; setHistory(requests); setCurrent(request); return; } advance(); }}>
+      <form className="pm-card pm-demo-form pm-customer-booking" onSubmit={event => { event.preventDefault(); if (step === 4) { const allocation = validateAllocation(); if (!allocation) return; const request: Request = { id: allocation.id, allocation, driver, car, service, routeIndex: route, origin: origin.trim(), destination: destination.trim(), stops: [...stops], customRoute: customRoute ?? undefined, people, name, email, phone, nif, total: price.totalCents, deposit: price.depositCents, balance: price.balanceCents, cancelled: false, rescheduled: false }; saveCustomerCalendarBooking(allocation); saveDemoCustomerRequest(request); requests = [...requests.filter(item => item.id !== request.id), request]; setHistory(requests); setCurrent(request); return; } advance(); }}>
         {step === 1 && <section className="pm-route-entry"><h2>{say('Para onde vai?', 'Where are you going?')}</h2><p className="pm-secondary">{say('Indique o destino. A origem é sugerida pela sua localização e pode ser editada.', 'Enter your destination. Pickup is suggested from your location and can be edited.')}</p><label>{say('Destino', 'Destination')}<input list="pm-destination-options" value={destination} onChange={event => selectDestination(event.target.value)} placeholder={say('Ex.: Cascais', 'e.g. Cascais')} required/><datalist id="pm-destination-options"><option value="Cascais"/><option value="Sintra"/><option value="Setúbal"/></datalist></label><label>{say('Origem', 'Pickup')}<input value={origin} onChange={event => { setCustomRoute(null); setOrigin(event.target.value); }} required/></label><Button type="button" variant="secondary" className="pm-location-button" onClick={useLocation}>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</Button><p className="pm-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo. Confirme a origem.', 'Location unavailable; Lisbon was filled as an example. Confirm pickup.') : say('Origem sugerida · confirme antes de continuar.', 'Suggested pickup · confirm before continuing.')}</p><label>{say('Rota de referência', 'Reference route')}<select aria-label={say('Rota de referência', 'Reference route')} value={route} onChange={event => { const next = Number(event.target.value); setCustomRoute(null); setRoute(next); setOrigin(transferRoutes[next].points[0].label); setDestination(transferRoutes[next].points[transferRoutes[next].points.length - 1].label); }}>{transferRoutes.map((item, index) => <option value={index} key={item.name}>{item.name}</option>)}</select></label><RouteMap route={previewRoute} language={i18n.language === 'en' ? 'en' : 'pt'}/><div className="pm-route-metrics"><div><span>{say('Distância', 'Distance')}</span><strong>{km} km</strong></div><div><span>{say('Duração estimada', 'Estimated duration')}</span><strong>{baseRoute.minutes} min</strong></div><div><span>{say('A partir de', 'From')}</span><strong>{money(price.totalCents)}</strong></div></div><label>{say('Serviço', 'Service')}<select aria-label={say('Serviço', 'Service')} value={service} onChange={event => selectService(event.target.value as ServiceKind)}><option value="transfer">Transfer</option><option value="tour">Tour · Sintra / Cabo da Roca</option></select></label><label>{say('Data e hora de recolha', 'Pickup date and time')}<input type="datetime-local" required value={start} onChange={event => setStart(event.target.value)}/></label><div className="pm-route-options"><label>{say('Passageiros', 'Passengers')}<select aria-label={say('Passageiros', 'Passengers')} value={people} onChange={event => setPeople(Number(event.target.value))}>{Array.from({ length: Math.max(...cars.map(item => item.capacity)) }, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}</select></label><label>{say('Espera adicional', 'Additional waiting')}<select aria-label={say('Espera adicional', 'Additional waiting')} value={wait} onChange={event => setWait(Number(event.target.value))}>{[0, 15, 30, 60].map(value => <option key={value} value={value}>{value} min</option>)}</select></label></div><p className="pm-field-help">{service === 'tour' ? say('Tour de 2 dias: preço de pacote para até 2 pessoas; adicionais aparecem no total.', '2-day tour: package price for up to 2 people; extras appear in the total.') : say('A estimativa usa a tarifa de demonstração configurável pelo proprietário. A rota real será validada no servidor.', 'The estimate uses the owner-configured demo tariff. The real route will be validated server-side.')}</p></section>}
         {step === 2 && <section className="pm-selection-step"><h2>{say('Escolha o motorista e o carro', 'Choose your driver and vehicle')}</h2><p className="pm-secondary">{say(`${km} km · ${baseRoute.minutes} min · ${people} passageiros`, `${km} km · ${baseRoute.minutes} min · ${people} passengers`)}</p><p className="pm-booking-slot" aria-label={say('Data e hora escolhidas', 'Selected date and time')}><img className="pm-booking-calendar-icon" src="/calendar.png" alt="" aria-hidden="true" />{say('Data escolhida', 'Selected date')}: <strong>{bookingSlot}</strong></p><RouteMap route={previewRoute} language={i18n.language === 'en' ? 'en' : 'pt'}/><div className="pm-demo-grid">{drivers.map((driverName, index) => <button className="pm-card pm-demo-record pm-driver-choice" type="button" key={driverName} aria-pressed={driver === index} onClick={() => { setDriver(index); const nextCar = cars.findIndex(item => item.driver === index); setCar(nextCar); }}><img src="/driver-illustration.png" alt="" className="pm-option-art" /><span className="pm-option-content"><strong>{driverName}</strong><small>{say('Português / Inglês · Perfil de demonstração', 'Portuguese / English · Demo profile')}</small>{driver === index && <span className="pm-option-selected"><Check size={15} aria-hidden="true" />{say('Selecionado', 'Selected')}</span>}</span></button>)}</div><label className="pm-select-with-icon"><span><img className="pm-vehicle-icon" src={cars[car].capacity > 4 ? '/vehicle-van.png' : '/vehicle-sedan.png'} alt="" aria-hidden="true" />{say('Carro disponível', 'Available vehicle')}</span><select aria-label={say('Carro', 'Car')} value={car} onChange={event => setCar(Number(event.target.value))}>{cars.map((item, index) => item.driver === driver && <option value={index} key={item.name}>{item.name} · {item.capacity} {say('lugares', 'seats')}</option>)}</select></label>{people > cars[car].capacity && <p className="pm-error" role="alert">{say(`Este carro aceita até ${cars[car].capacity} passageiros.`, `This vehicle accepts up to ${cars[car].capacity} passengers.`)}</p>}<div className="pm-summary"><Row label={say('Estimativa da viagem', 'Trip estimate')} value={money(price.totalCents)}/><Row label={say('Distância', 'Distance')} value={`${km} km × 2,00 €`}/><Row label={say('Sinal · 25%', 'Deposit · 25%')} value={money(price.depositCents)}/><Row label={say('Saldo · 75%', 'Balance · 75%')} value={money(price.balanceCents)}/></div></section>}
         {step === 3 && <section><h2>{say('Os seus dados', 'Your details')}</h2><label>{say('Nome completo', 'Full name')}<input required maxLength={120} value={name} onChange={event => setName(event.target.value)}/></label><label>Email<input required type="email" value={email} onChange={event => setEmail(event.target.value)}/></label><label>{say('Telefone', 'Phone')}<input required type="tel" value={phone} onChange={event => setPhone(event.target.value)} autoComplete="tel"/></label><label>NIF<input required inputMode="numeric" pattern="[0-9]{9}" maxLength={9} value={nif} onChange={event => setNif(event.target.value.replace(/\D/g, '').slice(0, 9))}/></label><p className="pm-field-help">{say('O NIF será usado apenas para faturação na versão real. Use dados fictícios neste teste.', 'The tax ID will only be used for invoicing in the live version. Use fictional details in this test.')}</p></section>}

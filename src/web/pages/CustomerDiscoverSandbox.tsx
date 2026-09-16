@@ -6,6 +6,7 @@ import { RouteMap } from '../components/RouteMap';
 import { tourRoute, type DemoRoute } from '../demo-routes';
 import { searchAddresses } from '../services/address-search';
 import { availableCustomerTimes, customerCalendarChangedEvent, readOwnerCalendar } from '../customer-availability';
+import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
 
 const tourOptions = [
   { id: 'lisbon', icon: '/route-landmark.png', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
@@ -388,6 +389,9 @@ export default function CustomerDiscoverSandbox() {
   const [geocoderState, setGeocoderState] = useState<'idle' | 'loading'>('idle');
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
   const [resolvedPlaces, setResolvedPlaces] = useState<GeocodedPlace[]>([]);
+  const [tariff, setTariff] = useState(readDemoTariff);
+
+  useEffect(() => { const refresh = () => setTariff(readDemoTariff()); return subscribeToDemoTariff(refresh); }, []);
 
   const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en', resolvedPlaces), [origin, destination, plannerKind, stops, i18n.language, resolvedPlaces]);
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
@@ -408,8 +412,8 @@ export default function CustomerDiscoverSandbox() {
     points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
     shape: [tourRoute.points[0].coordinates],
   }), [origin]);
-  const tourPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'tour', baseCents: 20000, extraPassengerCents: 3500 } });
-  const transferPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'transfer', baseCents: 1000, distanceMeters: previewRoute.meters, centsPerKm: 200 } });
+  const tourPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'tour', baseCents: tariff.tourBaseCents, extraPassengerCents: tariff.tourExtraPassengerCents } });
+  const transferPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'transfer', baseCents: tariff.transferBaseCents, distanceMeters: previewRoute.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
   const plannerPrice = plannerKind === 'tour' ? tourPrice : transferPrice;
   const km = new Intl.NumberFormat(i18n.language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(previewRoute.meters / 1000);
   const money = (cents: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(cents / 100);

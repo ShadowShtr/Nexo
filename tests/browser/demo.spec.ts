@@ -101,6 +101,22 @@ test('owner can create a manual WhatsApp booking after schedule validation', asy
   await expect(page.locator('.pm-demo-record').filter({ hasText: 'João WhatsApp' })).toContainText('WhatsApp');
 });
 
+test('owner receives the complete customer request in the demo inbox', async ({ page }) => {
+  await page.goto('/?demo=1#/owner/bookings');
+  await page.evaluate(() => localStorage.setItem('pm.demo.customer-requests', JSON.stringify([{
+    id: 'CLIENT-INBOX-1', allocation: { id: 'CLIENT-INBOX-1', driverId: '0', vehicleId: '0', startsAt: '2026-09-14T09:00:00Z', endsAt: '2026-09-14T10:00:00Z', status: 'requested' },
+    driver: 0, car: 0, service: 'transfer', routeIndex: 0, origin: 'Lisboa', destination: 'Sintra', stops: [], people: 2,
+    name: 'Cliente recebido', email: 'recebido@example.invalid', phone: '+351 910 000 090', nif: '987654321', total: 20000, deposit: 5000, balance: 15000, cancelled: false, rescheduled: false,
+  }])));
+  await page.reload();
+  const card = page.locator('.pm-owner-request').filter({ hasText: 'Cliente recebido' });
+  await expect(card).toContainText('recebido@example.invalid');
+  await expect(card).toContainText('+351 910 000 090');
+  await expect(card).toContainText('987654321');
+  await expect(card).toContainText('Lisboa → Sintra');
+  await expect(card).toContainText('200,00');
+});
+
 test('driver advances a service through execution states and opens Waze', async ({ page }) => {
   await page.goto('/?demo=1#/driver/services');
   const card = page.locator('.pm-demo-record').first();
@@ -135,9 +151,22 @@ test('owner adds a bilingual two-day tour package', async ({ page }) => {
   await form.getByLabel('Nome em inglês').fill('Premium Douro');
   await form.getByLabel('Descrição em português').fill('Vinhos e paisagens.');
   await form.getByLabel('Descrição em inglês').fill('Wine and landscapes.');
+  await form.getByLabel('Área/local do tour').fill('Douro');
+  await form.getByLabel('Foto principal').selectOption('/porto-tour.png');
   await form.getByLabel('Antecedência mínima (horas)').fill('48');
   await form.getByRole('button', { name: 'Guardar pacote', exact: true }).click();
   const card = page.locator('.pm-demo-record').filter({ hasText: 'Douro Premium' }).last();
   await expect(card).toContainText('2 dias');
   await expect(card).toContainText('200,00');
+  await expect(card).toContainText('Douro');
+  await expect(card.locator('img.pm-tour-cover')).toHaveAttribute('src', '/porto-tour.png');
+});
+
+test('owner can save a demo tariff from settings', async ({ page }) => {
+  await page.goto('/?demo=1#/owner/settings');
+  const form = page.getByRole('form', { name: 'Simulador de preço' });
+  await form.getByLabel('Preço base (€)').fill('12');
+  await form.getByLabel('Preço por km (€)').fill('2.5');
+  await form.getByRole('button', { name: 'Guardar tarifa', exact: true }).click();
+  await expect(form.getByRole('status')).toContainText('Tarifa guardada');
 });

@@ -2,6 +2,10 @@
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
+## Incremento 0.2.88 — 16/09/2026
+
+O pedido completo enviado pelo cliente passa a ser persistido em `localStorage` no modo demo e aparece na aba do proprietário com contacto, NIF, percurso, data, recursos e valores. O CRM importa o cliente recebido. A aba de configurações guarda a tarifa demo e o cálculo do cliente passa a ouvi-la. O editor de tours permite área/local, foto principal e novas áreas, também persistidas no navegador. Teste Playwright cobre a caixa de entrada do proprietário e os campos de área/foto; build aprovado. Isto continua limitado ao mesmo navegador: a integração Supabase/API, autenticação operacional, notificações e sincronização entre PCs não estão concluídas.
+
 ## Incremento 0.2.73 — 16/09/2026
 
 Barra inicial compacta com 52 px. Build TypeScript/Vite aprovado; inspeção visual no browser a 495 px confirmou altura de 52 px e ausência de overflow horizontal. Referência Uber usada como direção visual, sem medida oficial publicada. Sem nova validação em iPhone físico.

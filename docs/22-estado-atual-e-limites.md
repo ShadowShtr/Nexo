@@ -1,6 +1,6 @@
 # Estado atual e limites de continuidade
 
-Referência: v0.2.87, 16/09/2026. Alterações mais recentes: barra inicial compacta (52 px), botões e caixas de pesquisa do planeamento compactos, pins alinhados, um único resumo de booking, cartões finais separados, calendário principal com pop-up arredondado de data, mês e ano sem horários duplicados e bandeiras PNG maiores sem moldura quadrada no seletor de idioma, sem planeta duplicado, incluindo a opção ativa e a bandeira dos Estados Unidos para inglês; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
+Referência: v0.2.88, 16/09/2026. Alterações mais recentes: pedidos completos do cliente persistidos no navegador e apresentados ao proprietário/CRM, tarifa demo guardável e aplicada ao cálculo, e editor de tours com área/local, foto e novas áreas, além da barra inicial compacta (52 px), botões e caixas de pesquisa do planeamento compactos, pins alinhados, um único resumo de booking, cartões finais separados, calendário principal com pop-up arredondado de data, mês e ano sem horários duplicados e bandeiras PNG maiores sem moldura quadrada no seletor de idioma, sem planeta duplicado, incluindo a opção ativa e a bandeira dos Estados Unidos para inglês; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
 
 ## Produto e regras que ligam os módulos
 
@@ -16,9 +16,9 @@ Pedido de 15/09: serviço 24h, horários ocupados deixam de aparecer, margem mí
 |---|---|
 | Entrada e rotas | src/web/App.tsx, navigation.ts, main.tsx; seleção de área, hash e demonstração. |
 | Descoberta e planeador | src/web/pages/CustomerDiscoverSandbox.tsx; categorias, promos, moradas, estimativa e calendário. |
-| Pedido e consulta | src/web/pages/CustomerSandbox.tsx; passos, escolha, dados, resumo, cancelamento e reagendamento demo. |
+| Pedido e consulta | src/web/pages/CustomerSandbox.tsx, demo-request-store.ts e demo-config.ts; passos, escolha, dados, resumo, cancelamento/reagendamento e handoff demo para o proprietário/CRM. |
 | Agenda demo | src/web/pages/CalendarSandbox.tsx, src/web/customer-availability.ts; agenda local e filtragem de horas. |
-| Outras abas demo | CatalogSandbox, BookingSandbox, CustomerCrmSandbox, DriverServicesSandbox, TourSandbox, SettingsPage e DemoPage em src/web/pages. |
+| Outras abas demo | CatalogSandbox, BookingSandbox, CustomerCrmSandbox, DriverServicesSandbox, TourSandbox, SettingsPage e DemoPage em src/web/pages; Booking/CRM leem pedidos recebidos e Tour/Settings guardam configuração demo no navegador. |
 | UI comum | src/ui/components, src/ui/styles/tokens.css, src/web/styles.css e src/web/i18n.ts. |
 | Mapas e moradas | src/web/components/RouteMap.tsx, demo-routes.ts, services/address-search.ts; adaptador rodoviário em src/infrastructure/routing/osrm.ts. |
 | Domínio puro | src/domain: pricing, policy, calendar, slots, lead-time, booking, settlement, payment-ledger, defaults, validation. |
@@ -42,7 +42,7 @@ Não criar uma aplicação nova paralela nem mudar para outro framework para uma
 ## Limites conhecidos que a próxima máquina deve preservar como pendências
 
 1. pm.owner.calendar e pm.customer.route-handoff são sessionStorage. Não sincronizam disponibilidade entre utilizadores, PCs ou sessões independentes e não protegem concorrência real.
-2. CustomerSandbox mantém pedidos em memória; recarregar pode perder histórico demo. CalendarSandbox publica entradas para a sessão ao montar/gravar; não é ligação bidirecional completa com reservas persistentes.
+2. O pedido completo demo e algumas configurações usam localStorage para sobreviver a recarregamentos e ser partilhados entre abas do mesmo navegador. Isso não é persistência multiutilizador, backup, autenticação nem sincronização entre PCs; CalendarSandbox e catálogo de motoristas/carros continuam demonstrações locais.
 3. saveCustomerCalendarBooking transforma recursos em * (bloqueio global demo). Produção deve usar recursos concretos e disponibilidade transacional; não bloquear toda a frota indevidamente.
 4. O helper de horas não implementa toda a política do motor: usa duração mínima de 60 minutos, apenas estados explícitos para expiração e não a validade temporal completa dos holds. 24h atravessando meia-noite precisa verificar também exceções/dias seguintes.
 5. Atalhos de datas e relógios são fixos em setembro/2026; “outra data” amplia seleção, mas não transforma o demo em calendário de produção baseado na hora atual/antecedência.

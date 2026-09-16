@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.88 — 2026-09-16
+
+- pedidos enviados pelo cliente passam a ficar guardados no navegador e aparecem ao proprietário com contacto, NIF, percurso, motorista, carro, data e valores;
+- CRM recebe automaticamente os clientes desses pedidos no modo de demonstração;
+- configurações demo de tarifa podem ser guardadas e usadas no cálculo do cliente;
+- pacotes de tour aceitam área/local e foto principal, com áreas novas sugeridas e persistência no navegador;
+- integração Supabase/API entre computadores continua pendente.
+
 ## 0.2.74 — 2026-09-16
 
 - calendário principal mantém a data atual e os horários disponíveis em grelha;
