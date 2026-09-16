@@ -8,6 +8,7 @@ import { Button } from '../../ui/components/Button';
 import { Row, Section } from '../../ui/components/Primitives';
 import { RouteMap } from '../components/RouteMap';
 import { tourRoute, transferRoutes, type DemoRoute } from '../demo-routes';
+import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
 import { demoTrips } from './DemoPage';
 import { readDemoCustomerRequests, subscribeToDemoCustomerRequests, type DemoCustomerRequest } from '../demo-request-store';
 
@@ -70,13 +71,15 @@ export function BookingSandbox() {
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
   const [start, setStart] = useState('2026-09-14T10:00');
   const [people, setPeople] = useState(2);
+  const [tariff, setTariff] = useState(readDemoTariff);
   const [incoming, setIncoming] = useState<DemoCustomerRequest[]>(() => readDemoCustomerRequests());
   useEffect(() => { const refresh = () => setIncoming(readDemoCustomerRequests()); return subscribeToDemoCustomerRequests(refresh); }, []);
+  useEffect(() => subscribeToDemoTariff(() => setTariff(readDemoTariff())), []);
 
   const baseRoute = service === 'tour' ? tourRoute : transferRoutes[route];
   const previewRoute = labelledRoute(baseRoute, origin || baseRoute.points[0].label, destination || baseRoute.points[baseRoute.points.length - 1].label, stops);
   const km = new Intl.NumberFormat(en ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(baseRoute.meters / 1000);
-  const price = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: { kind: 'transfer', baseCents: 1000, distanceMeters: baseRoute.meters, centsPerKm: 200 } });
+  const price = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: service === 'tour' ? { kind: 'tour', baseCents: tariff.tourBaseCents, extraPassengerCents: tariff.tourExtraPassengerCents } : { kind: 'transfer', baseCents: tariff.transferBaseCents, distanceMeters: baseRoute.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
 
   const chooseService = (value: ServiceKind) => {
     setService(value); setError('');
@@ -98,9 +101,9 @@ export function BookingSandbox() {
     if (!customer.trim() || !origin.trim() || !destination.trim() || !date.isValid || date.getPossibleOffsets().length !== 1) { setError(say('Preencha cliente, percurso e uma hora de Lisboa válida.', 'Enter customer, route and a valid Lisbon time.')); return; }
     if (people > cars[car].capacity) { setError(say('O carro escolhido não tem capacidade para todos os passageiros.', 'The selected vehicle cannot carry all passengers.')); return; }
     const allocation: Allocation = { id: `MAN-${crypto.randomUUID().slice(0, 8)}`, driverId: String(driver), vehicleId: String(car), startsAt: date.toUTC().toISO()!, endsAt: date.plus({ minutes: baseRoute.minutes }).toUTC().toISO()!, status: 'requested', holdExpiresAt: DateTime.fromISO(clock).plus({ minutes: 30 }).toISO()! };
-    const availability = checkSchedule(allocation, rows.map(row => row.allocation), clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
+    const availability = checkSchedule(allocation, [...rows.map(row => row.allocation), ...incoming.filter(item => !item.cancelled).map(item => item.allocation)], clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
     if (!availability.available) { setError(say('Horário indisponível para o motorista ou carro escolhido.', 'The selected driver or vehicle is unavailable at this time.')); return; }
-    const priced = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: { kind: 'transfer', baseCents: 1000, distanceMeters: baseRoute.meters, centsPerKm: 200 } });
+    const priced = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: service === 'tour' ? { kind: 'tour', baseCents: tariff.tourBaseCents, extraPassengerCents: tariff.tourExtraPassengerCents } : { kind: 'transfer', baseCents: tariff.transferBaseCents, distanceMeters: baseRoute.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
     setRows(current => [...current, { id: allocation.id, allocation, customer: customer.trim(), service, route: previewRoute.name, from: origin.trim(), to: destination.trim(), stops: [...stops], total: priced.totalCents, deposit: priced.depositCents, balance: priced.balanceCents, cancelled: false }]);
     setShowForm(false); setFeedback(say('Marcação manual criada em modo de teste.', 'Manual booking created in test mode.'));
   };
