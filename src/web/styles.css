@@ -637,3 +637,124 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-owner-calendar-status { align-items:flex-start; flex-wrap:wrap; }
   .pm-owner-calendar-status a { margin-left:auto; }
 }
+
+/* Catálogo de tours do proprietário: editor visual e cartões com hierarquia. */
+.pm-owner-tours-page { display:grid; gap:1.25rem; padding-bottom:1.5rem; }
+.pm-tour-page-intro { display:flex; align-items:flex-end; justify-content:space-between; gap:1.25rem; }
+.pm-tour-page-intro h2 { margin:.35rem 0 .2rem; font-size:1.65rem; letter-spacing:-.04em; }
+.pm-tour-page-intro p { margin:0; color:var(--pm-ink-secondary); font-size:.86rem; line-height:1.45; }
+.pm-tour-new-button { display:inline-flex; align-items:center; justify-content:center; gap:.45rem; min-height:44px; padding:.65rem 1rem; border:0; border-radius:999px; background:var(--pm-ink); color:var(--pm-inverse); font:inherit; font-size:.82rem; font-weight:750; white-space:nowrap; box-shadow:0 6px 16px rgb(24 24 26 / 12%); }
+.pm-tour-new-button span { display:grid; place-items:center; width:20px; height:20px; font-size:1.15rem; line-height:1; }
+.pm-tour-new-button:hover { filter:brightness(.95); }
+.pm-tour-note { margin:0; max-width:72ch; font-size:.78rem; line-height:1.5; }
+.pm-tour-feedback { margin:0; padding:.75rem .9rem; border-radius:14px; background:var(--pm-success-bg); color:var(--pm-success); font-size:.8rem; font-weight:650; }
+.pm-tour-editor { display:grid; gap:1rem; padding:1.25rem; border:1px solid var(--pm-line); border-radius:24px; background:var(--pm-surface); box-shadow:var(--pm-shadow-card); }
+.pm-tour-editor-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-bottom:.9rem; border-bottom:1px solid var(--pm-line); }
+.pm-tour-editor-head h2 { margin:.25rem 0 .2rem; font-size:1.2rem; letter-spacing:-.03em; }
+.pm-tour-editor-head p { margin:0; color:var(--pm-ink-secondary); font-size:.78rem; line-height:1.4; }
+.pm-icon-button { display:grid; place-items:center; width:36px; height:36px; flex:0 0 auto; border:0; border-radius:50%; background:var(--pm-surface-muted); color:var(--pm-ink); font-size:1.25rem; line-height:1; }
+.pm-tour-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.pm-tour-form-grid>label,.pm-tour-location-field>label { display:grid; gap:.4rem; min-width:0; color:var(--pm-ink-secondary); font-size:.78rem; font-weight:700; }
+.pm-tour-form-grid input,.pm-tour-form-grid textarea { width:100%; box-sizing:border-box; min-height:44px; padding:.6rem .75rem; border:1px solid var(--pm-control-border); border-radius:14px; background:var(--pm-surface); color:var(--pm-ink); font:inherit; font-size:.86rem; }
+.pm-tour-form-grid textarea { min-height:88px; resize:vertical; line-height:1.45; }
+.pm-tour-form-wide { grid-column:1 / -1; }
+.pm-tour-location-field { position:relative; min-width:0; }
+.pm-tour-location-suggestions { position:absolute; z-index:40; top:calc(100% + .35rem); left:0; right:0; display:grid; gap:.15rem; max-height:240px; overflow:auto; padding:.35rem; border:1px solid var(--pm-line); border-radius:16px; background:var(--pm-surface); box-shadow:0 18px 36px rgb(20 24 40 / 16%); }
+.pm-tour-location-suggestions button { display:grid; grid-template-columns:26px minmax(0,1fr); align-items:center; gap:.55rem; width:100%; padding:.6rem; border:0; border-radius:11px; background:transparent; color:var(--pm-ink); text-align:left; }
+.pm-tour-location-suggestions button:hover,.pm-tour-location-suggestions button:focus-visible { background:var(--pm-surface-muted); }
+.pm-tour-location-suggestions button img { width:22px; height:22px; object-fit:contain; }
+.pm-tour-location-suggestions button span { display:grid; gap:.12rem; min-width:0; }
+.pm-tour-location-suggestions strong,.pm-tour-location-suggestions small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-tour-location-suggestions strong { font-size:.8rem; }
+.pm-tour-location-suggestions small { color:var(--pm-ink-secondary); font-size:.7rem; }
+.pm-tour-location-suggestions p { margin:.45rem .55rem; color:var(--pm-ink-secondary); font-size:.74rem; }
+.pm-tour-map-block { display:grid; gap:.65rem; padding:.85rem; border:1px solid var(--pm-line); border-radius:18px; background:var(--pm-canvas); }
+.pm-tour-block-heading { display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
+.pm-tour-block-heading>div { display:grid; gap:.15rem; min-width:0; }
+.pm-tour-block-heading strong { font-size:.82rem; }
+.pm-tour-block-heading span { overflow:hidden; color:var(--pm-ink-secondary); font-size:.7rem; text-overflow:ellipsis; white-space:nowrap; }
+.pm-tour-block-heading img { width:28px; height:28px; object-fit:contain; flex:0 0 auto; }
+.pm-tour-map-block .pm-route-preview { border-radius:15px; }
+.pm-tour-map-block .pm-route-map { height:230px; }
+.pm-tour-map-block .pm-route-summary { padding:.7rem .85rem; }
+.pm-tour-map-block .pm-route-summary strong { font-size:1rem; }
+.pm-tour-map-block .pm-route-points { padding:.7rem .85rem; gap:.6rem; }
+.pm-tour-map-block .pm-route-points li { grid-template-columns:28px 1fr; gap:.55rem; }
+.pm-tour-map-block .pm-route-points li>span { width:26px; height:26px; font-size:.68rem; }
+.pm-tour-map-block .pm-route-points li:not(:last-child)::after { left:13px; top:27px; height:calc(100% + .6rem); }
+.pm-tour-map-block .pm-route-preview>.pm-secondary { display:none; }
+.pm-tour-photo-field { min-width:0; margin:0; padding:0; border:0; }
+.pm-tour-photo-field legend { padding:0; color:var(--pm-ink-secondary); font-size:.78rem; font-weight:700; }
+.pm-tour-photo-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.65rem; margin-top:.45rem; }
+.pm-tour-photo-choice,.pm-tour-upload-choice { position:relative; display:grid; gap:.3rem; min-width:0; overflow:hidden; padding:0; border:1px solid var(--pm-line); border-radius:14px; background:var(--pm-surface); color:var(--pm-ink); text-align:left; cursor:pointer; }
+.pm-tour-photo-choice img { display:block; width:100%; aspect-ratio:1.4; object-fit:cover; }
+.pm-tour-photo-choice span { padding:.35rem .45rem .5rem; overflow:hidden; font-size:.68rem; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
+.pm-tour-photo-choice.is-selected { border:2px solid var(--pm-ink); box-shadow:0 0 0 2px rgb(24 24 26 / 10%); }
+.pm-tour-photo-choice.is-selected::after { content:'✓'; position:absolute; top:.35rem; right:.35rem; display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background:var(--pm-ink); color:var(--pm-inverse); font-size:.75rem; font-weight:800; }
+.pm-tour-upload-choice { align-content:center; justify-items:center; min-height:112px; padding:.6rem; border-style:dashed; text-align:center; }
+.pm-tour-upload-choice input { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; }
+.pm-tour-upload-choice>span { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--pm-surface-muted); font-size:1.25rem; line-height:1; }
+.pm-tour-upload-choice strong { font-size:.72rem; }
+.pm-tour-upload-choice small { color:var(--pm-ink-secondary); font-size:.62rem; }
+.pm-tour-cover-preview { display:flex; align-items:center; gap:.55rem; margin-top:.65rem; padding:.45rem; border-radius:12px; background:var(--pm-surface-muted); color:var(--pm-ink-secondary); font-size:.7rem; font-weight:650; }
+.pm-tour-cover-preview img { width:54px; height:34px; object-fit:cover; border-radius:8px; }
+.pm-tour-fixed-field { display:grid; align-content:center; gap:.15rem; min-height:44px; padding:.6rem .75rem; border-radius:14px; background:var(--pm-surface-muted); }
+.pm-tour-fixed-field span,.pm-tour-fixed-field small { color:var(--pm-ink-secondary); font-size:.72rem; }
+.pm-tour-fixed-field strong { font-size:.86rem; }
+.pm-tour-editor-actions { display:flex; justify-content:flex-end; gap:.6rem; padding-top:.1rem; }
+.pm-tour-editor-actions .pm-button { min-height:44px; }
+.pm-tour-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.pm-tour-card { min-width:0; overflow:hidden; padding:0; border:1px solid var(--pm-line); border-radius:22px; background:var(--pm-surface); box-shadow:var(--pm-shadow-card); }
+.pm-tour-card-media { position:relative; overflow:hidden; aspect-ratio:16/8; background:var(--pm-surface-muted); }
+.pm-tour-card-media>img { display:block; width:100%; height:100%; object-fit:cover; }
+.pm-tour-card-status { position:absolute; top:.75rem; left:.75rem; padding:.35rem .55rem; border-radius:999px; background:rgb(255 255 255 / 92%); color:var(--pm-ink-secondary); font-size:.68rem; font-weight:800; letter-spacing:.04em; }
+.pm-tour-card-status[data-tone="positive"] { color:var(--pm-success); }
+.pm-tour-card-body { display:grid; gap:.8rem; padding:1rem; }
+.pm-tour-card-title { display:flex; align-items:flex-start; justify-content:space-between; gap:.7rem; }
+.pm-tour-card-title h3 { margin:.2rem 0 0; font-size:1.08rem; line-height:1.2; letter-spacing:-.025em; }
+.pm-tour-card-title>img { width:38px; height:38px; object-fit:contain; flex:0 0 auto; }
+.pm-tour-description { min-height:2.8em; margin:0; color:var(--pm-ink-secondary); font-size:.8rem; line-height:1.45; }
+.pm-tour-location { display:flex; align-items:center; gap:.55rem; padding:.65rem .7rem; border-radius:14px; background:var(--pm-surface-muted); }
+.pm-tour-location>img { width:26px; height:26px; object-fit:contain; flex:0 0 auto; }
+.pm-tour-location>span { display:grid; gap:.12rem; min-width:0; }
+.pm-tour-location small { color:var(--pm-ink-secondary); font-size:.66rem; }
+.pm-tour-location strong { overflow:hidden; font-size:.8rem; text-overflow:ellipsis; white-space:nowrap; }
+.pm-tour-detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; }
+.pm-tour-detail-grid>div { display:grid; gap:.15rem; min-width:0; padding:.55rem .6rem; border-top:1px solid var(--pm-line); }
+.pm-tour-detail-grid small { color:var(--pm-ink-secondary); font-size:.66rem; }
+.pm-tour-detail-grid strong { overflow:hidden; font-size:.78rem; text-overflow:ellipsis; white-space:nowrap; }
+.pm-tour-card-actions { display:flex; gap:.5rem; padding-top:.1rem; border-top:1px solid var(--pm-line); }
+.pm-tour-card-actions .pm-button { min-height:40px; padding:.5rem .75rem; font-size:.76rem; }
+.pm-tour-card-actions .pm-button:first-child { flex:1; }
+@media (max-width:767px) {
+  .pm-owner-tours-page { gap:1rem; padding-bottom:7rem; }
+  .pm-tour-page-intro { align-items:stretch; flex-direction:column; gap:.8rem; }
+  .pm-tour-page-intro h2 { font-size:1.45rem; }
+  .pm-tour-new-button { width:100%; }
+  .pm-tour-editor { padding:1rem; border-radius:20px; }
+  .pm-tour-form-grid { grid-template-columns:1fr; gap:.8rem; }
+  .pm-tour-form-wide { grid-column:auto; }
+  .pm-tour-map-block { padding:.7rem; }
+  .pm-tour-map-block .pm-route-map { height:210px; }
+  .pm-tour-photo-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .pm-tour-editor-actions { justify-content:stretch; }
+  .pm-tour-editor-actions .pm-button { flex:1; }
+  .pm-tour-grid { grid-template-columns:1fr; gap:.8rem; }
+  .pm-tour-card { border-radius:20px; }
+  .pm-tour-card-media { aspect-ratio:16/8; }
+  .pm-tour-card-body { padding:.9rem; gap:.7rem; }
+  .pm-tour-card-title h3 { font-size:1rem; }
+  .pm-tour-description { min-height:0; }
+  .pm-tour-card-actions .pm-button { min-height:42px; }
+  .pm-app:has(.pm-tour-editor) .pm-bottom-nav { display:none; }
+  .pm-app:has(.pm-owner-manual-form) .pm-bottom-nav { display:none; }
+}
+.pm-tour-photo-compat { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
+.pm-tour-card-media>.pm-tour-cover { width:100%; height:100%; margin:0; border-radius:0; }
+.pm-tour-simulator-icon { width:42px; height:42px; object-fit:contain; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
+.pm-tour .pm-stepper .pm-button { font-size:1.2rem; font-weight:700; line-height:1; }
+.pm-tour-map-placeholder { display:grid; place-items:center; gap:.35rem; min-height:230px; padding:1rem; border:1px dashed var(--pm-control-border); border-radius:15px; background:var(--pm-surface); color:var(--pm-ink-secondary); text-align:center; }
+.pm-tour-map-placeholder img { width:42px; height:42px; object-fit:contain; }
+.pm-tour-map-placeholder strong { color:var(--pm-ink); font-size:.82rem; }
+.pm-tour-map-placeholder span { max-width:34ch; font-size:.72rem; line-height:1.4; }
+@media (max-width:767px) { .pm-tour-map-placeholder { min-height:210px; } }

@@ -52,6 +52,7 @@ const localPlaces: readonly AddressSearchResult[] = [
   { title: 'Palácio Nacional da Pena', detail: 'Estrada da Pena, Sintra', coordinates: [38.7876, -9.3906], source: 'photon' },
   { title: 'Praça do Comércio', detail: 'Baixa, Lisboa', coordinates: [38.7079, -9.1366], source: 'photon' },
   { title: 'Parque das Nações', detail: 'Lisboa', coordinates: [38.7675, -9.0953], source: 'photon' },
+  { title: 'UBBO', detail: 'Amadora, Lisboa', coordinates: [38.7766, -9.2148], source: 'photon' },
 ];
 
 function normalizePlace(value: string) {
@@ -165,6 +166,22 @@ export function BookingSandbox() {
     window.addEventListener('storage', onStorage);
     return () => { window.removeEventListener('storage', refresh); window.removeEventListener(customerCalendarChangedEvent, refresh); window.removeEventListener('storage', onStorage); };
   }, []);
+  useEffect(() => {
+    const labels = [origin, destination, ...stops].map(value => value.trim()).filter(value => value.length >= 3);
+    const queries = labels.filter(value => !localPlaces.some(place => normalizePlace(place.title) === normalizePlace(value)));
+    if (!queries.length) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        const results = await searchAddresses({ queries, language, signal: controller.signal, geoapifyKey: import.meta.env.VITE_GEOAPIFY_API_KEY?.trim(), geoapifyUrl: import.meta.env.VITE_GEOAPIFY_URL?.trim() || undefined, photonUrl: import.meta.env.VITE_PHOTON_URL?.trim() || undefined });
+        if (controller.signal.aborted) return;
+        setResolvedPlaces(current => results.reduce((next, place) => ({ ...next, [normalizePlace(place.title)]: place }), current));
+      } catch (reason) {
+        if ((reason as { name?: string }).name !== 'AbortError') return;
+      }
+    }, 350);
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [destination, language, origin, stops]);
 
   const activeTours = tours.length ? tours : [...defaultTours];
   const selectedTour = activeTours.find(tour => tour.id === selectedTourId) ?? activeTours[0];

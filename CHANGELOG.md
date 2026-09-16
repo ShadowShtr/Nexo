@@ -10,6 +10,8 @@
 - seleção de data e hora do proprietário separa o dia da grelha de horas inteiras; minutos deixam de ser editáveis e os horários indisponíveis desaparecem.
 - troca de data tornou-se tolerante a datas passadas ou dados de agenda inválidos, mantendo o formulário visível e indicando indisponibilidade.
 - ícones genéricos da marcação manual foram substituídos pelos assets pretos do produto para percurso, locais, calendário e ações.
+- catálogo de tours recebeu editor com localização pesquisável, mapa ligado ao endereço escolhido, edição dos pacotes e ativação/pausa;
+- foto principal passou a ser escolhida visualmente ou carregada pelo proprietário, e os cartões publicados ganharam hierarquia, ações e layout responsivo.
 
 ## 0.2.89 — 2026-09-16
 
