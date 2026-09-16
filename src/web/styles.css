@@ -617,6 +617,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-owner-bookings-page .pm-owner-form-icon::before { width:30px; height:30px; }
 .pm-owner-bookings-page .pm-owner-address-suggestions button::before { width:20px; height:20px; }
 .pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/owner-icon-calendar.png'); }
+.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/calendar.png'); }
 .pm-owner-bookings-page .pm-owner-stop-input button::before { content:"+"; font-size:1.2rem; line-height:1; }
 .pm-owner-bookings-page .pm-owner-stop-list button::before { content:"×"; font-size:1.1rem; line-height:1; }
 .pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button { display:inline-flex; align-items:center; gap:.45rem; }
