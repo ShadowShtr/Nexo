@@ -4,7 +4,7 @@ Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fict
 
 ## Incremento 0.2.89 — 16/09/2026
 
-O início do proprietário em modo demo foi redesenhado para uma leitura operacional móvel: saudação, próxima operação, métricas do dia, pedidos que precisam de atenção e atalhos. A direção compacta segue apps de mobilidade, mantendo a paleta neutra preta, branca e cinza do produto. Pedidos recebidos do cliente alimentam o destaque e os indicadores através do mesmo armazenamento demo. Build TypeScript/Vite aprovado e inspeção browser da rota `#/owner/home` aprovada. A consulta operacional real, autenticação, notificações e sincronização entre PCs continuam pendentes.
+O início do proprietário em modo demo foi redesenhado para uma leitura operacional móvel: saudação, próxima operação, métricas do dia, pedidos que precisam de atenção e atalhos. A direção compacta segue apps de mobilidade, mantendo a paleta neutra preta, branca e cinza do produto; os ícones fornecidos foram incorporados com tamanho pequeno e sombra leve. Pedidos recebidos do cliente alimentam o destaque e os indicadores através do mesmo armazenamento demo. Build TypeScript/Vite aprovado e inspeção browser da rota `#/owner/home` aprovada. A consulta operacional real, autenticação, notificações e sincronização entre PCs continuam pendentes.
 
 ## Incremento 0.2.88 — 16/09/2026
 

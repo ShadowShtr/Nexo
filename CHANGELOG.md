@@ -4,6 +4,7 @@
 
 - painel inicial do proprietário redesenhado para telemóvel, com saudação, próxima operação, resumo do dia, lista de atenção e atalhos rápidos;
 - direção visual compacta inspirada em apps de mobilidade, com a paleta neutra preta, branca e cinza do produto;
+- ícones pretos fornecidos para calendário, carteira, carro, perfil, tours, pesquisa e cartão entram nas áreas móveis do proprietário;
 - pedidos demo recebidos do cliente entram no destaque e nos indicadores do proprietário;
 - navegação do painel mantém links diretos para agenda, reservas, página pública e configurações;
 - integração Supabase/API entre computadores continua pendente.

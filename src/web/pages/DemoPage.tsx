@@ -14,6 +14,14 @@ const cars = [
   ['Volvo XC90', 'André Ribeiro', 6],
 ] as const;
 const customers = ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example', 'Tom Example', 'Carla Exemplo', 'James Example'];
+const ownerPageIcons: Record<string, string> = {
+  customers: '/owner-icon-person.png',
+  drivers: '/owner-icon-person.png',
+  vehicles: '/owner-icon-car-front.png',
+  tours: '/owner-icon-tours.png',
+  finance: '/owner-icon-wallet.png',
+  settlements: '/owner-icon-card.png',
+};
 export const demoTrips = [
   { id: 'TEST-001', day: '2026-09-11', time: '09:00', end: '10:30', from: 'Aeroporto de Lisboa', to: 'Cascais', destination: [38.6979,-9.4215] as const, driver: 0, car: 0, customer: 0, cents: 12000, passengers: 2 },
   { id: 'TEST-002', day: '2026-09-11', time: '13:00', end: '17:00', from: 'Lisboa', to: 'Sintra · Cabo da Roca', destination: [38.7804,-9.4989] as const, driver: 0, car: 1, customer: 1, cents: 27000, passengers: 4 },
@@ -51,7 +59,7 @@ export function DemoPage({ page, area }: { page: string; area: Area }) {
     {page === 'home' && <section className="pm-summary pm-hero"><span className="pm-eyebrow">{label('Serviço de exemplo','Sample service')}</span><h2>Aeroporto de Lisboa → Cascais</h2><p>11/09/2026 · 09:00 · Miguel Costa</p><p>Mercedes-Benz Classe E · 2 {label('passageiros','passengers')}</p><strong>{money(12000)}</strong></section>}
     {['finance','earnings'].includes(page) && <section className="pm-summary"><span>{label('Total dos orçamentos fictícios','Total fictional quotes')}</span><p className="pm-value">{money(trips.reduce((sum,trip)=>sum+trip.cents,0))}</p><p>{label('Não representa dinheiro recebido.','This does not represent money received.')}</p></section>}
     <Section title={label('Dados de teste','Test data')}><label className="pm-search"><span className="pm-sr-only">{label('Pesquisar dados de teste','Search test data')}</span><input type="search" aria-label={label('Pesquisar dados de teste','Search test data')} placeholder={label('Pesquisar…','Search…')} value={search} onChange={event=>setSearch(event.target.value)}/></label>
-      <div className="pm-demo-grid">{filtered.map(record=><article className="pm-card pm-demo-record" key={record.title}><div className="pm-section-heading">{page === 'vehicles' ? <CarFront aria-hidden/> : ['drivers','customers','profile'].includes(page) ? <UserRound aria-hidden/> : <MapPin aria-hidden/>}<span className="pm-status" data-tone="neutral">TEST</span></div><h2>{record.title}</h2><p>{record.detail}</p><p className="pm-secondary">{record.meta}</p><Row label={label('Exemplo','Example')} value={record.value}/>{record.waze&&<a className="pm-button pm-button-primary" href={record.waze} target="_blank" rel="noreferrer">{label('Abrir destino no Waze','Open destination in Waze')}</a>}</article>)}</div>
+      <div className="pm-demo-grid">{filtered.map(record=><article className="pm-card pm-demo-record" key={record.title}><div className="pm-section-heading">{area === 'owner' && ownerPageIcons[page] ? <img className="pm-demo-icon-art" src={ownerPageIcons[page]} alt="" aria-hidden="true"/> : page === 'vehicles' ? <CarFront aria-hidden/> : ['drivers','customers','profile'].includes(page) ? <UserRound aria-hidden/> : <MapPin aria-hidden/>}<span className="pm-status" data-tone="neutral">TEST</span></div><h2>{record.title}</h2><p>{record.detail}</p><p className="pm-secondary">{record.meta}</p><Row label={label('Exemplo','Example')} value={record.value}/>{record.waze&&<a className="pm-button pm-button-primary" href={record.waze} target="_blank" rel="noreferrer">{label('Abrir destino no Waze','Open destination in Waze')}</a>}</article>)}</div>
       {!filtered.length && <p role="status">{label('Sem resultados.','No results.')}</p>}
     </Section>
     {page === 'tours' && <TourSimulator/>}
