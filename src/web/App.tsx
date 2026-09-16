@@ -19,6 +19,15 @@ const CustomerSandbox = lazy(() => import('./pages/CustomerSandbox'));
 const CustomerDiscoverSandbox = lazy(() => import('./pages/CustomerDiscoverSandbox'));
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
+const ownerMenuIcons: Partial<Record<Page, string>> = {
+  customers: '/owner-icon-person.png',
+  drivers: '/owner-icon-person.png',
+  vehicles: '/owner-icon-car-front.png',
+  tours: '/owner-icon-tours.png',
+  finance: '/owner-icon-wallet.png',
+  settlements: '/owner-icon-card.png',
+  settings: '/owner-icon-card.png',
+};
 
 function Language() {
   const { t, i18n } = useTranslation();
@@ -56,6 +65,7 @@ export function App() {
   const pages = areas[area];
   const primary: readonly Page[] = area === 'owner' ? ['home', 'calendar', 'bookings'] : area === 'driver' ? ['home', 'services', 'availability'] : pages;
   const customerHomeDemo = demo && area === 'customer' && page === 'discover';
+  const ownerDemo = demo && area === 'owner';
   const ownerHomeDemo = demo && area === 'owner' && page === 'home';
   const mobilePrimary: readonly Page[] = area === 'customer' ? primary.filter(target => target !== 'booking') : primary;
   const link = (target: Page | 'more', mobile = false) => {
@@ -68,8 +78,8 @@ export function App() {
   const now = new Intl.DateTimeFormat(i18n.language, { timeZone: 'Europe/Lisbon', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
       return <AuthGate area={area} demo={demo}><div className={`pm-theme pm-app ${customerHomeDemo ? 'pm-client-app' : ''}`}><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.89 · {t('preview')}</span></div></aside>
     <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/><SessionControl demo={demo}/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}<label className="pm-switch"><input type="checkbox" checked={demo} onChange={e => { setDemo(e.target.checked); const url = new URL(window.location.href); url.searchParams.set('demo', e.target.checked ? '1' : '0'); history.replaceState(null, '', url); }}/>{i18n.language === 'en' ? 'Test data' : 'Dados de teste'}</label></div>
-    <main id="main" tabIndex={-1} className={`pm-page pm-safe-bottom ${customerHomeDemo ? 'pm-client-page' : ''} ${ownerHomeDemo ? 'pm-owner-page' : ''}`}>{!customerHomeDemo && !ownerHomeDemo && <Header eyebrow={page === 'home' ? now : t(area)} title={page === 'home' ? t('greeting') : t(page)} description={page === 'home' ? t('overview') : page === 'more' ? undefined : t(`${page}Body`)} action={<span className="pm-avatar" aria-hidden="true">{area === 'owner' ? 'P' : area === 'driver' ? 'M' : 'C'}</span>}/>}
-      {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span>{t(p)}</span><ChevronRight size={18}/></a>)}</div>
+    <main id="main" tabIndex={-1} className={`pm-page pm-safe-bottom ${customerHomeDemo ? 'pm-client-page' : ''} ${ownerDemo ? 'pm-owner-mobile-area' : ''} ${ownerHomeDemo ? 'pm-owner-page' : ''}`}>{!customerHomeDemo && !ownerHomeDemo && <Header eyebrow={page === 'home' ? now : t(area)} title={page === 'home' ? t('greeting') : t(page)} description={page === 'home' ? t('overview') : page === 'more' ? undefined : t(`${page}Body`)} action={<span className="pm-avatar" aria-hidden="true">{area === 'owner' ? 'P' : area === 'driver' ? 'M' : 'C'}</span>}/>}
+      {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span className="pm-menu-item-content">{ownerDemo && ownerMenuIcons[p] && <img className="pm-demo-icon-art" src={ownerMenuIcons[p]} alt="" aria-hidden="true"/>}<span>{t(p)}</span></span><ChevronRight size={18}/></a>)}</div>
       : demo && area === 'customer' && page === 'discover' ? <Suspense fallback={<p>…</p>}><CustomerDiscoverSandbox/></Suspense>
       : demo && area === 'customer' ? <Suspense fallback={<p>…</p>}><CustomerSandbox key={page} page={page}/></Suspense>
       : demo && area === 'owner' && (page === 'drivers' || page === 'vehicles') ? <CatalogSandbox page={page}/>
