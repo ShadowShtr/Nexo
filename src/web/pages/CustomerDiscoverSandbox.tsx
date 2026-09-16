@@ -587,7 +587,7 @@ export default function CustomerDiscoverSandbox() {
   return <div className="pm-client-home">
     <header className="pm-client-toolbar">
       <span className="pm-client-wordmark"><span className="pm-client-mark">pm.</span><strong>Premium Mobility</strong></span>
-      <label className="pm-client-language"><span className="pm-sr-only">{say('Idioma', 'Language')}</span><select aria-label={say('Idioma', 'Language')} value={i18n.language} onChange={event => changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>
+      <label className="pm-client-language"><span className={`pm-language-flag pm-language-flag-${i18n.language === 'en' ? 'en' : 'pt'}`} aria-hidden="true"/><span className="pm-sr-only">{say('Idioma', 'Language')}</span><select aria-label={say('Idioma', 'Language')} value={i18n.language} onChange={event => changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>
     </header>
 
     {!planning && <button type="button" className="pm-client-search" onClick={() => openPlanner()} aria-label={say('Pesquisar um tour', 'Search for a tour')}>

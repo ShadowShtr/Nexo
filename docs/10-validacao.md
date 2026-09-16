@@ -42,6 +42,14 @@ O teste de browser passou a garantir que a etapa de escolha de motorista e carro
 
 Foi adicionado espaçamento entre o mapa, o bloco de revisão e o cartão de pagamento na etapa final, evitando cartões colados.
 
+## Incremento 0.2.83 — 16/09/2026
+
+O seletor de idioma passou a mostrar as bandeiras de Portugal e do Reino Unido ao lado de “Português” e “English”. Build e browser visual aprovados.
+
+## Incremento 0.2.84 — 16/09/2026
+
+A bandeira do idioma escolhido também fica visível quando o seletor está fechado, além das opções sinalizadas no menu. Build e browser visual aprovados.
+
 ## Continuidade documental — 15/09/2026
 
 Adicionados guias 21–23, instruções em AGENTS.md e ligações no README. Revisão baseada no código e histórico até b5fedb7, incluindo estado demo, limitações de sessionStorage, calendário, assets, pagamento e instalação. Nenhuma alteração funcional nem nova validação de banco/iPhone nesta entrega. Executar npm run check:docs para validar ligações e tarefas. O guia 22 regista também a divergência observada na seleção de data pela ferramenta do browser, sem declarar a causa resolvida.
