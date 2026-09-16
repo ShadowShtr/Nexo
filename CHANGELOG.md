@@ -4,6 +4,7 @@
 
 - criação manual de marcações do proprietário estruturada como o fluxo do cliente, com origem, localização atual, destino, paragens, rota completa no mapa, data/hora, passageiros, motorista e carro;
 - formulário manual recebeu hierarquia de cartões, métricas de rota e controles responsivos no padrão visual neutro do produto.
+- removido o seletor redundante de “Rota de referência”; destinos demo reconhecidos atualizam a rota automaticamente.
 
 ## 0.2.89 — 2026-09-16
 
