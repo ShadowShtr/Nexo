@@ -1,6 +1,6 @@
 # Estado atual e limites de continuidade
 
-Referência: v0.2.76, 16/09/2026. Alterações mais recentes: barra inicial compacta (52 px), botões de planeamento compactos e calendário principal com pop-up arredondado de data, mês e ano sem horários duplicados; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
+Referência: v0.2.77, 16/09/2026. Alterações mais recentes: barra inicial compacta (52 px), botões e caixas de pesquisa do planeamento compactos e calendário principal com pop-up arredondado de data, mês e ano sem horários duplicados; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
 
 ## Produto e regras que ligam os módulos
 

@@ -1,6 +1,6 @@
 # Decisões visuais do cliente
 
-Consolidado em 16/09/2026 a partir das revisões do utilizador até v0.2.76. Complementa [sistema visual](12-design-system.md), [mapa das abas](13-mapa-visual-abas.md) e [fluxo do cliente](20-entrada-cliente.md). Mudanças abaixo orientam a área do cliente; não redesenhar áreas internas silenciosamente.
+Consolidado em 16/09/2026 a partir das revisões do utilizador até v0.2.77. Complementa [sistema visual](12-design-system.md), [mapa das abas](13-mapa-visual-abas.md) e [fluxo do cliente](20-entrada-cliente.md). Mudanças abaixo orientam a área do cliente; não redesenhar áreas internas silenciosamente.
 
 ## Composição aprovada
 
@@ -10,6 +10,7 @@ Consolidado em 16/09/2026 a partir das revisões do utilizador até v0.2.76. Com
 - Usar os ícones 3D fornecidos, variar entre categorias; sem quadrado de fundo adicional, com sombra suave. Não substituir todos por símbolos cinzentos genéricos.
 - O carro ao lado de “Carro disponível” tem fundo livre e sombra leve. Retirar o pequeno símbolo de pessoa ao lado do nome do motorista; a ilustração própria de motorista é outro elemento.
 - Pins nos campos de origem/destino menores e proporcionais ao texto.
+- Caixas de origem/destino compactas para telemóvel, com altura, padding e raio reduzidos sem perder a área de toque.
 - Usar relógio, calendário, pin e carro da coleção nas áreas correspondentes. “Ver rota e preço” usa a imagem de rotas.
 - Promoções Lisboa–Sintra e Porto: texto na parte inferior escura do gradiente, legível sobre a foto.
 - Separar cartões e ações no final do pedido; hierarquia de referência, estado, percurso, valores, pagamento e ações. Botões não podem ficar colados.
