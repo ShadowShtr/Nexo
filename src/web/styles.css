@@ -809,7 +809,8 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-tour-description { min-height:0; }
   .pm-tour-card-actions .pm-button { min-height:42px; }
   .pm-app:has(.pm-tour-editor) .pm-bottom-nav { display:none; }
-  .pm-app:has(.pm-owner-manual-form) .pm-bottom-nav { display:none; }
+  .pm-theme:has(.pm-owner-manual-form) .pm-page { padding-bottom:1.25rem; }
+  .pm-theme:has(.pm-owner-manual-form) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
 }
 .pm-tour-photo-compat { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
 .pm-tour-card-media>.pm-tour-cover { width:100%; height:100%; margin:0; border-radius:0; }

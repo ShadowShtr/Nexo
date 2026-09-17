@@ -15,6 +15,7 @@
 - pacotes ativos guardados pelo proprietário passam a aparecer automaticamente no catálogo do cliente, com foto, preço, localização e acesso direto ao planeador.
 - agenda móvel passou para uma lista diária compacta, com filtros em grelha, altura automática e navegação inferior no fluxo da página, sem sobreposição de conteúdo.
 - vistas de mês, dia e semana receberam dimensões móveis próprias; a semana usa rolagem interna e o mês mostra eventos compactos sem estourar a largura.
+- navegação inferior do proprietário permanece disponível ao abrir uma marcação manual e acompanha o fim do formulário no telemóvel, sem cobrir o mapa.
 
 ## 0.2.89 — 2026-09-16
 

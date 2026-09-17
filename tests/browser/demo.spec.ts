@@ -101,6 +101,21 @@ test('owner can create a manual WhatsApp booking after schedule validation', asy
   await expect(page.locator('.pm-demo-record').filter({ hasText: 'João WhatsApp' })).toContainText('WhatsApp');
 });
 
+test('owner keeps the mobile navigation available while creating a booking', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/owner/bookings');
+  await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
+  const nav = page.locator('.pm-bottom-nav');
+  await expect(nav).toBeVisible();
+  await expect(nav).toHaveCSS('position', 'static');
+  await nav.getByRole('link', { name: 'Início', exact: true }).click();
+  await expect(page).toHaveURL(/#\/owner\/home$/);
+  await page.goto('/?demo=1#/owner/bookings');
+  await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
+  await nav.getByRole('link', { name: 'Agenda', exact: true }).click();
+  await expect(page).toHaveURL(/#\/owner\/calendar$/);
+});
+
 test('owner receives the complete customer request in the demo inbox', async ({ page }) => {
   await page.goto('/?demo=1#/owner/bookings');
   await page.evaluate(() => localStorage.setItem('pm.demo.customer-requests', JSON.stringify([{
