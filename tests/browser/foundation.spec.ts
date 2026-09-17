@@ -66,3 +66,14 @@ test('demo calendar shows Lisbon time, filters resources and opens accessible de
   await page.getByLabel('Idioma',{exact:true}).selectOption('en');
   await expect(page.getByRole('button',{name:'New test trip'})).toBeVisible();
 });
+
+test('owner calendar views remain usable on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/owner/calendar');
+  const calendar = page.locator('.pm-agenda-workspace');
+  for (const [label, viewClass] of [['Mês', '.fc-dayGridMonth-view'], ['Dia', '.fc-timeGridDay-view'], ['Semana', '.fc-timeGridWeek-view'], ['Agenda', '.fc-list']] as const) {
+    await calendar.getByRole('button', { name: label, exact: true }).click();
+    await expect(calendar.locator(viewClass)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBeTruthy();
+  }
+});

@@ -229,6 +229,23 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-agenda-workspace .fc .fc-view-harness { overflow-x:auto; }
 }
 @media (max-width:767px) {
+  .pm-theme:has(.pm-calendar) .pm-page { padding-bottom:1.25rem; }
+  .pm-theme:has(.pm-calendar) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
+  .pm-calendar { overflow:hidden; }
+  .pm-calendar .fc-view-harness { min-height:0; }
+  .pm-calendar .fc-dayGridMonth-view { min-width:0; }
+  .pm-calendar .fc-dayGridMonth-view .fc-daygrid-day-frame { min-height:68px; }
+  .pm-calendar .fc-dayGridMonth-view .fc-daygrid-day-number { padding:.35rem; font-size:.7rem; }
+  .pm-calendar .fc-dayGridMonth-view .fc-daygrid-event { margin:1px 2px; padding:2px 3px; border-radius:5px; font-size:.62rem; line-height:1.15; }
+  .pm-calendar .fc-dayGridMonth-view .pm-calendar-month-event { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pm-calendar .fc-timeGridDay-view { min-width:0; }
+  .pm-calendar .fc-timeGridDay-view .fc-timegrid-slot { height:64px; }
+  .pm-calendar .fc-timeGridDay-view .fc-timegrid-event { min-width:0; padding:5px; }
+  .pm-calendar .fc-timeGridWeek-view { min-width:620px; }
+  .pm-calendar .fc-view-harness:has(.fc-timeGridWeek-view) { overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; }
+  .pm-calendar .fc-timeGridWeek-view .fc-timegrid-slot { height:64px; }
+  .pm-calendar .fc-timeGridWeek-view .fc-timegrid-event { padding:4px; }
+  .pm-calendar .fc-timeGridWeek-view .fc-event-main { overflow:hidden; text-overflow:ellipsis; }
   .pm-theme:has(.pm-agenda-workspace) .pm-page { padding-bottom:1.25rem; }
   .pm-theme:has(.pm-agenda-workspace) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
   .pm-agenda-workspace>.pm-calendar { padding:12px; }
@@ -245,6 +262,27 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-agenda-workspace .fc .fc-list-event-title .pm-agenda-event>span:last-child { color:#737984; font-size:.72rem; font-weight:400; }
   .pm-agenda-workspace .fc .fc-list-empty { padding:1.5rem .75rem; color:#737984; font-size:.8rem; }
   .pm-agenda-workspace .fc .fc-list-table { margin:0; }
+}
+@media (max-width:767px) {
+  .pm-theme:has(.pm-agenda-workspace) .pm-calendar { overflow:hidden; }
+  .pm-agenda-workspace .fc-view-harness { min-height:0; }
+  .pm-agenda-workspace .fc-dayGridMonth-view { min-width:0; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-day-frame { min-height:68px; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-day-number { padding:.35rem; font-size:.7rem; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-day-events { margin-top:1px; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-event { margin:1px 2px; padding:2px 3px; border-radius:5px; font-size:.62rem; line-height:1.15; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pm-agenda-workspace .fc-timeGridDay-view { min-width:0; }
+  .pm-agenda-workspace .fc-timeGridDay-view .fc-timegrid-slot { height:64px; }
+  .pm-agenda-workspace .fc-timeGridDay-view .fc-timegrid-event { min-width:0; padding:5px; }
+  .pm-agenda-workspace .fc-timeGridDay-view .pm-agenda-event { gap:3px; font-size:.72rem; }
+  .pm-agenda-workspace .fc-timeGridWeek-view { min-width:620px; }
+  .pm-agenda-workspace .fc-view-harness:has(.fc-timeGridWeek-view) { overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; }
+  .pm-agenda-workspace .fc-timeGridWeek-view .fc-timegrid-slot { height:64px; }
+  .pm-agenda-workspace .fc-timeGridWeek-view .fc-timegrid-event { padding:4px; }
+  .pm-agenda-workspace .fc-timeGridWeek-view .pm-agenda-event { gap:2px; font-size:.68rem; }
+  .pm-agenda-workspace .fc-timeGridWeek-view .pm-agenda-event strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 }
 @supports not (backdrop-filter:blur(20px)) { .pm-agenda-workspace { --agenda-glass:#fff; } }
 .pm-agenda-workspace .fc .fc-button-primary:not(:disabled).fc-button-active { color:#fff; }
