@@ -273,6 +273,12 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-tour-meta { color:#eee; }
 .pm-client-tour-action { display:flex; align-items:center; gap:.2rem; width:max-content; margin-top:.25rem; padding:.55rem .8rem; border-radius:999px; background:#fff; color:var(--pm-ink); font-size:.82rem; font-weight:700; }
 .pm-client-note { margin:0; color:#7a7b82; font-size:.75rem; text-align:center; }
+.pm-client-owner-catalog { display:grid; gap:.8rem; }
+.pm-client-owner-catalog h2 { margin:.2rem 0 0; font-size:1.3rem; letter-spacing:-.035em; }
+.pm-client-catalog-count { display:grid; place-items:center; min-width:30px; height:30px; padding:0 .55rem; border-radius:999px; background:#f1f1f2; color:#5f6067; font-size:.75rem; font-weight:700; }
+.pm-client-owner-tour-promo { min-height:330px; }
+.pm-client-owner-tour-promo>img { min-height:330px; }
+.pm-client-owner-empty { margin:0; padding:1.1rem; border:1px solid #e0e1e4; border-radius:18px; background:#f7f7f8; color:#6f7077; font-size:.82rem; text-align:center; }
 .pm-client-planner { display:grid; gap:1rem; }
 .pm-client-planner-head { display:flex; align-items:center; gap:.75rem; }
 .pm-client-planner-head h1 { margin:.15rem 0 0; font-size:clamp(1.65rem,6vw,2.2rem); line-height:1.05; letter-spacing:-.055em; }

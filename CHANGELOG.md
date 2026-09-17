@@ -12,6 +12,7 @@
 - ícones genéricos da marcação manual foram substituídos pelos assets pretos do produto para percurso, locais, calendário e ações.
 - catálogo de tours recebeu editor com localização pesquisável, mapa ligado ao endereço escolhido, edição dos pacotes e ativação/pausa;
 - foto principal passou a ser escolhida visualmente ou carregada pelo proprietário, e os cartões publicados ganharam hierarquia, ações e layout responsivo.
+- pacotes ativos guardados pelo proprietário passam a aparecer automaticamente no catálogo do cliente, com foto, preço, localização e acesso direto ao planeador.
 
 ## 0.2.89 — 2026-09-16
 

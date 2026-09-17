@@ -72,6 +72,26 @@ test('customer discovery keeps tour cards readable and opens Porto', async ({ pa
   await expect(page.getByLabel('Paragem 6', { exact: true })).toHaveValue('Foz do Douro');
 });
 
+test('customer discovery shows a package created in the owner catalogue', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/owner/tours');
+  await page.evaluate(tour => localStorage.setItem('pm.demo.tours', JSON.stringify([tour])), {
+    id: 'owner-tour-sync', namePt: 'Tour do proprietário', nameEn: 'Owner tour',
+    descriptionPt: 'Experiência criada pelo proprietário.', descriptionEn: 'Experience created by the owner.',
+    durationDays: 2, baseCents: 25000, extraPassengerCents: 4000, minimumNoticeHours: 48,
+    active: true, area: 'Cascais', photoPath: '/porto-tour.png',
+    location: { title: 'Cascais', detail: 'Cascais, Lisboa', coordinates: [38.6979, -9.4215], source: 'photon' },
+  });
+  await page.goto('/?demo=1#/customer/discover');
+  await expect(page.getByRole('heading', { name: 'Tours disponíveis', exact: true })).toBeVisible();
+  const tour = page.getByRole('button', { name: 'Abrir tour Tour do proprietário', exact: true });
+  await expect(tour).toBeVisible();
+  await expect(tour.locator('img').first()).toHaveAttribute('src', '/porto-tour.png');
+  await tour.click();
+  await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Cascais');
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
+});
+
 test('customer discovery Porto promo preloads its six stops', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');

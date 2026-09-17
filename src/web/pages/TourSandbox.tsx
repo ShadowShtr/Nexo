@@ -7,6 +7,7 @@ import { RouteMap } from '../components/RouteMap';
 import { searchAddresses, type AddressSearchResult } from '../services/address-search';
 import { tourRoute, type DemoRoute } from '../demo-routes';
 import { TourSimulator } from './TourSimulator';
+import { tourCatalogChangedEvent, tourCatalogStorageKey } from '../tour-catalog';
 
 type Tour = {
   id: string;
@@ -26,7 +27,6 @@ type Tour = {
 
 type TourDraft = Pick<Tour, 'namePt' | 'nameEn' | 'descriptionPt' | 'descriptionEn' | 'area' | 'baseCents' | 'extraPassengerCents' | 'minimumNoticeHours'>;
 
-const tourStorageKey = 'pm.demo.tours';
 const areaStorageKey = 'pm.demo.tour-areas';
 const defaultAreas = ['Lisboa', 'Sintra', 'Porto', 'Douro', 'Arrábida'];
 const localLocations: readonly AddressSearchResult[] = [
@@ -53,7 +53,7 @@ function normalize(value: string) {
 
 function readTours(): Tour[] {
   try {
-    const raw = window.localStorage.getItem(tourStorageKey);
+    const raw = window.localStorage.getItem(tourCatalogStorageKey);
     if (!raw) return initial;
     const parsed = JSON.parse(raw) as Partial<Tour>[];
     return Array.isArray(parsed) && parsed.length ? parsed.filter(item => typeof item.id === 'string' && typeof item.namePt === 'string' && typeof item.area === 'string').map(item => ({ ...initial[0], ...item, durationDays: 2 as const, photoPath: typeof item.photoPath === 'string' && item.photoPath ? item.photoPath : tourPhotos[0].path })) as Tour[] : initial;
@@ -142,7 +142,7 @@ export function TourSandbox() {
     reader.addEventListener('load', () => { if (typeof reader.result === 'string') setPhotoPath(reader.result); });
     reader.readAsDataURL(file);
   };
-  const persist = (nextTours: Tour[], nextAreas: string[]) => { setTours(nextTours); setAreas(nextAreas); try { window.localStorage.setItem(tourStorageKey, JSON.stringify(nextTours)); window.localStorage.setItem(areaStorageKey, JSON.stringify(nextAreas)); } catch { /* optional demo persistence */ } };
+  const persist = (nextTours: Tour[], nextAreas: string[]) => { setTours(nextTours); setAreas(nextAreas); try { window.localStorage.setItem(tourCatalogStorageKey, JSON.stringify(nextTours)); window.localStorage.setItem(areaStorageKey, JSON.stringify(nextAreas)); window.dispatchEvent(new Event(tourCatalogChangedEvent)); } catch { /* optional demo persistence */ } };
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const row = { ...draft, durationDays: 2 as const };

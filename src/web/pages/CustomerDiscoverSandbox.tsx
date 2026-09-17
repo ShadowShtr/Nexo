@@ -7,6 +7,7 @@ import { tourRoute, type DemoRoute } from '../demo-routes';
 import { searchAddresses } from '../services/address-search';
 import { availableCustomerTimes, customerCalendarChangedEvent, readOwnerCalendar } from '../customer-availability';
 import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
+import { hasStoredTourCatalog, readPublishedTours, subscribeToTourCatalog, type PublishedTour } from '../tour-catalog';
 
 const tourOptions = [
   { id: 'lisbon', icon: '/route-landmark.png', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
@@ -368,6 +369,12 @@ function plannerRoute(origin: string, destination: string, stops: readonly strin
   return { ...tourRoute, name: `${origin || 'Lisboa'} → ${destination}`, points };
 }
 
+function tourLocation(tour: PublishedTour): GeocodedPlace | undefined {
+  if (tour.location) return { title: tour.location.title, detail: tour.location.detail, coordinates: tour.location.coordinates };
+  const coordinates = coordinatesFor(tour.area);
+  return coordinates ? { title: tour.area, detail: tour.area, coordinates } : undefined;
+}
+
 export default function CustomerDiscoverSandbox() {
   const { i18n } = useTranslation();
   const say = (pt: string, en: string) => i18n.language === 'en' ? en : pt;
@@ -390,8 +397,15 @@ export default function CustomerDiscoverSandbox() {
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
   const [resolvedPlaces, setResolvedPlaces] = useState<GeocodedPlace[]>([]);
   const [tariff, setTariff] = useState(readDemoTariff);
+  const [ownerTours, setOwnerTours] = useState<PublishedTour[]>(readPublishedTours);
+  const [hasOwnerCatalog, setHasOwnerCatalog] = useState(hasStoredTourCatalog);
 
   useEffect(() => { const refresh = () => setTariff(readDemoTariff()); return subscribeToDemoTariff(refresh); }, []);
+
+  useEffect(() => {
+    const refresh = () => { setOwnerTours(readPublishedTours()); setHasOwnerCatalog(hasStoredTourCatalog()); };
+    return subscribeToTourCatalog(refresh);
+  }, []);
 
   const previewRoute = useMemo(() => plannerRoute(origin, destination, stops, plannerKind, i18n.language === 'en', resolvedPlaces), [origin, destination, plannerKind, stops, i18n.language, resolvedPlaces]);
   const routeKnown = Boolean(origin.trim() && destination.trim() && coordinatesFor(origin, resolvedPlaces) && coordinatesFor(destination, resolvedPlaces) && stops.every(stop => Boolean(coordinatesFor(stop, resolvedPlaces))));
@@ -449,7 +463,7 @@ export default function CustomerDiscoverSandbox() {
     setBookingStart(`${selectedBookingDate}T${nextTime}`);
   }, [availableBookingTimes, bookingStart, selectedBookingDate]);
 
-  const openPlanner = (preset = '', kind: PlannerKind = 'transfer', presetStops: readonly string[] = []) => {
+  const openPlanner = (preset = '', kind: PlannerKind = 'transfer', presetStops: readonly string[] = [], presetLocation?: GeocodedPlace) => {
     setPlanning(true);
     setRouteReady(false);
     setPlannerKind(kind);
@@ -461,7 +475,7 @@ export default function CustomerDiscoverSandbox() {
     setCustomCalendarOpen(false);
     setActiveSearch(null);
     setRemoteSuggestions([]);
-    setResolvedPlaces([]);
+    setResolvedPlaces(presetLocation ? [presetLocation] : []);
   };
   const chooseBooking = () => {
     try {
@@ -485,6 +499,10 @@ export default function CustomerDiscoverSandbox() {
   const chooseCategory = (id: string) => {
     const preset = id === 'lisbon' ? 'Lisboa' : id === 'sintra' || id === 'lisbon-sintra' ? 'Sintra' : id === 'porto' ? 'Porto' : '';
     openPlanner(preset, 'tour', id === 'porto' ? portoTourStops : []);
+  };
+  const openOwnerTour = (tour: PublishedTour) => {
+    const location = tourLocation(tour);
+    openPlanner(location?.title || tour.area, 'tour', [], location);
   };
   const useLocation = () => {
     if (!navigator.geolocation) {
@@ -618,10 +636,13 @@ export default function CustomerDiscoverSandbox() {
         <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>
         <div className="pm-client-category-grid">{tourOptions.map(option => <button type="button" className="pm-client-category" key={option.id} onClick={() => chooseCategory(option.id)}><span className="pm-client-category-art" aria-hidden="true"><img src={option.icon} alt="" /></span><strong>{say(option.pt, option.en)}</strong><span>{say(option.detailPt, option.detailEn)}</span></button>)}</div>
       </section>
-      <div className="pm-client-promo-list">
+      {hasOwnerCatalog ? <section className="pm-client-owner-catalog" aria-labelledby="client-owner-catalog-title">
+        <div className="pm-client-section-title"><div><span className="pm-client-eyebrow">{say('Catálogo do proprietário', 'Owner catalogue')}</span><h2 id="client-owner-catalog-title">{say('Tours disponíveis', 'Available tours')}</h2></div><span className="pm-client-catalog-count">{ownerTours.filter(tour => tour.active).length}</span></div>
+        {ownerTours.some(tour => tour.active) ? <div className="pm-client-promo-list">{ownerTours.filter(tour => tour.active).map(tour => <button type="button" className="pm-client-tour-promo pm-client-owner-tour-promo" key={tour.id} onClick={() => openOwnerTour(tour)} aria-label={say(`Abrir tour ${tour.namePt}`, `Open ${tour.nameEn} tour`)}><img src={tour.photoPath} alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>{say(tour.namePt, tour.nameEn)}</strong><span>{say(tour.descriptionPt, tour.descriptionEn)}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say(`2 dias · até 2 pessoas incluídas · ${money(tour.baseCents)}`, `2 days · up to 2 people included · ${money(tour.baseCents)}`)}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>)}</div> : <p className="pm-client-owner-empty">{say('Neste momento não há tours ativos para marcar.', 'There are no active tours available to book right now.')}</p>}
+      </section> : <div className="pm-client-promo-list">
         <button type="button" className="pm-client-tour-promo" onClick={() => openPlanner('Sintra', 'tour')} aria-label={say('Abrir tour Lisboa Sintra', 'Open Lisbon Sintra tour')}><img src="/lisbon-sintra-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Lisboa <span>→</span> Sintra</strong><span>{say('Do centro histórico aos palácios da serra.', 'From the historic centre to the hilltop palaces.')}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
         <button type="button" className="pm-client-tour-promo pm-client-tour-promo-porto" onClick={() => openPlanner('Porto', 'tour', portoTourStops)} aria-label={say('Abrir tour do Porto com seis paragens', 'Open Porto tour with six stops')}><img src="/porto-tour.png" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Porto <span>·</span> 6 paragens</strong><span>{say('Ribeira, centro histórico e Douro num percurso privado.', 'Ribeira, historic centre and Douro on a private route.')}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
-      </div>
+      </div>}
       <p className="pm-client-note">{say('Valores e disponibilidade são confirmados antes do pedido.', 'Prices and availability are confirmed before your request.')}</p>
     </>}
   </div>;
