@@ -13,6 +13,7 @@
 - catálogo de tours recebeu editor com localização pesquisável, mapa ligado ao endereço escolhido, edição dos pacotes e ativação/pausa;
 - foto principal passou a ser escolhida visualmente ou carregada pelo proprietário, e os cartões publicados ganharam hierarquia, ações e layout responsivo.
 - pacotes ativos guardados pelo proprietário passam a aparecer automaticamente no catálogo do cliente, com foto, preço, localização e acesso direto ao planeador.
+- agenda móvel passou para uma lista diária compacta, com filtros em grelha, altura automática e navegação inferior no fluxo da página, sem sobreposição de conteúdo.
 
 ## 0.2.89 — 2026-09-16
 
