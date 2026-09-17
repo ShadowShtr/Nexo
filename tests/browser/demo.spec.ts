@@ -116,6 +116,18 @@ test('owner keeps the mobile navigation available while creating a booking', asy
   await expect(page).toHaveURL(/#\/owner\/calendar$/);
 });
 
+test('owner more menu keeps the mobile navigation in the page flow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/?demo=1#/owner/home');
+  await page.getByRole('link', { name: 'Mais', exact: true }).click();
+  const nav = page.locator('.pm-bottom-nav');
+  await expect(nav).toBeVisible();
+  await expect(nav).toHaveCSS('position', 'static');
+  await expect(nav.getByRole('link', { name: 'Mais', exact: true })).toHaveAttribute('aria-current', 'page');
+  await nav.getByRole('link', { name: 'Início', exact: true }).click();
+  await expect(page).toHaveURL(/#\/owner\/home$/);
+});
+
 test('owner receives the complete customer request in the demo inbox', async ({ page }) => {
   await page.goto('/?demo=1#/owner/bookings');
   await page.evaluate(() => localStorage.setItem('pm.demo.customer-requests', JSON.stringify([{
