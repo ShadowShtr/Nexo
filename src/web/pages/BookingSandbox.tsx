@@ -189,7 +189,7 @@ export function BookingSandbox() {
   const previewRoute = dynamicRoute(origin, destination, stops, resolvedPlaces, baseTemplate);
   const durationMinutes = Math.max(60, previewRoute.minutes || baseTemplate.minutes);
   const km = new Intl.NumberFormat(en ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format((previewRoute.meters || baseTemplate.meters) / 1000);
-  const price = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: service === 'tour' ? { kind: 'tour', baseCents: selectedTour?.baseCents ?? tariff.tourBaseCents, extraPassengerCents: selectedTour?.extraPassengerCents ?? tariff.tourExtraPassengerCents } : { kind: 'transfer', baseCents: tariff.transferBaseCents, distanceMeters: previewRoute.meters || baseTemplate.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
+  const price = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: service === 'tour' ? { kind: 'tour', baseCents: selectedTour?.baseCents ?? tariff.tourBaseCents, extraPassengerCents: selectedTour?.extraPassengerCents ?? tariff.tourExtraPassengerCents } : { kind: 'transfer', distanceMeters: previewRoute.meters || baseTemplate.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
   const ownerCalendar = useMemo(() => readOwnerCalendar(), [calendarVersion]);
   const agendaBookings = useMemo(() => {
     const byId = new Map<string, Allocation>();

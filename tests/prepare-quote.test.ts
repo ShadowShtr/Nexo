@@ -15,7 +15,7 @@ const request = {
 
 function gateway(overrides: Partial<QuotePreparationGateway> = {}): QuotePreparationGateway {
   return {
-    resolvePricing: async () => ({ passengerCapacity: 6, baseCents: 1000, centsPerKm: 200, extraPassengerCents: 3500, nightSurchargeBps: 0, extras: [], tariffVersion: 7, validityMinutes: 30 }),
+    resolvePricing: async () => ({ passengerCapacity: 6, centsPerKm: 200, nightSurchargeBps: 0, extras: [], tariffVersion: 7, validityMinutes: 30 }),
     saveSnapshot: async input => ({ id: 'quote-1', validUntil: input.validUntil }),
     ...overrides,
   };
@@ -26,9 +26,9 @@ const road: RouteProvider = { estimate: async ({ points }) => ({ provider: 'test
 test('server preparation orders pickup, stops and destination and snapshots the calculated split', async () => {
   let saved: any;
   const result = await prepareQuote({ organizationId }, request, gateway({ saveSnapshot: async input => { saved = input; return { id: 'quote-1', validUntil: input.validUntil }; } }), road, () => '2026-09-14T10:00:00+01:00');
-  assert.equal(result.quote.totalCents, 3500);
-  assert.equal(result.quote.depositCents, 875);
-  assert.equal(result.quote.balanceCents, 2625);
+  assert.equal(result.quote.totalCents, 2500);
+  assert.equal(result.quote.depositCents, 625);
+  assert.equal(result.quote.balanceCents, 1875);
   assert.equal(result.settingsVersion, 7);
   assert.deepEqual(saved.route.points.map((point: { label: string }) => point.label), ['Aeroporto de Lisboa', 'Marquês de Pombal', 'Cascais']);
   assert.equal(saved.organizationId, organizationId);

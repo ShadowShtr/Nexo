@@ -18,6 +18,8 @@
 - navegação inferior do proprietário permanece disponível ao abrir uma marcação manual e acompanha o fim do formulário no telemóvel, sem cobrir o mapa.
 - cadastro de veículos e motoristas recebeu campos agrupados por etapa, capacidade visível e cartões de frota com hierarquia responsiva.
 - simuladores de calendário, tarifa e pacote foram reorganizados em cartões de leitura rápida, com resultados destacados e ações separadas.
+- transferes passam a calcular o total pelo percurso em quilómetros × preço por km, sem preço base;
+- simulador e resumos distinguem transferes por distância de tours com preço de pacote.
 
 ## 0.2.89 — 2026-09-16
 

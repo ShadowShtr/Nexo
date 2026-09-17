@@ -4,7 +4,7 @@ export type Line = { code: string; cents: number };
 export type QuoteInput = {
   passengers: number;
   passengerCapacity: number;
-  service: { kind: 'transfer'; baseCents: number; distanceMeters: number; centsPerKm: number }
+  service: { kind: 'transfer'; baseCents?: number; distanceMeters: number; centsPerKm: number }
     | { kind: 'tour'; baseCents: number; extraPassengerCents: number };
   nightSurchargeBps?: number;
   extras?: Line[];
@@ -28,10 +28,11 @@ export function paymentSplit(totalCents: number, depositBps = 2500) {
 export function quote(input: QuoteInput) {
   integer(input.passengers, 'passageiros', 1); integer(input.passengerCapacity, 'capacidade', 1);
   if (input.passengers > input.passengerCapacity) throw new RangeError('Capacidade insuficiente');
-  const lines: Line[] = [{ code: 'base', cents: integer(input.service.baseCents, 'base') }];
+  const lines: Line[] = [];
   if (input.service.kind === 'transfer') {
     lines.push({ code: 'distance', cents: ratio(integer(input.service.centsPerKm, 'tarifa/km'), integer(input.service.distanceMeters, 'metros'), 1000) });
   } else {
+    lines.push({ code: 'base', cents: integer(input.service.baseCents, 'base') });
     lines.push({ code: 'extra_passengers', cents: ratio(integer(input.service.extraPassengerCents, 'pessoa extra'), Math.max(0, input.passengers - 2), 1) });
   }
   const coreCents = sum(...lines.map(line => line.cents));

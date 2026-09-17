@@ -14,7 +14,7 @@ Moeda única EUR nesta fase. A localização inglesa não converte moeda. Impost
 
 `distanciaCentimos = roundHalfUp(metrosRodoviarios * tarifaCentimosPorKm / 1000)`
 
-`nucleo = tarifaBase + distanciaCentimos`
+`nucleo = distanciaCentimos`
 
 `suplementoNoturno = roundHalfUp(nucleo * taxaNoturnaBps / 10000)`
 
@@ -22,7 +22,7 @@ Moeda única EUR nesta fase. A localização inglesa não converte moeda. Impost
 
 Extras discriminados: zona/recolha, categoria/veículo quando explicitamente cobrada, paragens, espera, portagens e estacionamento conhecidos. Cada custo entra uma única vez. Os valores do núcleo são resolvidos pelo motor de tarifas, com precedência explícita e snapshot. No core atual recebem-se as tarifas já resolvidas.
 
-Exemplo: base 10 EUR + 12,5 km a 2 EUR/km = 35 EUR; noturno 20%=7 EUR; extra 5 EUR → total 47 EUR; sinal 11,75 EUR; saldo 35,25 EUR. Os 20 EUR/km mencionados na conversa não são default.
+Exemplo: 12,5 km a 2 EUR/km = 25 EUR; noturno 20%=5 EUR; extra 5 EUR → total 35 EUR; sinal 8,75 EUR; saldo 26,25 EUR. O transfer não soma preço base.
 
 Hipótese noturna: usa a hora local de início, sem repartir a viagem em segmentos diurnos/noturnos. Intervalo noturno [início,fim), inclusive início e exclusivo fim; se atravessa meia-noite, pertence à noite se hora>=início OU hora<fim. Exemplo configurável, não publicado: 22:00–06:00. Validação adicional fica em PRC-01.
 

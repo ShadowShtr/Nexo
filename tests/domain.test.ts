@@ -19,12 +19,13 @@ test('REG-03: capacidade exata aceite, excedida e zero rejeitados', () => {
   assert.equal(tour(6).totalCents, 34000);
   assert.throws(() => tour(7)); assert.throws(() => tour(0)); assert.throws(() => tour(2.5));
 });
-test('REG-02: transfer discrimina distância, noite e extra', () => {
+test('REG-02: transfer usa distância, noite e extra sem preço base', () => {
   const result = quote({ passengers: 2, passengerCapacity: 4,
     service: { kind: 'transfer', baseCents: 1000, distanceMeters: 12500, centsPerKm: 200 },
     nightSurchargeBps: 2000, extras: [{ code: 'pickup_zone', cents: 500 }] });
-  assert.equal(result.totalCents, 4700); assert.equal(result.depositCents, 1175);
-  assert.equal(result.balanceCents, 3525);
+  assert.equal(result.totalCents, 3500); assert.equal(result.depositCents, 875);
+  assert.equal(result.balanceCents, 2625);
+  assert.equal(result.lines.some(line => line.code === 'base'), false);
   assert.equal(result.lines.reduce((n, line) => n + line.cents, 0), result.totalCents);
 });
 test('REG-01: arredondamento half-up de meia unidade e metros não inteiros em km', () => {

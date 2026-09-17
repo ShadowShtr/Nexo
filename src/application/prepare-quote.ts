@@ -24,9 +24,9 @@ export const quoteRequestSchema = z.object({
 const pricingLine = z.object({ code: z.string().trim().min(1).max(80), cents: z.number().int().min(0) }).strict();
 const pricingConfig = z.object({
   passengerCapacity: z.number().int().min(1).max(20),
-  baseCents: z.number().int().min(0),
+  baseCents: z.number().int().min(0).optional(),
   centsPerKm: z.number().int().min(0),
-  extraPassengerCents: z.number().int().min(0),
+  extraPassengerCents: z.number().int().min(0).optional(),
   nightSurchargeBps: z.number().int().min(0).max(10000),
   extras: z.array(pricingLine).max(30).default([]),
   tariffVersion: z.number().int().positive(),
@@ -80,12 +80,13 @@ export async function prepareQuote(actor: QuoteActor, input: unknown, gateway: Q
   if (!estimateResult) throw new Error('ROUTE_UNAVAILABLE');
   const estimate = routeEstimate.parse(estimateResult);
   const config = pricingConfig.parse(await gateway.resolvePricing({ organizationId: actor.organizationId, driverId: request.driverId, vehicleId: request.vehicleId, serviceKind: request.serviceKind, startsAt: request.startsAt }));
+  if (request.serviceKind === 'tour' && (config.baseCents === undefined || config.extraPassengerCents === undefined)) throw new Error('TOUR_PRICING_UNAVAILABLE');
   const calculated = quote({
     passengers: request.passengers,
     passengerCapacity: config.passengerCapacity,
     service: request.serviceKind === 'transfer'
-      ? { kind: 'transfer', baseCents: config.baseCents, distanceMeters: estimate.distanceMeters, centsPerKm: config.centsPerKm }
-      : { kind: 'tour', baseCents: config.baseCents, extraPassengerCents: config.extraPassengerCents },
+      ? { kind: 'transfer', distanceMeters: estimate.distanceMeters, centsPerKm: config.centsPerKm }
+      : { kind: 'tour', baseCents: config.baseCents!, extraPassengerCents: config.extraPassengerCents! },
     nightSurchargeBps: config.nightSurchargeBps,
     extras: config.extras,
   });

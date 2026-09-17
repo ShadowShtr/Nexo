@@ -11,7 +11,7 @@ export type DemoTariffConfig = {
 };
 
 export const defaultDemoTariff: DemoTariffConfig = {
-  transferBaseCents: 1000,
+  transferBaseCents: 0,
   transferCentsPerKm: 200,
   tourBaseCents: 20000,
   tourExtraPassengerCents: 3500,

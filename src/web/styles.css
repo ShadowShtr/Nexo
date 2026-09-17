@@ -881,6 +881,8 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-policy-heading p { margin:.15rem 0 0; color:var(--pm-ink-secondary); font-size:.72rem; }
 .pm-price-field-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .pm-form-field-wide { grid-column:1/-1; }
+.pm-pricing-mode-note { display:grid; gap:.15rem; padding:.75rem .85rem; border-radius:14px; background:var(--pm-surface-muted); color:var(--pm-ink-secondary); font-size:.75rem; line-height:1.4; }
+.pm-pricing-mode-note strong { color:var(--pm-ink); font-size:.78rem; }
 .pm-price-form-footer { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.2rem; border-top:1px solid var(--pm-line); }
 .pm-price-form-footer p { margin:0; max-width:45ch; color:var(--pm-ink-secondary); font-size:.72rem; line-height:1.4; }
 .pm-price-result { padding:.75rem 1rem; border:1px solid var(--pm-line); box-shadow:none; }

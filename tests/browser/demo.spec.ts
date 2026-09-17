@@ -177,10 +177,9 @@ test('owner adds a bilingual two-day tour package', async ({ page }) => {
   await expect(card.locator('img.pm-tour-cover')).toHaveAttribute('src', '/porto-tour.png');
 });
 
-test('owner can save a demo tariff from settings', async ({ page }) => {
+test('owner can save a per-kilometre transfer tariff from settings', async ({ page }) => {
   await page.goto('/?demo=1#/owner/settings');
   const form = page.getByRole('form', { name: 'Simulador de preço' });
-  await form.getByLabel('Preço base (€)').fill('12');
   await form.getByLabel('Preço por km (€)').fill('2.5');
   await form.getByRole('button', { name: 'Guardar tarifa', exact: true }).click();
   await expect(form.getByRole('status')).toContainText('Tarifa guardada');

@@ -25,7 +25,6 @@ CFG-R01: só owner edita; backend verifica papel/organização. Mostrar valor at
 | booking.acceptanceTtlMinutes | aprovado 30 min | Inteiro >0; não ultrapassar início viável do serviço. |
 | booking.paymentTtlMinutes | aprovado 30 min | Inteiro >0; limitar ao início operacional viável e validade do orçamento, sem reaplicar a antecedência mínima ao pagamento. |
 | booking.confirmationMode | aprovado driver_acceptance | Alternativa automática só após validar operação e regras. |
-| pricing.baseCents | obrigatório para transfer | Inteiro >=0; por motorista/veículo conforme herança. |
 | pricing.centsPerKm | obrigatório para transfer | Inteiro >=0; distância em metros, nunca linha reta. |
 | pricing.nightEnabled | proposta false | Exige faixa e taxa quando ativo. |
 | pricing.nightStart/End | obrigatório quando ativo | HH:mm local, diferentes; suporta meia-noite. |
@@ -39,7 +38,7 @@ CFG-R01: só owner edita; backend verifica papel/organização. Mostrar valor at
 | vehicle.passengerCapacity | obrigatório | Inteiro >0, exclui motorista; bagagem em campos próprios. |
 | vehicle.minimumLeadMinutes | obrigatório | Ex.: maior antecedência para veículo de 7 lugares; não presumir 24h. |
 | vehicle.surchargeCents | proposta 0 | Suplemento explicitamente visível; não duplicar override de tarifa. |
-| tour.baseCents | obrigatório por pacote | Base inclui até duas pessoas. |
+| tour.baseCents | obrigatório por pacote | Preço do pacote inclui até duas pessoas; não é usado em transferes. |
 | tour.extraPassengerCents | obrigatório por pacote | Inteiro >=0 por pessoa acima de duas. |
 | tour.durationMinutes | obrigatório | Inteiro >0; inclui roteiro e visitas. |
 | tour.maxPassengers | obrigatório | Não exceder capacidade do carro selecionado. |
