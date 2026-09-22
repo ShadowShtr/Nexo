@@ -954,6 +954,22 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-price-form-footer { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.2rem; border-top:1px solid var(--pm-line); }
 .pm-price-form-footer p { margin:0; max-width:45ch; color:var(--pm-ink-secondary); font-size:.72rem; line-height:1.4; }
 .pm-price-result { padding:.75rem 1rem; border:1px solid var(--pm-line); box-shadow:none; }
+
+/* Keep the mobile navigation available while scrolling through every page and form. */
+@media (max-width:1023px) {
+  .pm-bottom-nav {
+    position:fixed !important;
+    bottom:calc(.75rem + env(safe-area-inset-bottom,0px)) !important;
+    left:50% !important;
+    width:calc(100% - 32px) !important;
+    max-width:470px !important;
+    margin:0 !important;
+    transform:translateX(-50%) !important;
+    display:flex !important;
+    z-index:50;
+  }
+  .pm-page { padding-bottom:calc(6rem + env(safe-area-inset-bottom,0px)) !important; }
+}
 .pm-price-result-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.2rem 0 .65rem; }
 .pm-price-result-heading>strong { font-size:1.35rem; font-variant-numeric:tabular-nums; }
 .pm-simulator-intro { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:.9rem; }
