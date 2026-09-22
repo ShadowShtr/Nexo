@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CalendarDays, Globe2, LockKeyhole, LogIn, LogOut, Save } from 'lucide-react';
+import { CalendarDays, LockKeyhole, LogIn, LogOut, Save } from 'lucide-react';
 import type { Membership } from '../../modules/identity/session';
 import { readIdentity, signIn } from '../../modules/identity/session';
 import { Button } from '../../ui/components/Button';
@@ -38,7 +38,7 @@ export function AuthGate({area,demo,children}:{area:Area;demo:boolean;children:R
   },[area,bypass,client]);
 
   if (bypass) return children;
-  const language = <label className="pm-language"><Globe2 size={17}/><img className="pm-language-flag" src={i18n.language === 'en' ? '/flag-usa.png' : '/flag-portugal.png'} alt="" aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={event=>void i18n.changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
+  const language = <label className="pm-language"><img className="pm-language-flag" src={i18n.language === 'en' ? '/flag-usa.png' : '/flag-portugal.png'} alt="" aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={event=>void i18n.changeLanguage(event.target.value)}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
   const shell = (body:ReactNode) => <main className="pm-theme pm-auth-shell"><div className="pm-auth-frame"><aside className="pm-auth-brand-panel"><div className="pm-auth-brand-top"><a className="pm-auth-brand" href="/?demo=1#/customer/discover"><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-auth-brand-area">{t(area)}</span></div><div className="pm-auth-brand-copy"><span className="pm-auth-kicker">{t('authBrandKicker')}</span><h2>{t('authBrandTitle')}</h2><p>{t('authBrandBody')}</p></div><div className="pm-auth-preview-card"><div className="pm-auth-preview-top"><span><CalendarDays size={16} aria-hidden="true"/>{t('authBrandCardLabel')}</span><span className="pm-auth-live-dot" aria-hidden="true"/></div><strong>{t('authBrandCardTitle')}</strong><span>{t('authBrandCardBody')}</span><div className="pm-auth-progress" aria-hidden="true"><span/></div></div><div className="pm-auth-brand-footer"><span>{t('authBrandFooter')}</span><span>v0.2.90</span></div></aside><section className="pm-card pm-auth-card"><div className="pm-auth-heading"><a className="pm-auth-mobile-brand" href="/?demo=1#/customer/discover"><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a>{language}</div><div className="pm-auth-card-body">{body}</div></section></div></main>;
   if (state === 'allowed' && !inviteMode) return children;
   if (state === 'allowed' && inviteMode) {

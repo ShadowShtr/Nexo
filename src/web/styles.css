@@ -43,6 +43,15 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
   .pm-auth-card h1 { font-size:clamp(2rem,10vw,2.65rem); }
 }
 
+/* Keep the language control clear and touch-friendly on small screens. */
+.pm-auth-card .pm-language { min-height:44px; gap:.5rem; padding:.25rem .5rem .25rem .65rem; border:1px solid var(--pm-line); border-radius:999px; background:var(--pm-surface-muted); }
+.pm-auth-card .pm-language .pm-language-flag { width:1.25rem; height:.85rem; }
+.pm-auth-card .pm-language select { min-height:36px; padding:.2rem 1.25rem .2rem .1rem; color:var(--pm-ink); font-size:.82rem; font-weight:650; }
+@media (max-width:767px) {
+  .pm-auth-card .pm-language { min-height:46px; }
+  .pm-auth-card .pm-language select { font-size:.84rem; }
+}
+
 @media (max-width:767px) {
   .pm-owner-mobile-area { max-width:560px; padding:1.25rem 1rem calc(6rem + env(safe-area-inset-bottom,0px)); }
   .pm-owner-mobile-area > .pm-header { align-items:flex-start; margin:0 0 1.35rem; }
