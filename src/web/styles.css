@@ -328,8 +328,8 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-day-number { padding:.35rem; font-size:.7rem; }
   .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-day-events { margin-top:1px; }
   .pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-event { margin:1px 2px; padding:2px 3px; border-radius:5px; font-size:.62rem; line-height:1.15; }
-  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event { display:block; min-width:0; max-width:100%; max-height:2.35em; overflow:hidden; overflow-wrap:anywhere; white-space:normal; }
+  .pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event strong { display:block; min-width:0; max-width:100%; max-height:2.35em; overflow:hidden; overflow-wrap:anywhere; white-space:normal; }
   .pm-agenda-workspace .fc-timeGridDay-view { min-width:0; }
   .pm-agenda-workspace .fc-timeGridDay-view .fc-timegrid-slot { height:64px; }
   .pm-agenda-workspace .fc-timeGridDay-view .fc-timegrid-event { min-width:0; padding:5px; }
@@ -964,6 +964,13 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-breakdown { margin-top:1rem; }
 .pm-breakdown-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.8rem 0 .25rem; }
 .pm-breakdown-heading>strong { font-size:1rem; font-variant-numeric:tabular-nums; }
+
+/* Month cells are narrow on phones: keep every route inside its own event box. */
+.pm-calendar .fc-dayGridMonth-view .fc-daygrid-event,
+.pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-event { min-width:0; max-width:calc(100% - 4px); box-sizing:border-box; overflow:hidden; }
+.pm-calendar .fc-dayGridMonth-view .pm-calendar-month-event,
+.pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event { min-width:0; max-width:100%; overflow:hidden; overflow-wrap:anywhere; white-space:normal; }
+.pm-agenda-workspace .fc-dayGridMonth-view .pm-agenda-event strong { min-width:0; max-width:100%; max-height:2.35em; overflow:hidden; overflow-wrap:anywhere; white-space:normal; }
 @media (max-width:900px) { .pm-settings-top-grid { grid-template-columns:1fr; gap:1rem; } }
 @media (max-width:767px) {
   .pm-catalog-intro h2 { font-size:1.25rem; }
