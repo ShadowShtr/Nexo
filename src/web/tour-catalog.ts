@@ -53,7 +53,7 @@ export function readPublishedTours(): PublishedTour[] {
         minimumNoticeHours: typeof item.minimumNoticeHours === 'number' && Number.isFinite(item.minimumNoticeHours) ? item.minimumNoticeHours : 48,
         active: item.active !== false,
         area: item.area!.trim(),
-        photoPath: typeof item.photoPath === 'string' && item.photoPath ? item.photoPath : '/lisbon-sintra-tour.png',
+        photoPath: typeof item.photoPath === 'string' && item.photoPath ? item.photoPath : '/lisbon-sintra-tour.webp',
         location: isLocation(item.location) ? item.location : undefined,
       }))
       .filter(item => item.namePt && item.nameEn && item.area);

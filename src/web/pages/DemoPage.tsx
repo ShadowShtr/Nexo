@@ -15,12 +15,12 @@ const cars = [
 ] as const;
 const customers = ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example', 'Tom Example', 'Carla Exemplo', 'James Example'];
 const ownerPageIcons: Record<string, string> = {
-  customers: '/owner-icon-person.png',
-  drivers: '/owner-icon-person.png',
-  vehicles: '/owner-icon-car-front.png',
-  tours: '/owner-icon-tours.png',
-  finance: '/owner-icon-wallet.png',
-  settlements: '/owner-icon-card.png',
+  customers: '/owner-icon-person.webp',
+  drivers: '/owner-icon-person.webp',
+  vehicles: '/owner-icon-car-front.webp',
+  tours: '/owner-icon-tours.webp',
+  finance: '/owner-icon-wallet.webp',
+  settlements: '/owner-icon-card.webp',
 };
 export const demoTrips = [
   { id: 'TEST-001', day: '2026-09-11', time: '09:00', end: '10:30', from: 'Aeroporto de Lisboa', to: 'Cascais', destination: [38.6979,-9.4215] as const, driver: 0, car: 0, customer: 0, cents: 12000, passengers: 2 },

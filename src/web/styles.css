@@ -1,4 +1,5 @@
-body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } button, a, input, select { -webkit-tap-highlight-color:transparent; }
+html,body,#root { min-width:0; max-width:100%; overflow-x:hidden; }
+body { margin:0; -webkit-text-size-adjust:100%; } button, input, select { font:inherit; } a { color:inherit; } button, a, input, select { -webkit-tap-highlight-color:transparent; }
 .pm-app { min-height:100vh; } .pm-app a { text-decoration:none; } .pm-app button, .pm-app select { cursor:pointer; }
 .pm-app :is(button,a,input,select):focus-visible { outline:2px solid var(--pm-focus); outline-offset:3px; }
 .pm-app h1:focus { outline:none; } .pm-app h2 { font-size:var(--pm-text-section); line-height:1.35; margin:0; } .pm-app h3 { font-size:var(--pm-text-body); margin:0; }
@@ -345,11 +346,11 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-agenda-workspace .fc .fc-button-primary:not(:disabled).fc-button-active { color:#fff; }
 
 /* Customer discovery: a light, Glovo-inspired catalogue surface for tours. */
-.pm-client-app { background:#fff; }
+.pm-client-app { min-width:0; max-width:100%; overflow-x:clip; background:#fff; }
 .pm-client-app .pm-sidebar,.pm-client-app .pm-topbar,.pm-client-app .pm-preview-banner { display:none; }
 .pm-client-app .pm-main-shell { margin-left:0; }
 .pm-client-page { max-width:760px; padding-top:1rem; background:#fff; }
-.pm-client-home { display:grid; gap:1.5rem; padding-bottom:1rem; }
+.pm-client-home { display:grid; min-width:0; max-width:100%; gap:1.5rem; padding-bottom:1rem; }
 .pm-client-toolbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:40px; }
 .pm-client-wordmark { display:flex; align-items:center; gap:.6rem; font-size:.875rem; letter-spacing:-.015em; }
 .pm-client-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:var(--pm-ink); color:var(--pm-inverse); font-size:1rem; font-weight:700; letter-spacing:-.08em; }
@@ -379,7 +380,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-tour-shade { position:absolute; inset:0; background:linear-gradient(180deg,transparent 26%,rgb(0 0 0 / 7%) 42%,rgb(0 0 0 / 78%) 100%); }
 .pm-client-tour-copy { position:absolute; inset:auto 1.25rem 1.25rem; display:grid; gap:.4rem; }
 .pm-client-kicker,.pm-client-tour-meta { display:flex; align-items:center; gap:.4rem; font-size:.78rem; font-weight:600; }
-.pm-client-tour-meta-clock::before { content:""; width:1.7rem; height:1.7rem; flex:0 0 auto; background:url('/clock.png') center/contain no-repeat; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
+.pm-client-tour-meta-clock::before { content:""; width:1.7rem; height:1.7rem; flex:0 0 auto; background:url('/clock.webp') center/contain no-repeat; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-client-kicker { width:max-content; padding:.35rem .6rem; border-radius:999px; background:rgb(255 255 255 / 88%); color:var(--pm-ink); }
 .pm-client-tour-copy>strong { font-size:clamp(1.7rem,7vw,2.35rem); line-height:1; letter-spacing:-.055em; }
 .pm-client-tour-copy>span:not(.pm-client-kicker):not(.pm-client-tour-meta):not(.pm-client-tour-action) { max-width:38ch; font-size:.9rem; }
@@ -398,7 +399,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-eyebrow { color:#777981; font-size:.75rem; font-weight:600; }
 .pm-client-back { display:grid; place-items:center; width:42px; height:42px; flex:0 0 auto; border:0; border-radius:50%; background:#f1f1f2; color:var(--pm-ink); }
 .pm-client-back:focus-visible,.pm-client-location-button:focus-visible,.pm-client-primary-action:focus-visible,.pm-client-suggestion:focus-visible,.pm-client-add-stop:focus-visible,.pm-client-reorder-stop:focus-visible,.pm-client-remove-stop:focus-visible,.pm-client-calendar-choice:focus-visible { outline:2px solid var(--pm-focus); outline-offset:3px; }
-.pm-client-planner-pills { display:flex; gap:.45rem; }
+.pm-client-planner-pills { display:flex; max-width:100%; gap:.45rem; flex-wrap:wrap; }
 .pm-client-planner-pills span { display:inline-flex; align-items:center; gap:.35rem; min-height:36px; padding:0 .65rem; border-radius:999px; background:#f2f2f3; color:#27282c; font-size:.74rem; font-weight:600; }
 .pm-client-planner-pills .pm-client-pill-icon { width:1.55rem; height:1.55rem; }
 .pm-client-address-card { padding:.6rem .7rem; border:1px solid #17181b; border-radius:17px; background:#fff; box-shadow:0 5px 18px rgb(20 24 40 / 7%); }
@@ -530,6 +531,13 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-client-category-art { width:42px; height:42px; }
   .pm-client-category strong { font-size:.8rem; }
   .pm-client-category>span:last-child { font-size:.66rem; }
+}
+@media (max-width:767px) {
+  /* iOS zooms the page when a form control is smaller than 16px. */
+  .pm-app input:not([type=checkbox]),.pm-app textarea,.pm-app select,.pm-client-app .pm-client-address-field input { font-size:16px; }
+  .pm-client-address-card,.pm-client-inline-suggestions { width:100%; max-width:100%; box-sizing:border-box; }
+  .pm-client-address-field input { box-sizing:border-box; }
+  .pm-client-location-button { width:100%; }
 }
 
 .pm-owner-page { display:grid; gap:1.5rem; padding-bottom:1rem; }
@@ -732,11 +740,11 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-owner-calendar-status.is-invalid { background:var(--pm-surface-muted); color:var(--pm-ink-secondary); }
 .pm-owner-calendar-status a { margin-left:auto; color:inherit; font-size:.74rem; font-weight:750; text-decoration:underline!important; white-space:nowrap; }
 .pm-owner-bookings-page .pm-owner-form-icon>svg,.pm-owner-bookings-page .pm-owner-location-action>svg,.pm-owner-bookings-page .pm-owner-address-suggestions button>svg,.pm-owner-bookings-page .pm-owner-calendar-status>svg,.pm-owner-bookings-page .pm-owner-stop-input button>svg,.pm-owner-bookings-page .pm-owner-stop-list button>svg,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button>svg,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button>svg,.pm-owner-bookings-page .pm-demo-record .pm-button>svg { display:none; }
-.pm-owner-bookings-page .pm-owner-form-icon::before,.pm-owner-bookings-page .pm-owner-location-action::before,.pm-owner-bookings-page .pm-owner-address-suggestions button::before,.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { content:""; display:block; flex:0 0 auto; width:24px; height:24px; background:url('/owner-icon-pin.png') center / contain no-repeat; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
+.pm-owner-bookings-page .pm-owner-form-icon::before,.pm-owner-bookings-page .pm-owner-location-action::before,.pm-owner-bookings-page .pm-owner-address-suggestions button::before,.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { content:""; display:block; flex:0 0 auto; width:24px; height:24px; background:url('/owner-icon-pin.webp') center / contain no-repeat; filter:drop-shadow(0 1px 1.5px rgb(15 23 42 / 18%)); }
 .pm-owner-bookings-page .pm-owner-form-icon::before { width:30px; height:30px; }
 .pm-owner-bookings-page .pm-owner-address-suggestions button::before { width:20px; height:20px; }
-.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/owner-icon-calendar.png'); }
-.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/calendar.png'); }
+.pm-owner-bookings-page .pm-owner-calendar-status::before,.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/owner-icon-calendar.webp'); }
+.pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button::before,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button::before { background-image:url('/calendar.webp'); }
 .pm-owner-bookings-page .pm-owner-stop-input button::before { content:"+"; font-size:1.2rem; line-height:1; }
 .pm-owner-bookings-page .pm-owner-stop-list button::before { content:"×"; font-size:1.1rem; line-height:1; }
 .pm-owner-bookings-page .pm-owner-bookings-intro>.pm-button,.pm-owner-bookings-page .pm-owner-manual-form>.pm-actions .pm-button { display:inline-flex; align-items:center; gap:.45rem; }

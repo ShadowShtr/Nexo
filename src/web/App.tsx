@@ -20,18 +20,18 @@ const CustomerDiscoverSandbox = lazy(() => import('./pages/CustomerDiscoverSandb
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
 const ownerMenuIcons: Partial<Record<Page, string>> = {
-  customers: '/owner-icon-person.png',
-  drivers: '/owner-icon-person.png',
-  vehicles: '/owner-icon-car-front.png',
-  tours: '/owner-icon-tours.png',
-  finance: '/owner-icon-wallet.png',
-  settlements: '/owner-icon-card.png',
-  settings: '/owner-icon-card.png',
+  customers: '/owner-icon-person.webp',
+  drivers: '/owner-icon-person.webp',
+  vehicles: '/owner-icon-car-front.webp',
+  tours: '/owner-icon-tours.webp',
+  finance: '/owner-icon-wallet.webp',
+  settlements: '/owner-icon-card.webp',
+  settings: '/owner-icon-card.webp',
 };
 
 function Language() {
   const { t, i18n } = useTranslation();
-  return <label className="pm-language"><img className="pm-language-flag" src={i18n.language === 'en' ? '/flag-usa.png' : '/flag-portugal.png'} alt="" aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={e => { const language = e.target.value; void i18n.changeLanguage(language); const url = new URL(window.location.href); url.searchParams.set('lang', language); history.replaceState(null, '', url); }}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
+  return <label className="pm-language"><img className="pm-language-flag" src={i18n.language === 'en' ? '/flag-usa.webp' : '/flag-portugal.webp'} alt="" aria-hidden="true"/><span className="pm-sr-only">{t('language')}</span><select aria-label={t('language')} value={i18n.language} onChange={e => { const language = e.target.value; void i18n.changeLanguage(language); const url = new URL(window.location.href); url.searchParams.set('lang', language); history.replaceState(null, '', url); }}><option value="pt-PT">Português</option><option value="en">English</option></select></label>;
 }
 function Home({ area }: { area: Area }) {
   const { t } = useTranslation();

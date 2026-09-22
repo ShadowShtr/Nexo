@@ -80,7 +80,7 @@ export function OwnerHomeSandbox() {
 
   const formatDate = (value: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date(value));
   const formatTime = (value: string) => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(new Date(value));
-  const upcomingIcon = (route: string) => route.toLocaleLowerCase().includes('aeroporto') ? '/owner-icon-plane.png' : route.includes('→') ? '/owner-icon-pin.png' : '/owner-icon-car-front.png';
+  const upcomingIcon = (route: string) => route.toLocaleLowerCase().includes('aeroporto') ? '/owner-icon-plane.webp' : route.includes('→') ? '/owner-icon-pin.webp' : '/owner-icon-car-front.webp';
 
   return <div className="pm-owner-dashboard">
     <header className="pm-owner-dashboard-header">
@@ -89,15 +89,15 @@ export function OwnerHomeSandbox() {
         <p className="pm-owner-greeting">{say('Bom dia, Vitor', 'Good morning, Vitor')}</p>
         <p className="pm-owner-subtitle">{say('Onde o podemos levar hoje?', 'Where can we take you today?')}</p>
       </div>
-      <button type="button" className="pm-owner-profile" aria-label={say('Perfil', 'Profile')}><AssetIcon src="/owner-icon-person.png" /></button>
+      <button type="button" className="pm-owner-profile" aria-label={say('Perfil', 'Profile')}><AssetIcon src="/owner-icon-person.webp" /></button>
     </header>
 
     <section className="pm-owner-summary-card">
       <div className="pm-owner-summary-heading"><div><h2>{say('Resumo de hoje', 'Today at a glance')}</h2><p>{shortToday}</p></div><button type="button" className="pm-owner-summary-menu" aria-label={say('Mais opções', 'More options')}>•••</button></div>
       <div className="pm-owner-summary-metrics">
-        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-car-front.png" /></span><strong>{scheduledToday}</strong><span>{say('viagens', 'trips')}</span></article>
-        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-wallet.png" /></span><strong>{money(revenueToday, i18n.language)}</strong><span>{say('faturação hoje', 'revenue today')}</span></article>
-        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-calendar.png" /></span><strong>{upcoming.length}</strong><span>{say('próximas', 'upcoming')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-car-front.webp" /></span><strong>{scheduledToday}</strong><span>{say('viagens', 'trips')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-wallet.webp" /></span><strong>{money(revenueToday, i18n.language)}</strong><span>{say('faturação hoje', 'revenue today')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-calendar.webp" /></span><strong>{upcoming.length}</strong><span>{say('próximas', 'upcoming')}</span></article>
       </div>
     </section>
 
@@ -117,16 +117,16 @@ export function OwnerHomeSandbox() {
     <section className="pm-owner-section">
       <div className="pm-owner-section-heading"><h2>{say('Ações rápidas', 'Quick actions')}</h2></div>
       <div className="pm-owner-shortcuts">
-        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-calendar.png" /></span><strong>{say('Agendar', 'Schedule')}</strong><small>{say('Nova viagem', 'New trip')}</small><ChevronRight size={17} /></a>
-        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-car-front.png" /></span><strong>{say('As minhas viagens', 'My trips')}</strong><small>{say('Histórico e próximas', 'History and upcoming')}</small><ChevronRight size={17} /></a>
-        <a href="#/owner/tours"><span><AssetIcon src="/owner-icon-tours.png" /></span><strong>{say('Tours', 'Tours')}</strong><small>{say('Destinos exclusivos', 'Exclusive destinations')}</small><ChevronRight size={17} /></a>
-        <a href="#/owner/finance"><span><AssetIcon src="/owner-icon-card.png" /></span><strong>{say('Pagamento', 'Payment')}</strong><small>{say('Cartões e métodos', 'Cards and methods')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-calendar.webp" /></span><strong>{say('Agendar', 'Schedule')}</strong><small>{say('Nova viagem', 'New trip')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-car-front.webp" /></span><strong>{say('As minhas viagens', 'My trips')}</strong><small>{say('Histórico e próximas', 'History and upcoming')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/tours"><span><AssetIcon src="/owner-icon-tours.webp" /></span><strong>{say('Tours', 'Tours')}</strong><small>{say('Destinos exclusivos', 'Exclusive destinations')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/finance"><span><AssetIcon src="/owner-icon-card.webp" /></span><strong>{say('Pagamento', 'Payment')}</strong><small>{say('Cartões e métodos', 'Cards and methods')}</small><ChevronRight size={17} /></a>
       </div>
     </section>
 
     <section className="pm-owner-section">
       <div className="pm-owner-section-heading"><h2>{say('Próximo serviço', 'Next service')}</h2></div>
-      <a className="pm-owner-next-service pm-demo-record" href="#/owner/bookings"><span className="pm-owner-upcoming-icon"><AssetIcon src="/owner-icon-car-front.png" /></span><span className="pm-owner-upcoming-copy"><strong>{nextService.route}</strong><small><UsersRound size={14} /> {nextService.name}</small><small><Clock3 size={14} /> {nextService.detail || say('Aguardando nova marcação', 'Waiting for a new booking')}</small></span><ChevronRight className="pm-owner-row-chevron" size={18} /></a>
+      <a className="pm-owner-next-service pm-demo-record" href="#/owner/bookings"><span className="pm-owner-upcoming-icon"><AssetIcon src="/owner-icon-car-front.webp" /></span><span className="pm-owner-upcoming-copy"><strong>{nextService.route}</strong><small><UsersRound size={14} /> {nextService.name}</small><small><Clock3 size={14} /> {nextService.detail || say('Aguardando nova marcação', 'Waiting for a new booking')}</small></span><ChevronRight className="pm-owner-row-chevron" size={18} /></a>
     </section>
   </div>;
 }
