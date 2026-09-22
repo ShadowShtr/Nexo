@@ -202,6 +202,7 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-route-entry h2,.pm-selection-step h2 { font-size:1.4rem; letter-spacing:-.025em; }
 .pm-route-entry>label,.pm-selection-step>label,.pm-customer-booking section>label { display:grid; gap:.5rem; color:var(--pm-ink-secondary); font-size:.875rem; font-weight:600; }
 .pm-route-entry :is(input,select),.pm-selection-step :is(input,select) { width:100%; min-height:48px; }
+.pm-customer-booking section>label input::placeholder { color:#a1a2aa; opacity:1; }
 .pm-location-button { justify-self:start; }
 .pm-location-button::before { content:'⌖'; font-size:1rem; line-height:1; }
 .pm-field-help { color:var(--pm-ink-secondary); font-size:.8rem; line-height:1.5; margin:0; }
