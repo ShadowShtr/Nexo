@@ -68,6 +68,38 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
   .pm-owner-mobile-area .pm-search input { min-height:46px; padding:.55rem 1rem; }
 }
 
+/* FullCalendar needs explicit shrink rules so route names stay inside each day. */
+.pm-calendar-scroll,.pm-agenda-calendar-scroll { min-width:0; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; }
+.pm-calendar .fc-daygrid-day-events,.pm-calendar .fc-daygrid-event-harness,.pm-calendar .fc-daygrid-event,.pm-calendar .fc-daygrid-event .fc-event-main,.pm-agenda-workspace .fc-daygrid-day-events,.pm-agenda-workspace .fc-daygrid-event-harness,.pm-agenda-workspace .fc-daygrid-event,.pm-agenda-workspace .fc-daygrid-event .fc-event-main { min-width:0; max-width:100%; overflow:hidden; }
+.pm-calendar .fc-daygrid-event .pm-calendar-month-event,.pm-agenda-workspace .fc-daygrid-event .pm-agenda-event { display:block; min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-calendar .pm-calendar-event { display:grid; min-width:0; max-width:100%; gap:.15rem; overflow:hidden; line-height:1.3; }
+.pm-calendar .pm-calendar-event-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-calendar .pm-calendar-month-event .pm-calendar-event-time { display:inline; margin-right:.25rem; }
+.pm-calendar .pm-calendar-month-event .pm-calendar-event-title { display:inline; }
+.pm-agenda-workspace .pm-agenda-event { min-width:0; max-width:100%; }
+.pm-agenda-workspace .pm-agenda-event strong,.pm-agenda-workspace .pm-agenda-event>span:last-child { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-agenda-calendar-controls { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:1rem; }
+.pm-agenda-calendar-controls .pm-actions { flex-wrap:nowrap; }
+.pm-agenda-calendar-controls select { min-height:44px; min-width:8.5rem; border:1px solid var(--pm-control-border); border-radius:var(--pm-radius-input); background:var(--pm-surface); color:var(--pm-ink); padding:.5rem .75rem; }
+@media (max-width:767px) {
+  .pm-card.pm-calendar > .pm-calendar-controls { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:stretch; gap:.55rem; }
+  .pm-card.pm-calendar > .pm-calendar-controls > strong { grid-column:1/-1; grid-row:1; order:0; }
+  .pm-card.pm-calendar > .pm-calendar-controls > .pm-actions { grid-column:1; grid-row:2; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.35rem; }
+  .pm-card.pm-calendar > .pm-calendar-controls > .pm-actions .pm-button { min-width:0; padding:.5rem .35rem; }
+  .pm-card.pm-calendar > .pm-calendar-controls > select { grid-column:2; grid-row:2; min-width:7.2rem; }
+  .pm-agenda-calendar-controls { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:stretch; }
+  .pm-agenda-calendar-controls .pm-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.35rem; }
+  .pm-agenda-calendar-controls .pm-actions .pm-button { min-width:0; padding:.5rem .35rem; }
+  .pm-agenda-calendar-controls select { min-width:7.2rem; }
+  .pm-calendar .fc-dayGridMonth-view .fc-daygrid-event { max-width:calc(100% - 4px); }
+  .pm-calendar .fc-dayGridMonth-view .fc-daygrid-event .pm-calendar-month-event,.pm-agenda-workspace .fc-dayGridMonth-view .fc-daygrid-event .pm-agenda-event { font-size:.68rem; }
+  .pm-agenda-calendar-scroll .fc-timeGridWeek-view,.pm-calendar-scroll .fc-timeGridWeek-view { min-width:680px; }
+}
+@media (max-width:420px) {
+  .pm-card.pm-calendar > .pm-calendar-controls,.pm-agenda-calendar-controls { grid-template-columns:1fr; }
+  .pm-card.pm-calendar > .pm-calendar-controls > .pm-actions,.pm-card.pm-calendar > .pm-calendar-controls > select,.pm-agenda-calendar-controls .pm-actions,.pm-agenda-calendar-controls select { grid-column:1; grid-row:auto; width:100%; }
+}
+
 .pm-calendar .fc-event-main { font-size:.75rem; line-height:1.4; }.pm-calendar .fc-bg-event { font-size:.75rem; padding:.25rem; color:var(--pm-ink-secondary); }
 .pm-demo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:1rem; margin-top:1rem; }.pm-demo-record { min-width:0; overflow-wrap:anywhere; }.pm-demo-record h2 { font-size:1.125rem; }.pm-preview-banner { flex-wrap:wrap; }.pm-demo-record .pm-setting-row { flex-wrap:wrap; }
 .pm-demo-form { display:grid; gap:1rem; margin:1rem 0; }.pm-demo-form label { display:grid; gap:.4rem; min-width:0; }.pm-demo-form input,.pm-demo-form select { width:100%; box-sizing:border-box; }.pm-calendar .fc-header-toolbar { flex-wrap:wrap; gap:.5rem; }.pm-calendar .fc-toolbar-chunk { max-width:100%; }.pm-calendar .fc-button { font-size:.8rem; }.pm-demo-form .pm-actions { flex-wrap:wrap; }

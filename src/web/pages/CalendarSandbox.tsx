@@ -7,7 +7,7 @@ import luxonPlugin from '@fullcalendar/luxon3';
 import pt from '@fullcalendar/core/locales/pt';
 import enGB from '@fullcalendar/core/locales/en-gb';
 import { DateTime } from 'luxon';
-import { Ban, Plus, RotateCcw, Save, X } from 'lucide-react';
+import { Ban, CalendarDays, ChevronLeft, ChevronRight, Plus, RotateCcw, Save, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { checkSchedule, requiredGapMinutes, type Allocation } from '../../domain/calendar';
 import { Button } from '../../ui/components/Button';
@@ -52,10 +52,12 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
   const [feedback,setFeedback] = useState('');
   const [gap,setGap] = useState(60);
   const [travel,setTravel] = useState(30);
+  const [view,setView] = useState(() => window.innerWidth < 768 ? 'listDay' : 'timeGridWeek');
   const [title,setTitle] = useState('');
   const [date,setDate] = useState('2026-09-11');
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(()=>{ if(draft) { formRef.current?.scrollIntoView({block:'start'}); formRef.current?.querySelector<HTMLElement>('h2')?.focus({preventScroll:true}); } },[draft?.id]);
+  useEffect(() => { calendar.current?.getApi().changeView(view); }, [view]);
   const margin = requiredGapMinutes(travel,{minimumGapMinutes:gap,delayAllowanceMinutes:15});
   const save = (next:Entry[]) => { memory=next;setEntries(next);saveOwnerCalendarBookings(next); };
   useEffect(() => { saveOwnerCalendarBookings(entries); }, []);
@@ -95,11 +97,14 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
       {entries.some(e=>e.id===draft.id)&&<Button type="button" variant="secondary" onClick={()=>{save(entries.map(e=>e.id===draft.id?{...e,status:'cancelled'}:e));setDraft(null);setFeedback(say('Viagem fictícia cancelada; horário libertado.','Fictional trip cancelled; slot released.'));}}><Ban size={17} aria-hidden="true" />{say('Cancelar viagem de teste','Cancel test trip')}</Button>}</div>
     </form>}
     {feedback && <p role="status">{feedback}</p>}
-    <div className="pm-card pm-calendar"><div className="pm-agenda-heading"><div><span className="pm-eyebrow">{say('Planeamento','Schedule')}</span><h2>{title}</h2></div><span className="pm-status" data-tone="neutral">{say('Horários de Lisboa','Lisbon time')}</span></div><FullCalendar ref={calendar} plugins={[dayGridPlugin,timeGridPlugin,listPlugin,luxonPlugin]} initialDate="2026-09-11" initialView={window.innerWidth<768?'listDay':'timeGridWeek'} locales={[pt,enGB]} locale={i18n.language==='en'?'en-gb':'pt'} timeZone={zone} firstDay={1} headerToolbar={{left:'prev,next',center:'',right:'timeGridDay,timeGridWeek,dayGridMonth,listDay'}} events={events} dayMaxEventRows={2} eventContent={info=>{const entry=entries.find(item=>item.id===info.event.id);if(!entry)return <span>{info.event.title}</span>;const compact=info.view.type==='dayGridMonth';return <div className={`pm-agenda-event ${compact?'pm-agenda-event-compact':''}`} title={info.event.title}>{!compact&&<span className="pm-agenda-event-time">{info.timeText}</span>}<strong>{entry.from} → {entry.to}</strong>{!compact&&<span>{drivers[Number(entry.driverId)]}</span>}</div>;}} datesSet={info=>{setTitle(info.view.title);setDate(DateTime.fromJSDate(info.view.calendar.getDate()).setZone(zone).toISODate()!);}} eventClick={info=>{if(!driverOnly&&!info.event.id.startsWith('margin-')){setDraft(entries.find(e=>e.id===info.event.id)!);setError('');setFeedback('');}}} eventInteractive editable={false} allDaySlot={false} slotDuration="01:00:00" slotMinTime="06:00:00" slotMaxTime="23:00:00" height={window.innerWidth<768?'auto':680} scrollTime="08:00:00" eventTimeFormat={{hour:'2-digit',minute:'2-digit',hour12:false}}/></div>
+    <div className="pm-card pm-calendar">
+      <div className="pm-agenda-heading"><div><span className="pm-eyebrow">{say('Planeamento','Schedule')}</span><h2>{title}</h2></div><span className="pm-status" data-tone="neutral">{say('Horários de Lisboa','Lisbon time')}</span></div>
+      <div className="pm-calendar-controls pm-agenda-calendar-controls"><div className="pm-actions"><Button variant="ghost" aria-label={say('Anterior','Previous')} onClick={() => calendar.current?.getApi().prev()}><ChevronLeft size={18}/></Button><Button variant="ghost" onClick={() => calendar.current?.getApi().today()}><CalendarDays size={17} aria-hidden="true" />{say('Hoje','Today')}</Button><Button variant="ghost" aria-label={say('Seguinte','Next')} onClick={() => calendar.current?.getApi().next()}><ChevronRight size={18}/></Button></div><select aria-label={say('Vista da agenda','Calendar view')} value={view} onChange={e => setView(e.target.value)}><option value="timeGridDay">{say('Dia','Day')}</option><option value="timeGridWeek">{say('Semana','Week')}</option><option value="dayGridMonth">{say('Mês','Month')}</option><option value="listDay">{say('Agenda','Agenda')}</option></select></div>
+      <div className="pm-calendar-scroll pm-agenda-calendar-scroll"><FullCalendar ref={calendar} plugins={[dayGridPlugin,timeGridPlugin,listPlugin,luxonPlugin]} initialDate="2026-09-11" initialView={view} locales={[pt,enGB]} locale={i18n.language==='en'?'en-gb':'pt'} timeZone={zone} firstDay={1} headerToolbar={false} events={events} dayMaxEventRows={2} eventContent={info=>{const entry=entries.find(item=>item.id===info.event.id);if(!entry)return <span>{info.event.title}</span>;const compact=info.view.type==='dayGridMonth';return <div className={`pm-agenda-event ${compact?'pm-agenda-event-compact':''}`} title={info.event.title}>{!compact&&<span className="pm-agenda-event-time">{info.timeText}</span>}<strong>{entry.from} → {entry.to}</strong>{!compact&&<span>{drivers[Number(entry.driverId)]}</span>}</div>;}} datesSet={info=>{setTitle(info.view.title);setDate(DateTime.fromJSDate(info.view.calendar.getDate()).setZone(zone).toISODate()!);}} eventClick={info=>{if(!driverOnly&&!info.event.id.startsWith('margin-')){setDraft(entries.find(e=>e.id===info.event.id)!);setError('');setFeedback('');}}} eventInteractive editable={false} allDaySlot={false} slotDuration="01:00:00" slotMinTime="06:00:00" slotMaxTime="23:00:00" height={view==='listDay'?'auto':window.innerWidth<768?'auto':680} scrollTime="08:00:00" eventTimeFormat={{hour:'2-digit',minute:'2-digit',hour12:false}}/></div>
+    </div>
     <p>{say('Cinza: margem simulada após cada serviço. A disponibilidade é verificada por motorista e carro, incluindo o serviço seguinte.','Grey: simulated buffer after each trip. Availability checks driver and car, including the next trip.')}</p>
     <p>{visible.filter(e=>e.status==='cancelled').length} {say('viagens fictícias canceladas nesta sessão','fictional trips cancelled in this session')}</p>
     {!driverOnly&&<Button variant="secondary" onClick={()=>{save(initial());setDraft(null);setFeedback(say('Cenário original reposto.','Original scenario restored.'));calendar.current?.getApi().gotoDate('2026-09-11');}}><RotateCcw size={17} aria-hidden="true" />{say('Repor dados de teste','Reset test data')}</Button>}
   </div>;
 }
-
 
