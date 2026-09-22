@@ -71,6 +71,7 @@ body { margin:0; } button, input, select { font:inherit; } a { color:inherit; } 
 /* FullCalendar needs explicit shrink rules so route names stay inside each day. */
 .pm-calendar-scroll,.pm-agenda-calendar-scroll { min-width:0; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; }
 .pm-calendar .fc-daygrid-day-events,.pm-calendar .fc-daygrid-event-harness,.pm-calendar .fc-daygrid-event,.pm-calendar .fc-daygrid-event .fc-event-main,.pm-agenda-workspace .fc-daygrid-day-events,.pm-agenda-workspace .fc-daygrid-event-harness,.pm-agenda-workspace .fc-daygrid-event,.pm-agenda-workspace .fc-daygrid-event .fc-event-main { min-width:0; max-width:100%; overflow:hidden; }
+.pm-calendar .fc-daygrid-event,.pm-agenda-workspace .fc-daygrid-event { display:block; width:calc(100% - 4px); box-sizing:border-box; }
 .pm-calendar .fc-daygrid-event .pm-calendar-month-event,.pm-agenda-workspace .fc-daygrid-event .pm-agenda-event { display:block; min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .pm-calendar .pm-calendar-event { display:grid; min-width:0; max-width:100%; gap:.15rem; overflow:hidden; line-height:1.3; }
 .pm-calendar .pm-calendar-event-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
