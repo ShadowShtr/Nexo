@@ -1,8 +1,10 @@
 # Estado atual e limites de continuidade
 
-Atualização de auditoria em 02/10/2026: consultar primeiro o [checkup para apresentação](24-checkup-apresentacao.md). A interface está publicada e respondeu HTTP 200; operação real e sincronização não estão comprovadas. Foram reproduzidas divergências de preço de tour, geolocalização e validação, além de datas demo desatualizadas. As descrições históricas abaixo não equivalem a aprovação atual. A navegação móvel atual é fixa; assets usados foram convertidos para WebP. Nenhuma correção funcional foi feita nesta auditoria.
+Estado v0.2.92, 02/10/2026: corrigidas as quatro falhas reproduzidas na revisão de `18a030b`: motorista sem carro, excesso de passageiros na marcação manual, antecedência do tour e diferença de hora no inverno. [Checkup](24-checkup-apresentacao.md) e [validação](10-validacao.md) registam casos de regressão e limites. O código continua local, sem publicação nesta tarefa; integrações reais continuam pendentes.
 
-Referência: v0.2.89, 16/09/2026. Alterações mais recentes: painel inicial do proprietário com próxima operação, resumo do dia, lista de atenção e atalhos responsivos, alimentado pelos pedidos demo do cliente e usando a paleta neutra preta, branca e cinza, com os novos ícones móveis fornecidos; pedidos completos persistidos no navegador e apresentados ao proprietário/CRM, tarifa demo guardável e aplicada ao cálculo, e editor de tours com área/local, foto e novas áreas, além da barra inicial compacta (52 px), botões e caixas de pesquisa do planeamento compactos, pins alinhados, um único resumo de booking, cartões finais separados, calendário principal com pop-up arredondado de data, mês e ano sem horários duplicados e bandeiras PNG maiores sem moldura quadrada no seletor de idioma, sem planeta duplicado, incluindo a opção ativa e a bandeira dos Estados Unidos para inglês; regras funcionais mantidas. Este é o ponto de entrada atual; os relatórios numerados antigos preservam evidência da versão indicada, não o estado final de todo o produto.
+Atualização v0.2.91 em 02/10/2026: consultar o [checkup para apresentação](24-checkup-apresentacao.md). Foram corrigidos os fluxos demo de preço/duração de tour, captura de coordenadas, validação de contactos/NIF, datas, recursos, disponibilidade, texto de estimativas, sugestões locais e navegação móvel. Build, 90 testes unitários, 42 browser e 280 combinações visuais passam. A interface continua uma demonstração local: operação real, sincronização, pagamentos e autorização remota não estão comprovados. Sem teste em iPhone/Safari.
+
+Contexto anterior, v0.2.91. O painel do proprietário ordena viagens futuras e identifica valores como estimativas. O cliente mantém pacote e preço escolhidos, recebe sugestões locais para praias de Leiria, valida contactos e deixa claro que pedidos demo não são enviados. Relógio e catálogo demo são partilhados entre abas deste navegador. Páginas pesadas carregam sob demanda. Relatórios numerados preservam evidência histórica das respetivas versões.
 
 ## Produto e regras que ligam os módulos
 
@@ -37,7 +39,7 @@ Não criar uma aplicação nova paralela nem mudar para outro framework para uma
 - Núcleo de regras e casos de uso com testes unitários. Provas de transações/concorrência em PostgreSQL e schema/autenticação locais têm evidência histórica nos documentos 16–19.
 - UI React/Vite PT/EN com demonstrações e fluxo cliente. As abas Sandbox não constituem uma API operacional.
 - Seleção de datas futuras usa input date nativo e grelha de horas livres. Não é app iOS nem reprodução exata do seletor Apple.
-- MB WAY e WhatsApp aparecem no resumo demo, com número fictício. Não há cobrança real, confirmação automática de comprovativo, webhook operacional ou contacto comercial definido.
+- Número/link fictício de pagamento e WhatsApp foram retirados do resumo demo. Não há cobrança real, confirmação automática de comprovativo, webhook operacional ou contacto comercial definido.
 - Adaptador OSRM existe; a pré-visualização ainda usa percursos/estimativas demonstrativos. Autocomplete remoto não torna a cotação rodoviária real.
 - Supabase remoto, publicação e operação com dados reais continuam por configurar/integrar. SEC-01 tem evidência local concluída; isso não conclui todo o fluxo operacional.
 
@@ -47,10 +49,10 @@ Não criar uma aplicação nova paralela nem mudar para outro framework para uma
 2. O pedido completo demo e algumas configurações usam localStorage para sobreviver a recarregamentos e ser partilhados entre abas do mesmo navegador. Isso não é persistência multiutilizador, backup, autenticação nem sincronização entre PCs; CalendarSandbox e catálogo de motoristas/carros continuam demonstrações locais.
 3. saveCustomerCalendarBooking transforma recursos em * (bloqueio global demo). Produção deve usar recursos concretos e disponibilidade transacional; não bloquear toda a frota indevidamente.
 4. O helper de horas não implementa toda a política do motor: usa duração mínima de 60 minutos, apenas estados explícitos para expiração e não a validade temporal completa dos holds. 24h atravessando meia-noite precisa verificar também exceções/dias seguintes.
-5. Atalhos de datas e relógios são fixos em setembro/2026; “outra data” amplia seleção, mas não transforma o demo em calendário de produção baseado na hora atual/antecedência.
+5. Relógio demo agora acompanha Europe/Lisbon e os dados iniciais usam datas futuras do cenário. Produção ainda precisa da hora e antecedência autoritativas do servidor.
 6. Há validação final adicional no pedido. Unificar fonte de disponibilidade entre prévia, recursos e confirmação antes de produção; uma hora visível não é garantia de reserva.
-7. Teste Playwright de datas futuras passou, mas a interação pela ferramenta do browser local manteve 14/09 numa tentativa de escolher 20/09. Causa não resolvida (evento do seletor/ferramenta ou UI); repetir manualmente num iPhone real e verificar a data no passo seguinte. Não declarar validação iOS concluída.
-8. Tours de dois dias precisam alocação de todos os intervalos do pacote; minutos de condução isolados não provam ocupação correta de dois dias.
+7. Uma tentativa manual anterior pela ferramenta de browser manteve 14/09 ao escolher 20/09. A suíte Playwright atual seleciona 20/09 e confirma o estado escolhido; a tentativa antiga não foi reproduzida. Confirmar teclado e seletor nativos num iPhone/Safari físico antes de declarar validação iOS concluída.
+8. Disponibilidade demo agora considera a duração integral do pacote; produção precisa alocação transacional de todos os intervalos do tour.
 9. Tarifas, beneficiários e contacto de comprovativos precisam vir de configuração autorizada. Um comprovativo enviado não confirma pagamento automaticamente.
 10. Relatórios de testes em artifacts não são versionados. Os testes fonte são reproduzíveis; um clone não contém screenshots locais nem evidência de novas execuções.
 

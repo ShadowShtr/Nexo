@@ -14,6 +14,8 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
   const target = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const routeLayerRef = useRef<L.LayerGroup | null>(null);
+  const initFrameRef = useRef<number | null>(null);
+  const routeFrameRef = useRef<number | null>(null);
   // Labels change while the user types, but the map should only redraw when
   // its geometry or stop coordinates change.
   const routeVisualKey = [
@@ -23,15 +25,19 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
 
   useEffect(() => {
     if (!target.current) return;
-    const map = L.map(target.current, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
+    const map = L.map(target.current, { scrollWheelZoom: false, zoomControl: true, attributionControl: true, zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.webp', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
     mapRef.current = map;
     routeLayerRef.current = L.layerGroup().addTo(map);
-    setTimeout(() => map.invalidateSize(), 0);
+    initFrameRef.current = requestAnimationFrame(() => {
+      if (mapRef.current === map) map.invalidateSize();
+    });
     return () => {
+      if (initFrameRef.current !== null) cancelAnimationFrame(initFrameRef.current);
+      if (routeFrameRef.current !== null) cancelAnimationFrame(routeFrameRef.current);
       map.remove();
       mapRef.current = null;
       routeLayerRef.current = null;
@@ -54,9 +60,12 @@ export function RouteMap({ route, language, mode = 'full', previewMessage }: Rou
     // as the line. This keeps both pins visible when a provider returns a
     // simplified geometry or when a demo route is assembled from aliases.
     const boundsPoints = [...shape, ...route.points.map(item => L.latLng(item.coordinates[0], item.coordinates[1]))];
-    if (boundsPoints.length > 1) map.fitBounds(L.latLngBounds(boundsPoints), { padding: [32,32], maxZoom: 12 });
+    if (boundsPoints.length > 1) map.fitBounds(L.latLngBounds(boundsPoints), { padding: [32,32], maxZoom: 12, animate: false });
     else if (shape[0]) map.setView(shape[0], 12);
-    setTimeout(() => map.invalidateSize(), 0);
+    if (routeFrameRef.current !== null) cancelAnimationFrame(routeFrameRef.current);
+    routeFrameRef.current = requestAnimationFrame(() => {
+      if (mapRef.current === map) map.invalidateSize();
+    });
   }, [routeVisualKey]);
   const km = new Intl.NumberFormat(language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(route.meters / 1000);
   return <section className="pm-route-preview" aria-label={language === 'en' ? 'Route preview' : 'Pré-visualização do percurso'}>

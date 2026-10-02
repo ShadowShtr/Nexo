@@ -5,20 +5,21 @@ import { areas, hrefFor, icons, parseRoute, type Area, type Page } from './navig
 import { Button } from '../ui/components/Button';
 import { Empty, Header, Section, Shortcut } from '../ui/components/Primitives';
 import { SettingsPage } from './pages/SettingsPage';
-import { DemoPage } from './pages/DemoPage';
-import { TourSimulator } from './pages/TourSimulator';
 import { AuthGate } from './auth/AuthGate';
+import { demoNowIso } from './demo-clock';
 import { SessionControl } from './auth/SessionControl';
-import { CatalogSandbox } from './pages/CatalogSandbox';
-import { BookingSandbox } from './pages/BookingSandbox';
-import { DriverServicesSandbox } from './pages/DriverServicesSandbox';
-import { CustomerCrmSandbox } from './pages/CustomerCrmSandbox';
-import { TourSandbox } from './pages/TourSandbox';
-import { OwnerHomeSandbox } from './pages/OwnerHomeSandbox';
 const CustomerSandbox = lazy(() => import('./pages/CustomerSandbox'));
 const CustomerDiscoverSandbox = lazy(() => import('./pages/CustomerDiscoverSandbox'));
 const CalendarSandbox = lazy(() => import('./pages/CalendarSandbox'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
+const DemoPage = lazy(() => import('./pages/DemoPage').then(module => ({ default: module.DemoPage })));
+const TourSimulator = lazy(() => import('./pages/TourSimulator').then(module => ({ default: module.TourSimulator })));
+const CatalogSandbox = lazy(() => import('./pages/CatalogSandbox').then(module => ({ default: module.CatalogSandbox })));
+const BookingSandbox = lazy(() => import('./pages/BookingSandbox').then(module => ({ default: module.BookingSandbox })));
+const DriverServicesSandbox = lazy(() => import('./pages/DriverServicesSandbox').then(module => ({ default: module.DriverServicesSandbox })));
+const CustomerCrmSandbox = lazy(() => import('./pages/CustomerCrmSandbox').then(module => ({ default: module.CustomerCrmSandbox })));
+const TourSandbox = lazy(() => import('./pages/TourSandbox').then(module => ({ default: module.TourSandbox })));
+const OwnerHomeSandbox = lazy(() => import('./pages/OwnerHomeSandbox').then(module => ({ default: module.OwnerHomeSandbox })));
 const ownerMenuIcons: Partial<Record<Page, string>> = {
   customers: '/owner-icon-person.webp',
   drivers: '/owner-icon-person.webp',
@@ -43,7 +44,7 @@ function Home({ area }: { area: Area }) {
 function Collection({ page }: { page: Page }) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
-  return <><div className="pm-search-row"><label className="pm-search"><span className="pm-sr-only">{t('search')}</span><input type="search" placeholder={`${t('search')}…`} value={query} onChange={e => setQuery(e.target.value)}/></label><span className="pm-status" data-tone="neutral">{t('unavailable')}</span></div><div className="pm-card"><Empty title={t(query ? 'noSearch' : 'noRecords')} description={t('noRecordsBody')}>{query && <Button variant="secondary" onClick={() => setQuery('')}><RotateCcw size={17} aria-hidden="true" />{t('clear')}</Button>}</Empty></div><p className="pm-note">{t('notConnected')}</p>{page === 'tours' && <TourSimulator/>}</>;
+  return <><div className="pm-search-row"><label className="pm-search"><span className="pm-sr-only">{t('search')}</span><input type="search" placeholder={`${t('search')}…`} value={query} onChange={e => setQuery(e.target.value)}/></label><span className="pm-status" data-tone="neutral">{t('unavailable')}</span></div><div className="pm-card"><Empty title={t(query ? 'noSearch' : 'noRecords')} description={t('noRecordsBody')}>{query && <Button variant="secondary" onClick={() => setQuery('')}><RotateCcw size={17} aria-hidden="true" />{t('clear')}</Button>}</Empty></div><p className="pm-note">{t('notConnected')}</p>{page === 'tours' && <Suspense fallback={<p role="status">{t('loading')}…</p>}><TourSimulator/></Suspense>}</>;
 }
 function Finance({ settlement = false }: { settlement?: boolean }) {
   const { t } = useTranslation();
@@ -75,20 +76,20 @@ export function App() {
     const label = customerHomeDemo && target === 'discover' ? t('home') : customerHomeDemo && target === 'booking' ? t('activity') : customerHomeDemo && target === 'lookup' ? (i18n.language === 'en' ? 'Account' : 'Conta') : t(target);
     return <a key={target} href={hrefFor(area, target)} className={`pm-nav-link ${active ? 'pm-active' : ''}`} aria-current={active ? 'page' : undefined}><Icon size={mobile ? 19 : 20} strokeWidth={1.7}/><span>{label}</span></a>;
   };
-  const now = new Intl.DateTimeFormat(i18n.language, { timeZone: 'Europe/Lisbon', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
-      return <AuthGate area={area} demo={demo}><div className={`pm-theme pm-app ${customerHomeDemo ? 'pm-client-app' : ''}`}><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.90 · {t('preview')}</span></div></aside>
+  const now = new Intl.DateTimeFormat(i18n.language, { timeZone: 'Europe/Lisbon', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(demoNowIso()));
+      return <AuthGate area={area} demo={demo}><div className={`pm-theme pm-app ${customerHomeDemo ? 'pm-client-app' : ''}`}><a className="pm-skip" href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>{t('skip')}</a><aside className="pm-sidebar"><a className="pm-brand" href={hrefFor(area, pages[0])}><span className="pm-logo">pm.</span><span>Premium<br/><strong>Mobility</strong></span></a><span className="pm-eyebrow pm-nav-caption">{t(area)}</span><nav aria-label={t(area)}>{pages.map(p => link(p))}</nav><div className="pm-sidebar-footer"><p>{t('footer')}</p><span>v0.2.92 · {t('preview')}</span></div></aside>
     <div className="pm-main-shell"><div className="pm-topbar"><span className="pm-workspace">{t('workspace')}</span><div className="pm-topbar-controls"><label className="pm-role"><span className="pm-sr-only">{t('viewAs')}</span><select aria-label={t('viewAs')} value={area} onChange={e => { const selected = e.target.value as Area; window.location.hash = hrefFor(selected, areas[selected][0]); }}>{Object.keys(areas).map(a => <option key={a} value={a}>{t(a)}</option>)}</select></label><Language/><SessionControl demo={demo}/></div></div><div className="pm-preview-banner"><span className="pm-dot"/>{t('previewNote')}<label className="pm-switch"><input type="checkbox" checked={demo} onChange={e => { setDemo(e.target.checked); const url = new URL(window.location.href); url.searchParams.set('demo', e.target.checked ? '1' : '0'); history.replaceState(null, '', url); }}/>{i18n.language === 'en' ? 'Test data' : 'Dados de teste'}</label></div>
     <main id="main" tabIndex={-1} className={`pm-page pm-safe-bottom ${customerHomeDemo ? 'pm-client-page' : ''} ${ownerDemo ? 'pm-owner-mobile-area' : ''} ${ownerHomeDemo ? 'pm-owner-page' : ''}`}>{!customerHomeDemo && !ownerHomeDemo && <Header eyebrow={page === 'home' ? now : t(area)} title={page === 'home' ? t('greeting') : t(page)} description={page === 'home' ? t('overview') : page === 'more' ? undefined : t(`${page}Body`)} action={<span className="pm-avatar" aria-hidden="true">{area === 'owner' ? 'P' : area === 'driver' ? 'M' : 'C'}</span>}/>}
       {page === 'more' ? <div className="pm-card pm-menu-list">{pages.filter(p => !primary.includes(p)).map(p => <a key={p} href={hrefFor(area, p)}><span className="pm-menu-item-content">{ownerDemo && ownerMenuIcons[p] && <img className="pm-demo-icon-art" src={ownerMenuIcons[p]} alt="" aria-hidden="true"/>}<span>{t(p)}</span></span><ChevronRight size={18}/></a>)}</div>
       : demo && area === 'customer' && page === 'discover' ? <Suspense fallback={<p>…</p>}><CustomerDiscoverSandbox/></Suspense>
       : demo && area === 'customer' ? <Suspense fallback={<p>…</p>}><CustomerSandbox key={page} page={page}/></Suspense>
-      : demo && area === 'owner' && (page === 'drivers' || page === 'vehicles') ? <CatalogSandbox page={page}/>
-      : demo && area === 'owner' && page === 'bookings' ? <BookingSandbox/>
-      : demo && area === 'owner' && page === 'customers' ? <CustomerCrmSandbox/>
-      : demo && area === 'owner' && page === 'tours' ? <TourSandbox/>
-      : demo && area === 'driver' && page === 'services' ? <DriverServicesSandbox/>
-      : demo && area === 'owner' && page === 'home' ? <OwnerHomeSandbox/>
-      : demo && !['calendar', 'availability', 'settings'].includes(page) ? <DemoPage key={area + page} page={page} area={area}/>
+      : demo && area === 'owner' && (page === 'drivers' || page === 'vehicles') ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><CatalogSandbox page={page}/></Suspense>
+      : demo && area === 'owner' && page === 'bookings' ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><BookingSandbox/></Suspense>
+      : demo && area === 'owner' && page === 'customers' ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><CustomerCrmSandbox/></Suspense>
+      : demo && area === 'owner' && page === 'tours' ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><TourSandbox/></Suspense>
+      : demo && area === 'driver' && page === 'services' ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><DriverServicesSandbox/></Suspense>
+      : demo && area === 'owner' && page === 'home' ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><OwnerHomeSandbox/></Suspense>
+      : demo && !['calendar', 'availability', 'settings'].includes(page) ? <Suspense fallback={<p role="status">{t('loading')}…</p>}><DemoPage key={area + page} page={page} area={area}/></Suspense>
       : area === 'customer' ? <CustomerPage page={page}/>
       : page === 'home' ? <Home area={area}/>
       : page === 'calendar' || page === 'availability' ? <Suspense fallback={<p role="status">{t('calendar')}…</p>}>{demo ? <CalendarSandbox driverOnly={area === 'driver'}/> : <CalendarPage/>}</Suspense>

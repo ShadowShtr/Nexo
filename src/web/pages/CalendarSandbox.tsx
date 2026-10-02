@@ -1,3 +1,4 @@
+import { demoTripAllocation } from '../demo-trip-allocation';
 import { useEffect, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -13,9 +14,9 @@ import { checkSchedule, requiredGapMinutes, type Allocation } from '../../domain
 import { Button } from '../../ui/components/Button';
 import { demoTrips } from './DemoPage';
 import { readOwnerCalendar, saveOwnerCalendarBookings, type CalendarBooking } from '../customer-availability';
+import { demoDateOffset, demoNowIso } from '../demo-clock';
+import { readDemoCatalog, subscribeToDemoCatalog } from '../demo-catalog';
 
-const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
-const cars = ['Mercedes Classe E', 'Mercedes Classe V', 'BMW Série 5', 'Volvo XC90'];
 type Entry = Allocation & { from: string; to: string; stops?: string[] };
 const zone = 'Europe/Lisbon';
 const toISO = (value: string) => {
@@ -23,7 +24,7 @@ const toISO = (value: string) => {
   if (!date.isValid || date.toFormat("yyyy-MM-dd'T'HH:mm") !== value || date.getPossibleOffsets().length !== 1) throw Error('TIME');
   return date.toUTC().toISO()!;
 };
-const initial = (): Entry[] => demoTrips.map(trip => ({id:trip.id,driverId:String(trip.driver),vehicleId:String(trip.car),startsAt:toISO(`${trip.day}T${trip.time}`),endsAt:toISO(`${trip.day}T${trip.end}`),status:'confirmed',from:trip.from,to:trip.to}));
+const initial = (): Entry[] => demoTrips.map(trip => ({ ...demoTripAllocation(trip), from: trip.from, to: trip.to }));
 const hydrate = (): Entry[] => {
   const byId = new Map(initial().map(entry => [entry.id, entry]));
   readOwnerCalendar().bookings.filter(booking => booking.source !== 'customer').forEach((booking: CalendarBooking) => {
@@ -43,6 +44,9 @@ let memory = hydrate();
 export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: boolean }) {
   const { i18n } = useTranslation();
   const say = (p:string,e:string) => i18n.language === 'en' ? e : p;
+  const [catalog, setCatalog] = useState(readDemoCatalog);
+  const drivers = catalog.drivers.map(driver => driver.name);
+  const cars = catalog.vehicles.map(vehicle => `${vehicle.make} ${vehicle.model}`);
   const calendar = useRef<FullCalendar>(null);
   const [entries,setEntries] = useState(memory);
   const [filter,setFilter] = useState(driverOnly ? '0' : 'all');
@@ -54,10 +58,13 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
   const [travel,setTravel] = useState(30);
   const [view,setView] = useState(() => window.innerWidth < 768 ? 'listDay' : 'timeGridWeek');
   const [title,setTitle] = useState('');
-  const [date,setDate] = useState('2026-09-11');
+  const [date,setDate] = useState(() => demoDateOffset(1));
+  const callbackFrame = useRef<number | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(()=>{ if(draft) { formRef.current?.scrollIntoView({block:'start'}); formRef.current?.querySelector<HTMLElement>('h2')?.focus({preventScroll:true}); } },[draft?.id]);
+  useEffect(() => subscribeToDemoCatalog(() => setCatalog(readDemoCatalog())), []);
   useEffect(() => { calendar.current?.getApi().changeView(view); }, [view]);
+  useEffect(() => () => { if(callbackFrame.current!==null) cancelAnimationFrame(callbackFrame.current); }, []);
   const margin = requiredGapMinutes(travel,{minimumGapMinutes:gap,delayAllowanceMinutes:15});
   const save = (next:Entry[]) => { memory=next;setEntries(next);saveOwnerCalendarBookings(next); };
   useEffect(() => { saveOwnerCalendarBookings(entries); }, []);
@@ -83,7 +90,7 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
         const form=new FormData(e.currentTarget);
         const next={...draft,driverId:String(form.get('driver')),vehicleId:String(form.get('vehicle')),from:String(form.get('from')).trim(),to:String(form.get('to')).trim(),startsAt:toISO(String(form.get('start'))),endsAt:toISO(String(form.get('end')))};
         if(!next.from||!next.to) throw Error('EMPTY');
-        const result=checkSchedule(next,entries,'2026-09-10T00:00:00Z',{minimumGapMinutes:gap,delayAllowanceMinutes:15},()=>travel);
+        const result=checkSchedule(next,entries,demoNowIso(),{minimumGapMinutes:gap,delayAllowanceMinutes:15},()=>travel);
         if(!result.available){setError(result.conflicts.map(c=>`${c.bookingId}: ${c.reason==='overlap'?say('sobreposição','overlap'):say('margem insuficiente','insufficient buffer')}${c.requiredMinutes?` (${c.requiredMinutes} min)`:''}`).join(' · '));return;}
         save([...entries.filter(item=>item.id!==next.id),next]);setDraft(null);setFeedback(say('Viagem de teste guardada.','Test trip saved.'));calendar.current?.getApi().gotoDate(next.startsAt);
       }catch{setError(say('Verifique as datas: fim após início e hora de Lisboa válida, sem ambiguidade.','Check dates: end after start and valid, unambiguous Lisbon time.'));}
@@ -100,11 +107,11 @@ export default function CalendarSandbox({ driverOnly = false }: { driverOnly?: b
     <div className="pm-card pm-calendar">
       <div className="pm-agenda-heading"><div><span className="pm-eyebrow">{say('Planeamento','Schedule')}</span><h2>{title}</h2></div><span className="pm-status" data-tone="neutral">{say('Horários de Lisboa','Lisbon time')}</span></div>
       <div className="pm-calendar-controls pm-agenda-calendar-controls"><div className="pm-actions"><Button variant="ghost" aria-label={say('Anterior','Previous')} onClick={() => calendar.current?.getApi().prev()}><ChevronLeft size={18}/></Button><Button variant="ghost" onClick={() => calendar.current?.getApi().today()}><CalendarDays size={17} aria-hidden="true" />{say('Hoje','Today')}</Button><Button variant="ghost" aria-label={say('Seguinte','Next')} onClick={() => calendar.current?.getApi().next()}><ChevronRight size={18}/></Button></div><select aria-label={say('Vista da agenda','Calendar view')} value={view} onChange={e => setView(e.target.value)}><option value="timeGridDay">{say('Dia','Day')}</option><option value="timeGridWeek">{say('Semana','Week')}</option><option value="dayGridMonth">{say('Mês','Month')}</option><option value="listDay">{say('Agenda','Agenda')}</option></select></div>
-      <div className="pm-calendar-scroll pm-agenda-calendar-scroll"><FullCalendar ref={calendar} plugins={[dayGridPlugin,timeGridPlugin,listPlugin,luxonPlugin]} initialDate="2026-09-11" initialView={view} locales={[pt,enGB]} locale={i18n.language==='en'?'en-gb':'pt'} timeZone={zone} firstDay={1} headerToolbar={false} events={events} dayMaxEventRows={2} eventContent={info=>{const entry=entries.find(item=>item.id===info.event.id);if(!entry)return <span>{info.event.title}</span>;const compact=info.view.type==='dayGridMonth';return <div className={`pm-agenda-event ${compact?'pm-agenda-event-compact':''}`} title={info.event.title}>{!compact&&<span className="pm-agenda-event-time">{info.timeText}</span>}<strong>{entry.from} → {entry.to}</strong>{!compact&&<span>{drivers[Number(entry.driverId)]}</span>}</div>;}} datesSet={info=>{setTitle(info.view.title);setDate(DateTime.fromJSDate(info.view.calendar.getDate()).setZone(zone).toISODate()!);}} eventClick={info=>{if(!driverOnly&&!info.event.id.startsWith('margin-')){setDraft(entries.find(e=>e.id===info.event.id)!);setError('');setFeedback('');}}} eventInteractive editable={false} allDaySlot={false} slotDuration="01:00:00" slotMinTime="06:00:00" slotMaxTime="23:00:00" height={view==='listDay'?'auto':window.innerWidth<768?'auto':680} scrollTime="08:00:00" eventTimeFormat={{hour:'2-digit',minute:'2-digit',hour12:false}}/></div>
+      <div className="pm-calendar-scroll pm-agenda-calendar-scroll"><FullCalendar ref={calendar} plugins={[dayGridPlugin,timeGridPlugin,listPlugin,luxonPlugin]} initialDate={demoDateOffset(1)} initialView={view} locales={[pt,enGB]} locale={i18n.language==='en'?'en-gb':'pt'} timeZone={zone} firstDay={1} headerToolbar={false} events={events} dayMaxEventRows={2} eventContent={info=>{const entry=entries.find(item=>item.id===info.event.id);if(!entry)return <span>{info.event.title}</span>;const compact=info.view.type==='dayGridMonth';return <div className={`pm-agenda-event ${compact?'pm-agenda-event-compact':''}`} title={info.event.title}>{!compact&&<span className="pm-agenda-event-time">{info.timeText}</span>}<strong>{entry.from} → {entry.to}</strong>{!compact&&<span>{drivers[Number(entry.driverId)]}</span>}</div>;}} datesSet={info=>{const nextTitle=info.view.title;const nextDate=DateTime.fromJSDate(info.view.calendar.getDate()).setZone(zone).toISODate()!;if(callbackFrame.current!==null)cancelAnimationFrame(callbackFrame.current);callbackFrame.current=requestAnimationFrame(()=>{setTitle(nextTitle);setDate(nextDate);});}} eventClick={info=>{if(!driverOnly&&!info.event.id.startsWith('margin-')){const selected=entries.find(e=>e.id===info.event.id);if(!selected)return;if(callbackFrame.current!==null)cancelAnimationFrame(callbackFrame.current);callbackFrame.current=requestAnimationFrame(()=>{setDraft(selected);setError('');setFeedback('');});}}} eventInteractive editable={false} allDaySlot={false} slotDuration="01:00:00" slotMinTime="00:00:00" slotMaxTime="24:00:00" height={view==='listDay'?'auto':window.innerWidth<768?'auto':680} scrollTime="08:00:00" eventTimeFormat={{hour:'2-digit',minute:'2-digit',hour12:false}}/></div>
     </div>
     <p>{say('Cinza: margem simulada após cada serviço. A disponibilidade é verificada por motorista e carro, incluindo o serviço seguinte.','Grey: simulated buffer after each trip. Availability checks driver and car, including the next trip.')}</p>
     <p>{visible.filter(e=>e.status==='cancelled').length} {say('viagens fictícias canceladas nesta sessão','fictional trips cancelled in this session')}</p>
-    {!driverOnly&&<Button variant="secondary" onClick={()=>{save(initial());setDraft(null);setFeedback(say('Cenário original reposto.','Original scenario restored.'));calendar.current?.getApi().gotoDate('2026-09-11');}}><RotateCcw size={17} aria-hidden="true" />{say('Repor dados de teste','Reset test data')}</Button>}
+    {!driverOnly&&<Button variant="secondary" onClick={()=>{save(initial());setDraft(null);setFeedback(say('Cenário original reposto.','Original scenario restored.'));calendar.current?.getApi().gotoDate(demoDateOffset(1));}}><RotateCcw size={17} aria-hidden="true" />{say('Repor dados de teste','Reset test data')}</Button>}
   </div>;
 }
 

@@ -288,8 +288,6 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-agenda-workspace .fc .fc-view-harness { overflow-x:auto; }
 }
 @media (max-width:767px) {
-  .pm-theme:has(.pm-calendar) .pm-page { padding-bottom:1.25rem; }
-  .pm-theme:has(.pm-calendar) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
   .pm-calendar { overflow:hidden; }
   .pm-calendar .fc-view-harness { min-height:0; }
   .pm-calendar .fc-dayGridMonth-view { min-width:0; }
@@ -305,8 +303,6 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-calendar .fc-timeGridWeek-view .fc-timegrid-slot { height:64px; }
   .pm-calendar .fc-timeGridWeek-view .fc-timegrid-event { padding:4px; }
   .pm-calendar .fc-timeGridWeek-view .fc-event-main { overflow:hidden; text-overflow:ellipsis; }
-  .pm-theme:has(.pm-agenda-workspace) .pm-page { padding-bottom:1.25rem; }
-  .pm-theme:has(.pm-agenda-workspace) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
   .pm-agenda-workspace>.pm-calendar { padding:12px; }
   .pm-agenda-heading { padding:0 4px; }
   .pm-agenda-heading h2 { margin-top:3px; font-size:1.2rem; }
@@ -511,7 +507,6 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 .pm-client-app .pm-bottom-nav { position:fixed; bottom:calc(.75rem + env(safe-area-inset-bottom,0px)); left:50%; z-index:20; display:flex; width:calc(100% - 32px); max-width:470px; transform:translateX(-50%); justify-content:space-between; gap:.2rem; padding:.4rem; border-radius:var(--pm-radius-nav); background:rgb(255 255 255 / 92%); box-shadow:0 8px 28px rgb(20 24 40 / 15%); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
 .pm-client-app .pm-bottom-nav .pm-nav-link { flex:1; justify-content:center; padding:.65rem .55rem; gap:.3rem; border-radius:var(--pm-radius-pill); font-size:.72rem; }
 .pm-client-app .pm-bottom-nav .pm-nav-link.pm-active { background:var(--pm-ink); color:#fff; box-shadow:none; }
-.pm-client-app:has(.pm-client-planner) .pm-bottom-nav { display:none; }
 @media (min-width:600px) {
   .pm-client-page { padding-top:2rem; }
   .pm-client-category-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }
@@ -874,11 +869,6 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-tour-card-title h3 { font-size:1rem; }
   .pm-tour-description { min-height:0; }
   .pm-tour-card-actions .pm-button { min-height:42px; }
-  .pm-app:has(.pm-tour-editor) .pm-bottom-nav { display:none; }
-  .pm-theme:has(.pm-owner-manual-form) .pm-page { padding-bottom:1.25rem; }
-  .pm-theme:has(.pm-owner-manual-form) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
-  .pm-theme:has(.pm-menu-list) .pm-page { padding-bottom:1.25rem; }
-  .pm-theme:has(.pm-menu-list) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
 }
 .pm-tour-photo-compat { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
 .pm-tour-card-media>.pm-tour-cover { width:100%; height:100%; margin:0; border-radius:0; }
@@ -958,17 +948,17 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
 /* Keep the mobile navigation available while scrolling through every page and form. */
 @media (max-width:1023px) {
   .pm-bottom-nav {
-    position:fixed !important;
-    bottom:calc(.75rem + env(safe-area-inset-bottom,0px)) !important;
-    left:50% !important;
-    width:calc(100% - 32px) !important;
-    max-width:470px !important;
-    margin:0 !important;
-    transform:translateX(-50%) !important;
-    display:flex !important;
+    position:fixed;
+    bottom:calc(.75rem + env(safe-area-inset-bottom,0px));
+    left:50%;
+    width:calc(100% - 32px);
+    max-width:470px;
+    margin:0;
+    transform:translateX(-50%);
+    display:flex;
     z-index:50;
   }
-  .pm-page { padding-bottom:calc(6rem + env(safe-area-inset-bottom,0px)) !important; }
+  .pm-page { padding-bottom:calc(6rem + env(safe-area-inset-bottom,0px)); }
 }
 .pm-price-result-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.2rem 0 .65rem; }
 .pm-price-result-heading>strong { font-size:1.35rem; font-variant-numeric:tabular-nums; }
@@ -1015,6 +1005,5 @@ button.pm-demo-record[aria-pressed="true"] { border-color:var(--pm-ink); box-sha
   .pm-simulator-intro { align-items:flex-start; flex-direction:column; gap:.5rem; }
   .pm-tour-simulator { grid-template-columns:1fr; gap:.8rem; }
   .pm-tour-quote { order:-1; }
-  .pm-theme:has(.pm-catalog-form) .pm-page,.pm-theme:has(.pm-price-form) .pm-page,.pm-theme:has(.pm-rules-form) .pm-page { padding-bottom:1.25rem; }
-  .pm-theme:has(.pm-catalog-form) .pm-bottom-nav,.pm-theme:has(.pm-price-form) .pm-bottom-nav,.pm-theme:has(.pm-rules-form) .pm-bottom-nav { position:static; width:calc(100% - 2rem); max-width:none; margin:0 1rem 1rem; transform:none; }
+  .pm-price-form select { font-size:16px; }
 }

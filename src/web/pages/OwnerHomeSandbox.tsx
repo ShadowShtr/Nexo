@@ -3,6 +3,8 @@ import { ChevronRight, Clock3, UsersRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { demoTrips } from './DemoPage';
 import { readDemoCustomerRequests, subscribeToDemoCustomerRequests, type DemoCustomerRequest } from '../demo-request-store';
+import { demoNowIso } from '../demo-clock';
+import { DateTime } from 'luxon';
 
 const cars = ['Mercedes-Benz Classe E', 'Mercedes-Benz Classe V', 'BMW Série 5', 'Volvo XC90'];
 
@@ -39,13 +41,15 @@ export function OwnerHomeSandbox() {
   useEffect(() => { const refresh = () => setIncoming(readDemoCustomerRequests()); return subscribeToDemoCustomerRequests(refresh); }, []);
 
   const locale = en ? 'en-GB' : 'pt-PT';
-  const shortToday = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date());
+  const scenarioDate = DateTime.fromISO(demoNowIso()).setZone('Europe/Lisbon');
+  const shortToday = scenarioDate.setLocale(locale).toLocaleString({ day: 'numeric', month: 'short' });
   const activeRequests = incoming.filter(request => !request.cancelled);
-  const todayKey = dateKey(new Date());
+  const todayKey = scenarioDate.toISODate()!;
+  const scenarioNow = Date.parse(demoNowIso());
   const todayTrips = demoTrips.filter(trip => trip.day === todayKey);
   const todayRequests = activeRequests.filter(request => dateKey(request.allocation.startsAt) === todayKey);
   const scheduledToday = todayTrips.length + todayRequests.length;
-  const revenueToday = todayTrips.reduce((sum, trip) => sum + trip.cents, 0) + todayRequests.reduce((sum, request) => sum + request.total, 0);
+  const estimatedToday = todayTrips.reduce((sum, trip) => sum + trip.cents, 0) + todayRequests.reduce((sum, request) => sum + request.total, 0);
 
   const upcoming = useMemo<UpcomingItem[]>(() => [
     ...activeRequests.map(request => ({
@@ -60,13 +64,13 @@ export function OwnerHomeSandbox() {
     ...demoTrips.map(trip => ({
       id: trip.id,
       name: ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example', 'Tom Example'][trip.customer],
-      date: `${trip.day}T${trip.time}:00+01:00`,
+      date: DateTime.fromISO(`${trip.day}T${trip.time}`, { zone: 'Europe/Lisbon' }).toISO()!,
       route: `${trip.from} → ${trip.to}`,
       detail: `${trip.time} · ${cars[trip.car]}`,
       value: trip.cents,
       incoming: false,
     })),
-  ], [activeRequests, en]);
+  ].filter(item => new Date(item.date).getTime() > scenarioNow).sort((a,b) => Date.parse(a.date) - Date.parse(b.date)), [activeRequests, en, scenarioNow]);
 
   const nextService = upcoming[0] ?? {
     id: 'next-service',
@@ -78,25 +82,25 @@ export function OwnerHomeSandbox() {
     incoming: false,
   };
 
-  const formatDate = (value: string) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(new Date(value));
-  const formatTime = (value: string) => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+  const formatDate = (value: string) => DateTime.fromISO(value).setZone('Europe/Lisbon').setLocale(locale).toLocaleString({ day: 'numeric', month: 'short' });
+  const formatTime = (value: string) => DateTime.fromISO(value).setZone('Europe/Lisbon').toLocaleString({ hour: '2-digit', minute: '2-digit' });
   const upcomingIcon = (route: string) => route.toLocaleLowerCase().includes('aeroporto') ? '/owner-icon-plane.webp' : route.includes('→') ? '/owner-icon-pin.webp' : '/owner-icon-car-front.webp';
 
   return <div className="pm-owner-dashboard">
     <header className="pm-owner-dashboard-header">
       <div>
         <h1 className="pm-owner-page-title">{say('Início', 'Home')}</h1>
-        <p className="pm-owner-greeting">{say('Bom dia, Vitor', 'Good morning, Vitor')}</p>
-        <p className="pm-owner-subtitle">{say('Onde o podemos levar hoje?', 'Where can we take you today?')}</p>
+        <p className="pm-owner-greeting">{say('Gestão da atividade', 'Business overview')}</p>
+        <p className="pm-owner-subtitle">{say('Serviços e pedidos da operação.', 'Trips and requests for your operation.')}</p>
       </div>
-      <button type="button" className="pm-owner-profile" aria-label={say('Perfil', 'Profile')}><AssetIcon src="/owner-icon-person.webp" /></button>
+      <a href="#/owner/settings" className="pm-owner-profile" aria-label={say('Perfil e configurações', 'Profile and settings')}><AssetIcon src="/owner-icon-person.webp" /></a>
     </header>
 
     <section className="pm-owner-summary-card">
-      <div className="pm-owner-summary-heading"><div><h2>{say('Resumo de hoje', 'Today at a glance')}</h2><p>{shortToday}</p></div><button type="button" className="pm-owner-summary-menu" aria-label={say('Mais opções', 'More options')}>•••</button></div>
+      <div className="pm-owner-summary-heading"><div><h2>{say('Resumo de hoje', 'Today at a glance')}</h2><p>{shortToday}</p></div></div>
       <div className="pm-owner-summary-metrics">
         <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-car-front.webp" /></span><strong>{scheduledToday}</strong><span>{say('viagens', 'trips')}</span></article>
-        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-wallet.webp" /></span><strong>{money(revenueToday, i18n.language)}</strong><span>{say('faturação hoje', 'revenue today')}</span></article>
+        <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-wallet.webp" /></span><strong>{money(estimatedToday, i18n.language)}</strong><span>{say('valor estimado', 'estimated value')}</span></article>
         <article><span className="pm-owner-metric-icon"><AssetIcon src="/owner-icon-calendar.webp" /></span><strong>{upcoming.length}</strong><span>{say('próximas', 'upcoming')}</span></article>
       </div>
     </section>
@@ -120,7 +124,7 @@ export function OwnerHomeSandbox() {
         <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-calendar.webp" /></span><strong>{say('Agendar', 'Schedule')}</strong><small>{say('Nova viagem', 'New trip')}</small><ChevronRight size={17} /></a>
         <a href="#/owner/bookings"><span><AssetIcon src="/owner-icon-car-front.webp" /></span><strong>{say('As minhas viagens', 'My trips')}</strong><small>{say('Histórico e próximas', 'History and upcoming')}</small><ChevronRight size={17} /></a>
         <a href="#/owner/tours"><span><AssetIcon src="/owner-icon-tours.webp" /></span><strong>{say('Tours', 'Tours')}</strong><small>{say('Destinos exclusivos', 'Exclusive destinations')}</small><ChevronRight size={17} /></a>
-        <a href="#/owner/finance"><span><AssetIcon src="/owner-icon-card.webp" /></span><strong>{say('Pagamento', 'Payment')}</strong><small>{say('Cartões e métodos', 'Cards and methods')}</small><ChevronRight size={17} /></a>
+        <a href="#/owner/finance"><span><AssetIcon src="/owner-icon-card.webp" /></span><strong>{say('Financeiro', 'Finances')}</strong><small>{say('Estimativas e acertos', 'Estimates and settlements')}</small><ChevronRight size={17} /></a>
       </div>
     </section>
 

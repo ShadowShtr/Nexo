@@ -30,11 +30,11 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 
 **Aceitação:** Componentes partilham tokens; keyboard/foco/disabled/loading funcionam; nenhuma ação demonstra sucesso fictício; estilos não alteram regras de negócio; sem fontes remotas não aprovadas.
 
-**Evidência:** `src/ui/styles/tokens.css`, `src/ui/components/Primitives.tsx`, `src/web/styles.css`, build TypeScript/Vite e 15 cenários Playwright. O calendário demo foi revisto em viewport móvel; persistência real e catálogo completo continuam pendentes.
+**Evidência:** `src/ui/styles/tokens.css`, `src/ui/components/Primitives.tsx`, `src/web/styles.css`, build TypeScript/Vite e 42 cenários Playwright na v0.2.91. Os componentes e estados móveis continuam em evolução; persistência real e catálogo completo continuam pendentes.
 
 ## UI-03 — Rever consistência visual em todas as abas implementadas
 
-**Estado:** PLANEADA
+**Estado:** EM CURSO — varredura responsiva feita; revisão de dispositivo e acessibilidade ainda pendente
 
 **Dependências:** UI-02, PUB-03, DRV-02, FIN-02, CFG-03, CAL-04
 
@@ -44,7 +44,7 @@ Ler [sistema visual](../12-design-system.md), [mapa de abas](../13-mapa-visual-a
 
 **Aceitação:** Nenhum valor/ação importante cortado ou tapado pela barra; cada aba mantém hierarquia partilhada; contraste e alvos verificados na composição final; revisão funcional não substituída pela aparência.
 
-**Evidência:** Por preencher com capturas e cenários por aba. Não foi executado browser QA nesta entrega.
+**Evidência:** v0.2.91, 20 rotas × 7 larguras (320/375/390/430/768/1024/1440) × 2 idiomas; sem erro JS, overflow horizontal, navegação móvel ausente, campo abaixo de 16px ou imagem partida. Browser automatizado no Edge; faltam texto ampliado, teste completo de foco/contraste e iPhone/Safari físico. Capturas da varredura em `artifacts/checkup` são locais e não versionadas.
 
 
 Evidência parcial 0.2.0: [base web e limites](../15-base-web.md). Navegação e exemplos visuais não concluem critérios funcionais dependentes de persistência e acesso.

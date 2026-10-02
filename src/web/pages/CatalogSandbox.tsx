@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ban, CarFront, Plus, Save, UserRound, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { canCarryPassengers, isDriverPublishable, isVehiclePublishable } from '../../contracts/catalog';
 import { Button } from '../../ui/components/Button';
 import { Row, Section } from '../../ui/components/Primitives';
+import { readDemoCatalog, saveDemoCatalog, subscribeToDemoCatalog, type DemoDriver as Driver, type DemoVehicle as Vehicle } from '../demo-catalog';
 
-type Driver = { id:string; name:string; english:string; phone:string; status:'active'|'inactive'; vehicles:string[] };
-type Vehicle = { id:string; registration:string; make:string; model:string; capacity:number; luggage:number; notice:number; supplement:number; status:'active'|'inactive'; driverIds:string[] };
-const seedDrivers:Driver[]=[{id:'d1',name:'Miguel Costa',english:'Michael Costa',phone:'+351 910 000 001',status:'active',vehicles:['v1','v2']},{id:'d2',name:'Sofia Martins',english:'Sofia Martins',phone:'+351 910 000 002',status:'active',vehicles:['v3']},{id:'d3',name:'André Ribeiro',english:'Andrew Ribeiro',phone:'+351 910 000 003',status:'inactive',vehicles:['v4']}];
-const seedVehicles:Vehicle[]=[{id:'v1',registration:'00-AA-00',make:'Mercedes-Benz',model:'Classe E',capacity:4,luggage:2,notice:2,supplement:0,status:'active',driverIds:['d1']},{id:'v2',registration:'00-BB-00',make:'Mercedes-Benz',model:'Classe V',capacity:6,luggage:6,notice:48,supplement:3500,status:'active',driverIds:['d1']},{id:'v3',registration:'00-CC-00',make:'BMW',model:'Série 5',capacity:4,luggage:2,notice:2,supplement:0,status:'active',driverIds:['d2']},{id:'v4',registration:'00-DD-00',make:'Volvo',model:'XC90',capacity:6,luggage:4,notice:2,supplement:1500,status:'inactive',driverIds:['d3']}];
 const money=(cents:number,locale:string)=>new Intl.NumberFormat(locale,{style:'currency',currency:'EUR'}).format(cents/100);
 
 export function CatalogSandbox({page}:{page:'drivers'|'vehicles'}) {
   const {i18n}=useTranslation();
   const en=i18n.language==='en';
   const say=(pt:string,english:string)=>en?english:pt;
-  const [drivers,setDrivers]=useState(seedDrivers);
-  const [vehicles,setVehicles]=useState(seedVehicles);
+  const [initialCatalog]=useState(readDemoCatalog);
+  const [drivers,setDrivers]=useState(initialCatalog.drivers);
+  const [vehicles,setVehicles]=useState(initialCatalog.vehicles);
   const [showForm,setShowForm]=useState(false);
   const [feedback,setFeedback]=useState('');
   const isVehicle=page==='vehicles';
+  useEffect(() => subscribeToDemoCatalog(() => { const catalog=readDemoCatalog();setDrivers(catalog.drivers);setVehicles(catalog.vehicles); }), []);
+  useEffect(() => { saveDemoCatalog({drivers,vehicles}); }, [drivers,vehicles]);
   const toggleDriver=(id:string)=>{setDrivers(rows=>rows.map(row=>row.id===id?{...row,status:row.status==='active'?'inactive':'active'}:row));setFeedback(say('Estado do motorista atualizado apenas nesta demonstração.','Driver status updated in this demo only.'));};
   const toggleVehicle=(id:string)=>{setVehicles(rows=>rows.map(row=>row.id===id?{...row,status:row.status==='active'?'inactive':'active'}:row));setFeedback(say('Estado do veículo atualizado apenas nesta demonstração.','Vehicle status updated in this demo only.'));};
   const addDriver=(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=new FormData(event.currentTarget);const row={displayName:String(form.get('name')||''),displayNameEn:String(form.get('english')||''),biographyPt:'Perfil de demonstração',biographyEn:'Demo profile',phone:String(form.get('phone')||''),photoPath:'demo/profile.jpg',languages:['pt-PT','en'] as ('pt-PT'|'en')[]};if(!isDriverPublishable(row)){setFeedback(say('Preencha nome, nome em inglês e telefone.','Fill in name, English name and phone.'));return;}setDrivers(rows=>[...rows,{id:`d${Date.now()}`,name:row.displayName,english:row.displayNameEn,phone:row.phone,status:'active',vehicles:[]}]);setShowForm(false);setFeedback(say('Motorista adicionado à demonstração.','Driver added to the demo.'));};

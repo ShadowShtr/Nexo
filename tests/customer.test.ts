@@ -7,4 +7,8 @@ test('customer CRM requires a valid NIF and contact data',()=>{
   assert.equal(isCustomerPublishable(customer),true);
   assert.equal(isCustomerPublishable({...customer,nif:'123'}),false);
   assert.equal(isCustomerPublishable({...customer,email:'bad'}),false);
+  assert.equal(isCustomerPublishable({...customer,fullName:'   '}),false);
+  assert.equal(isCustomerPublishable({...customer,phone:'abc'}),false);
+  assert.equal(isCustomerPublishable({...customer,nif:'000000000'}),false);
+  assert.equal(isCustomerPublishable({...customer,nif:'987654322'}),true);
 });

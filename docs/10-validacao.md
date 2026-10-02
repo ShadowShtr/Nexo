@@ -1,8 +1,20 @@
 # 10 — Evidência da versão 0.1.0
 
-## Auditoria atual — 02/10/2026
+## Validação atual — v0.2.92, 02/10/2026
 
-Ver [checkup para apresentação](24-checkup-apresentacao.md): 90 testes unitários, 11 PostgreSQL, 13 Supabase locais e 38 browser aprovados; autenticação UI aprovada; 120 combinações de rota/idioma/largura inspecionadas. Build aprovado. Probes adicionais reproduziram falhas de preço de tour, geolocalização, dados inválidos e botões sem ação. Não há aprovação operacional nem validação em iPhone físico. Relatos de versões abaixo são históricos.
+92 testes unitários aprovados, incluindo conversão de reservas iniciais no verão/inverno e rejeição de horas ambíguas/inexistentes. Suite browser completa: **47 aprovados (1,2 min), processo concluído com sucesso**, incluindo cinco cenários de regressão: recuperação de motorista sem carro, capacidade manual, antecedência de 168 horas na pesquisa, antecedência de 49 horas e revalidação final de pedido antigo com aceitação da fronteira exata.
+
+O encerramento automático do servidor pelo Playwright ficou preso no ambiente Windows desta execução. A validação final iniciou Vite explicitamente na porta 5174 com `VITE_DEMO_DATE=2026-09-10` e executou `npx playwright test --config artifacts/playwright-fixes.config.ts`, mantendo as opções do config versionado e apenas retirando `webServer` (servidor já ativo) e ajustando caminhos relativos. Não foram removidos testes nem asserções. Log local: `artifacts/fix-ui-final.log`.
+
+Verificação adicional de browser no servidor 5175, sem data fixa de ambiente: TEST-001 mostra 09:00 em Marcações e Agenda com `demoDate=2026-09-10` e `demoDate=2026-11-10`. Build TypeScript/Vite aprovado; continua o aviso de entrada JavaScript acima de 500 KB. A varredura de 280 combinações pertence à v0.2.91 e não foi repetida nesta correção sem alteração de CSS. Sem backend remoto, pagamento real ou iPhone físico.
+
+## Validação anterior — v0.2.91, 02/10/2026
+
+90 testes unitários, 42 browser, build TypeScript/Vite e 280 combinações visuais (20 rotas × 7 larguras × 2 idiomas) aprovados. Entrada principal 504,21 KB (156,43 KB gzip), com aviso ainda ativo acima de 500 KB. Os 11 testes PostgreSQL, 13 testes Supabase locais e a autenticação UI são evidência da auditoria base, não repetida nesta alteração; nenhuma integração ou migração foi modificada. Sem teste em iPhone, Safari, pagamento real, notificações ou sincronização entre dispositivos. Ver [checkup](24-checkup-apresentacao.md).
+
+## Incremento 0.2.91 — 02/10/2026
+
+Fluxos demo corrigidos para preservar preço/duração/antecedência de tours, coordenadas de localização, validação de contactos/NIF, catálogo de recursos, relógio Europe/Lisbon, disponibilidade de 24 horas e estimativas do proprietário. Removidas indicações falsas de pagamento e WhatsApp; navegação móvel permanece disponível com formulário aberto; mapa atualiza sem animações/timers pendentes. Páginas pesadas e mapa carregam sob demanda. Evidência: 90 unitários, 42 browser, build e 280 combinações visuais. Supabase/API, operação multiutilizador e pagamentos reais continuam pendentes.
 
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 

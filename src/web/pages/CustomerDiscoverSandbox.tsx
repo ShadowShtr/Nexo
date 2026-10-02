@@ -1,13 +1,16 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Plus, Route, Search, Sparkles, Ticket, X } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Plus, Route, Search, Ticket, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { quote } from '../../domain/pricing';
+import { checkLeadTime, requiredLeadMinutes } from '../../domain/lead-time';
 import { RouteMap } from '../components/RouteMap';
 import { tourRoute, type DemoRoute } from '../demo-routes';
 import { searchAddresses } from '../services/address-search';
 import { availableCustomerTimes, customerCalendarChangedEvent, readOwnerCalendar } from '../customer-availability';
 import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
 import { hasStoredTourCatalog, readPublishedTours, subscribeToTourCatalog, type PublishedTour } from '../tour-catalog';
+import { demoDateOffset, demoDateTime, demoNowIso, demoToday } from '../demo-clock';
+import { DateTime } from 'luxon';
 
 const tourOptions = [
   { id: 'lisbon', icon: '/route-landmark.webp', pt: 'Tour em Lisboa', en: 'Lisbon tour', detailPt: 'Miradouros e centro histórico', detailEn: 'Viewpoints and historic centre' },
@@ -15,25 +18,34 @@ const tourOptions = [
   { id: 'porto', icon: '/luggage.webp', pt: 'Tour no Porto', en: 'Porto tour', detailPt: 'Ribeira, Douro e caves', detailEn: 'Ribeira, Douro and cellars' },
   { id: 'lisbon-sintra', icon: '/passengers.webp', pt: 'Lisboa + Sintra', en: 'Lisbon + Sintra', detailPt: 'A experiência completa', detailEn: 'The complete experience' },
   { id: 'custom', icon: '/driver-illustration.webp', pt: 'Tour à medida', en: 'Custom tour', detailPt: 'O seu ritmo, o seu percurso', detailEn: 'Your pace, your route' },
-  { id: 'custom-route', icon: '/vehicle-sedan.webp', pt: 'Tour personalizado', en: 'Personalised tour', detailPt: 'Paragens escolhidas por si', detailEn: 'Stops chosen by you' },
 ];
 
 const portoTourStops = ['Ribeira do Porto', 'Ponte Dom Luís I', 'Sé do Porto', 'Livraria Lello', 'Palácio da Bolsa', 'Foz do Douro'];
 
-const bookingDates = [
-  { value: '2026-09-14', pt: 'Seg 14 set', en: 'Mon 14 Sep', ariaPt: 'Segunda-feira, 14 de setembro', ariaEn: 'Monday, 14 September' },
-  { value: '2026-09-15', pt: 'Ter 15 set', en: 'Tue 15 Sep', ariaPt: 'Terça-feira, 15 de setembro', ariaEn: 'Tuesday, 15 September' },
-  { value: '2026-09-16', pt: 'Qua 16 set', en: 'Wed 16 Sep', ariaPt: 'Quarta-feira, 16 de setembro', ariaEn: 'Wednesday, 16 September' },
-  { value: '2026-09-17', pt: 'Qui 17 set', en: 'Thu 17 Sep', ariaPt: 'Quinta-feira, 17 de setembro', ariaEn: 'Thursday, 17 September' },
-];
 const bookingTimes = ['09:00', '11:30', '14:00', '16:30', '18:00'];
 const customDateCopy = (value: string, english: boolean) => {
   const date = new Date(`${value}T12:00:00Z`);
   return new Intl.DateTimeFormat(english ? 'en-GB' : 'pt-PT', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(date);
 };
-const demoBookingToday = '2026-09-14';
+const datesFrom = (offset: number, base = demoToday()) => Array.from({ length: 4 }, (_, index) => {
+  const value = demoDateOffset(offset + index, base);
+  const date = new Date(`${value}T12:00:00Z`);
+  return {
+    value,
+    pt: new Intl.DateTimeFormat('pt-PT', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(date),
+    en: new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(date),
+    ariaPt: customDateCopy(value, false), ariaEn: customDateCopy(value, true),
+  };
+});
+const demoBookingToday = demoToday();
 const calendarWeekdays = { pt: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'], en: ['S', 'M', 'T', 'W', 'T', 'F', 'S'] };
 const monthKey = (value: string) => value.slice(0, 7);
+const earliestCustomerStart = (kind: 'transfer' | 'tour', noticeHours: number) => DateTime.fromISO(demoNowIso()).plus({ minutes: requiredLeadMinutes(kind, { tourMinutes: noticeHours * 60 }) }).setZone('Europe/Lisbon');
+const futureCustomerTimes = (date: string, duration: number, bookings: ReturnType<typeof readOwnerCalendar>['bookings'], settings: ReturnType<typeof readOwnerCalendar>['settings'], kind: 'transfer' | 'tour', noticeHours: number) => {
+  const times = availableCustomerTimes(date, duration, bookings, settings);
+  const now = demoNowIso();
+  return times.filter(time => checkLeadTime(now, DateTime.fromISO(`${date}T${time}`, { zone: 'Europe/Lisbon' }).toUTC().toISO()!, kind, { tourMinutes: noticeHours * 60 }).eligible);
+};
 const shiftMonth = (value: string, amount: number) => {
   const [year, month] = value.split('-').map(Number);
   const next = new Date(Date.UTC(year, month - 1 + amount, 1));
@@ -93,7 +105,6 @@ const recentPlaces = [
   { title: 'Freeport Lisboa Fashion Outlet', detail: 'Av. Euro 2004, Alcochete' },
   { title: 'Carregado', detail: 'Carregado, Alenquer' },
   { title: 'Leiria', detail: 'Leiria, Portugal' },
-  { title: 'Praias de Leiria', detail: 'Leiria, Portugal' },
   { title: 'Praia do Pedrógão', detail: 'Leiria, Portugal' },
   { title: 'Praia da Vieira', detail: 'Marinha Grande, Leiria' },
   { title: 'Praia de São Pedro de Moel', detail: 'Marinha Grande, Leiria' },
@@ -152,7 +163,7 @@ const placeCoordinates: ReadonlyArray<{ aliases: string[]; coordinates: readonly
   { aliases: ['ubbo'], coordinates: [38.7586, -9.2047] },
   { aliases: ['freeport lisboa fashion outlet', 'freeport'], coordinates: [38.9536, -8.8710] },
   { aliases: ['carregado'], coordinates: [39.0234, -8.9768] },
-  { aliases: ['leiria', 'leiria praia', 'praias de leiria'], coordinates: [39.7436, -8.8071] },
+  { aliases: ['leiria'], coordinates: [39.7436, -8.8071] },
   { aliases: ['praia do pedrogao', 'pedrogao'], coordinates: [39.9126, -8.9501] },
   { aliases: ['praia da vieira', 'vieira'], coordinates: [39.8694, -8.9367] },
   { aliases: ['praia de sao pedro de moel', 'sao pedro de moel'], coordinates: [39.7544, -9.0345] },
@@ -395,11 +406,11 @@ export default function CustomerDiscoverSandbox() {
   const [origin, setOrigin] = useState('Lisboa');
   const [destination, setDestination] = useState('');
   const [stops, setStops] = useState<string[]>([]);
-  const [bookingStart, setBookingStart] = useState('2026-09-14T10:00');
+  const [bookingStart, setBookingStart] = useState(() => demoDateTime(2));
   const [calendarVersion, setCalendarVersion] = useState(0);
   const [customCalendarOpen, setCustomCalendarOpen] = useState(false);
-  const [customCalendarDate, setCustomCalendarDate] = useState('2026-09-14');
-  const [customCalendarMonth, setCustomCalendarMonth] = useState('2026-09');
+  const [customCalendarDate, setCustomCalendarDate] = useState(() => demoDateOffset(2));
+  const [customCalendarMonth, setCustomCalendarMonth] = useState(() => monthKey(demoDateOffset(2)));
   const [activeSearch, setActiveSearch] = useState<ActiveSearch>(null);
   const [remoteSuggestions, setRemoteSuggestions] = useState<GeocodedPlace[]>([]);
   const [geocoderState, setGeocoderState] = useState<'idle' | 'loading'>('idle');
@@ -408,6 +419,7 @@ export default function CustomerDiscoverSandbox() {
   const [tariff, setTariff] = useState(readDemoTariff);
   const [ownerTours, setOwnerTours] = useState<PublishedTour[]>(readPublishedTours);
   const [hasOwnerCatalog, setHasOwnerCatalog] = useState(hasStoredTourCatalog);
+  const [selectedTour, setSelectedTour] = useState<PublishedTour | null>(null);
 
   useEffect(() => { const refresh = () => setTariff(readDemoTariff()); return subscribeToDemoTariff(refresh); }, []);
 
@@ -432,28 +444,33 @@ export default function CustomerDiscoverSandbox() {
     .filter(remote => !localSuggestions.some(local => normalizePlace(`${local.title}|${local.detail}`) === normalizePlace(`${remote.title}|${remote.detail}`)))];
   const originPreviewRoute = useMemo<DemoRoute>(() => ({
     name: origin || 'Lisboa', meters: 0, minutes: 0,
-    points: [{ ...tourRoute.points[0], label: origin || 'Lisboa' }],
-    shape: [tourRoute.points[0].coordinates],
-  }), [origin]);
-  const tourPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'tour', baseCents: tariff.tourBaseCents, extraPassengerCents: tariff.tourExtraPassengerCents } });
+    points: [{ ...tourRoute.points[0], label: origin || 'Lisboa', coordinates: coordinatesFor(origin, resolvedPlaces) ?? tourRoute.points[0].coordinates }],
+    shape: [coordinatesFor(origin, resolvedPlaces) ?? tourRoute.points[0].coordinates],
+  }), [origin, resolvedPlaces]);
+  const currentTourBaseCents = selectedTour?.baseCents ?? tariff.tourBaseCents;
+  const currentTourExtraPassengerCents = selectedTour?.extraPassengerCents ?? tariff.tourExtraPassengerCents;
+  const tourPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'tour', baseCents: currentTourBaseCents, extraPassengerCents: currentTourExtraPassengerCents } });
   const transferPrice = quote({ passengers: 2, passengerCapacity: 6, service: { kind: 'transfer', distanceMeters: previewRoute.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
   const plannerPrice = plannerKind === 'tour' ? tourPrice : transferPrice;
   const km = new Intl.NumberFormat(i18n.language === 'en' ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format(previewRoute.meters / 1000);
   const money = (cents: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(cents / 100);
   const ownerCalendar = useMemo(() => readOwnerCalendar(), [calendarVersion]);
-  const serviceDurationMinutes = Math.max(60, previewRoute.minutes);
-  const availableBookingDates = useMemo(() => bookingDates.filter(day => availableCustomerTimes(day.value, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings).length > 0), [ownerCalendar, serviceDurationMinutes]);
+  const serviceDurationMinutes = plannerKind === 'tour' ? Math.max(60, (selectedTour?.durationDays ?? 2) * 24 * 60) : Math.max(60, previewRoute.minutes);
+  const minimumNoticeHours = selectedTour?.minimumNoticeHours ?? 48;
+  const earliestBookingDate = earliestCustomerStart(plannerKind, minimumNoticeHours).toISODate()!;
+  const bookingDates = useMemo(() => datesFrom(0, earliestBookingDate), [earliestBookingDate]);
+  const availableBookingDates = useMemo(() => bookingDates.filter(day => futureCustomerTimes(day.value, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings, plannerKind, minimumNoticeHours).length > 0), [bookingDates, ownerCalendar, serviceDurationMinutes, plannerKind, minimumNoticeHours]);
   const bookingStartDate = bookingStart.slice(0, 10);
-  const bookingStartDateTimes = useMemo(() => availableCustomerTimes(bookingStartDate, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings), [bookingStartDate, ownerCalendar, serviceDurationMinutes]);
+  const bookingStartDateTimes = useMemo(() => futureCustomerTimes(bookingStartDate, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings, plannerKind, minimumNoticeHours), [bookingStartDate, ownerCalendar, serviceDurationMinutes, plannerKind, minimumNoticeHours]);
   const selectedBookingDate = bookingStartDateTimes.length > 0 ? bookingStartDate : availableBookingDates[0]?.value ?? bookingStartDate;
-  const availableBookingTimes = useMemo(() => availableCustomerTimes(selectedBookingDate, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings), [ownerCalendar, selectedBookingDate, serviceDurationMinutes]);
-  const bookingTimesForDate = (date: string) => availableCustomerTimes(date, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings);
+  const availableBookingTimes = useMemo(() => futureCustomerTimes(selectedBookingDate, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings, plannerKind, minimumNoticeHours), [ownerCalendar, selectedBookingDate, serviceDurationMinutes, plannerKind, minimumNoticeHours]);
+  const bookingTimesForDate = (date: string) => futureCustomerTimes(date, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings, plannerKind, minimumNoticeHours);
   const customCalendarCells = useMemo(() => calendarCells(customCalendarMonth).map(cell => ({
     ...cell,
     isToday: cell.value === demoBookingToday,
     isSelected: cell.value === customCalendarDate,
-    available: cell.inMonth && cell.value >= demoBookingToday && availableCustomerTimes(cell.value, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings).length > 0,
-  })), [customCalendarMonth, customCalendarDate, ownerCalendar, serviceDurationMinutes]);
+    available: cell.inMonth && cell.value >= earliestBookingDate && futureCustomerTimes(cell.value, serviceDurationMinutes, ownerCalendar.bookings, ownerCalendar.settings, plannerKind, minimumNoticeHours).length > 0,
+  })), [customCalendarMonth, customCalendarDate, ownerCalendar, serviceDurationMinutes, earliestBookingDate, plannerKind, minimumNoticeHours]);
   const calendarDates = useMemo(() => availableBookingDates.some(day => day.value === selectedBookingDate) || !bookingStartDateTimes.length
     ? availableBookingDates
     : [...availableBookingDates, { value: selectedBookingDate, pt: customDateCopy(selectedBookingDate, false), en: customDateCopy(selectedBookingDate, true), ariaPt: customDateCopy(selectedBookingDate, false), ariaEn: customDateCopy(selectedBookingDate, true) }], [availableBookingDates, bookingStartDateTimes.length, selectedBookingDate]);
@@ -472,15 +489,17 @@ export default function CustomerDiscoverSandbox() {
     setBookingStart(`${selectedBookingDate}T${nextTime}`);
   }, [availableBookingTimes, bookingStart, selectedBookingDate]);
 
-  const openPlanner = (preset = '', kind: PlannerKind = 'transfer', presetStops: readonly string[] = [], presetLocation?: GeocodedPlace) => {
+  const openPlanner = (preset = '', kind: PlannerKind = 'transfer', presetStops: readonly string[] = [], presetLocation?: GeocodedPlace, tour: PublishedTour | null = null) => {
     setPlanning(true);
     setRouteReady(false);
     setPlannerKind(kind);
     setDestination(preset);
     setStops([...presetStops]);
-    setBookingStart('2026-09-14T10:00');
-    setCustomCalendarDate('2026-09-14');
-    setCustomCalendarMonth('2026-09');
+    setSelectedTour(tour);
+    const earliest = earliestCustomerStart(kind, tour?.minimumNoticeHours ?? 48);
+    setBookingStart(earliest.toFormat("yyyy-MM-dd'T'HH:mm"));
+    setCustomCalendarDate(earliest.toISODate()!);
+    setCustomCalendarMonth(earliest.toFormat('yyyy-MM'));
     setCustomCalendarOpen(false);
     setActiveSearch(null);
     setRemoteSuggestions([]);
@@ -495,6 +514,7 @@ export default function CustomerDiscoverSandbox() {
         stops: stops.filter(stop => stop.trim()),
         start: bookingStart,
         route: previewRoute,
+        tour: selectedTour ? { id: selectedTour.id, baseCents: selectedTour.baseCents, extraPassengerCents: selectedTour.extraPassengerCents, durationDays: selectedTour.durationDays, minimumNoticeHours: selectedTour.minimumNoticeHours } : undefined,
       }));
     } catch {
       // A blocked session store should not prevent the demo navigation.
@@ -511,7 +531,7 @@ export default function CustomerDiscoverSandbox() {
   };
   const openOwnerTour = (tour: PublishedTour) => {
     const location = tourLocation(tour);
-    openPlanner(location?.title || tour.area, 'tour', [], location);
+    openPlanner(location?.title || tour.area, 'tour', [], location, tour);
   };
   const useLocation = () => {
     if (!navigator.geolocation) {
@@ -521,7 +541,14 @@ export default function CustomerDiscoverSandbox() {
     }
     setLocationState('requesting');
     navigator.geolocation.getCurrentPosition(
-      () => { setOrigin('A minha localização'); setLocationState('suggested'); },
+      position => {
+        const { latitude, longitude } = position.coords;
+        const place: GeocodedPlace = { title: 'A minha localização', detail: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, coordinates: [latitude, longitude] };
+        setOrigin(place.title);
+        setResolvedPlaces(current => [...current.filter(item => normalizePlace(item.title) !== normalizePlace(place.title)), place]);
+        setRouteReady(false);
+        setLocationState('suggested');
+      },
       () => { setOrigin('Lisboa'); setLocationState('fallback'); },
       { enableHighAccuracy: false, timeout: 2500 },
     );
@@ -639,15 +666,15 @@ export default function CustomerDiscoverSandbox() {
       <button type="button" className="pm-client-location-button" onClick={useLocation}><img className="pm-client-button-icon" src={clientIcons.location} alt="" aria-hidden="true"/>{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button>
       <p className="pm-client-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo.', 'Location unavailable; Lisbon was filled as an example.') : !routeKnown && destination.trim() ? say('O endereço ainda não foi reconhecido; escolha uma sugestão da lista.', 'The address is not recognised yet; choose a suggestion from the list.') : say('A origem fica sugerida e pode ser alterada antes de calcular.', 'Pickup is suggested and can be changed before calculating.')}</p>
       {!destination.trim() && !routeReady && <div className="pm-client-suggestions"><div className="pm-client-suggestions-title"><strong>{say('Locais recentes', 'Recent places')}</strong><span>{say('Toque para preencher o destino', 'Tap to fill destination')}</span></div>{visibleRecentPlaces.map(place => <button type="button" className="pm-client-suggestion" key={place.title} onClick={() => { setDestination(place.title); setRouteReady(false); }}><span className="pm-client-suggestion-pin"><img className="pm-client-list-icon" src={clientIcons.clock} alt="" aria-hidden="true"/></span><span><strong>{place.title}</strong><small>{place.detail}</small></span><ChevronRight size={17}/></button>)}</div>}
-      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim() && routeKnown))} disabled={!origin.trim() || !destination.trim() || !routeKnown}><img className="pm-client-action-route" src="/route-landmark.webp" alt="" aria-hidden="true" />{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{plannerKind === 'tour' ? say('Estimativa do tour', 'Tour estimate') : say('Estimativa do transfer', 'Transfer estimate')}</span><strong>{money(plannerPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{plannerKind === 'tour' ? say('2 dias', '2 days') : say('Transfer', 'Transfer')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(plannerPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{plannerKind === 'tour' ? say('Inclui até 2 pessoas. Cada pessoa adicional acrescenta 35,00 €. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. Each additional person adds €35. Driver availability is confirmed in the next step.') : say(`Cálculo de demonstração: ${money(200)} por km de rota. Paragens incluídas no percurso; a tarifa real será definida pelo proprietário.`, `Demo calculation: ${money(200)} per route kilometre. Stops are included in the route; the owner will define the live tariff.`)}</p><section className="pm-client-booking-calendar" aria-label={say('Escolher data e hora', 'Choose date and time')}><div className="pm-client-booking-calendar-head"><img className="pm-client-calendar-icon" src={clientIcons.calendar} alt="" aria-hidden="true"/><div><strong>{say('Quando deseja viajar?', 'When would you like to travel?')}</strong><span>{say('Escolha um dia e um horário disponíveis.', 'Choose an available day and time.')}</span></div></div><div className="pm-client-calendar-days" role="listbox" aria-label={say('Dias disponíveis', 'Available days')}>{calendarDates.map(day => <button type="button" role="option" aria-selected={selectedBookingDate === day.value} aria-label={say(day.ariaPt, day.ariaEn)} className={selectedBookingDate === day.value ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${day.value}T${bookingTimesForDate(day.value)[0] ?? '00:00'}`)} key={day.value}>{say(day.pt, day.en)}</button>)}</div><div className="pm-client-calendar-times" role="listbox" aria-label={say('Horários disponíveis', 'Available times')}>{availableBookingTimes.map(time => <button type="button" role="option" aria-selected={bookingStart.slice(11, 16) === time} aria-label={time} className={bookingStart.slice(11, 16) === time ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${bookingStart.slice(0, 10)}T${time}`)} key={time}>{time}</button>)}</div><button type="button" className="pm-client-calendar-more" aria-expanded={customCalendarOpen} aria-controls="pm-client-more-dates" onClick={() => { setCustomCalendarDate(bookingStartDate); setCustomCalendarMonth(monthKey(bookingStartDate)); setCustomCalendarOpen(open => !open); }}><img src={clientIcons.calendar} alt="" aria-hidden="true"/><span>{say('Escolher outra data', 'Choose another date')}</span><ChevronDown size={17} aria-hidden="true"/></button>{customCalendarOpen && <div id="pm-client-more-dates" className="pm-client-more-dates" role="dialog" aria-label={say('Mais datas', 'More dates')}><div className="pm-client-date-picker-head"><button type="button" className="pm-client-date-picker-nav" aria-label={say('Mês anterior', 'Previous month')} disabled={customCalendarMonth <= monthKey(demoBookingToday)} onClick={() => setCustomCalendarMonth(shiftMonth(customCalendarMonth, -1))}><ChevronLeft size={17} aria-hidden="true"/></button><strong>{monthLabel(customCalendarMonth, i18n.language === 'en')}</strong><button type="button" className="pm-client-date-picker-nav" aria-label={say('Mês seguinte', 'Next month')} onClick={() => setCustomCalendarMonth(shiftMonth(customCalendarMonth, 1))}><ChevronRight size={17} aria-hidden="true"/></button></div><div className="pm-client-date-picker-weekdays" aria-hidden="true">{calendarWeekdays[i18n.language === 'en' ? 'en' : 'pt'].map((day, index) => <span key={index}>{day}</span>)}</div><div className="pm-client-date-picker-grid" role="grid" aria-label={say('Dias do mês', 'Days of the month')}>{customCalendarCells.map(cell => <button type="button" role="gridcell" aria-label={cell.inMonth ? customDateLabel(cell.value, i18n.language === 'en') : undefined} aria-selected={cell.isSelected} disabled={!cell.inMonth || !cell.available} className={'pm-client-date-picker-day' + (!cell.inMonth ? ' pm-client-date-picker-day-outside' : '') + (!cell.available ? ' pm-client-date-picker-day-unavailable' : '') + (cell.isToday ? ' is-today' : '') + (cell.isSelected ? ' is-selected' : '')} onClick={() => { const nextTime = bookingTimesForDate(cell.value)[0]; if (!nextTime) return; setCustomCalendarDate(cell.value); setBookingStart(cell.value + 'T' + nextTime); setCustomCalendarOpen(false); }} key={cell.value}>{cell.day}</button>)}</div><div className="pm-client-date-picker-footer"><button type="button" onClick={() => { const nextTime = bookingTimesForDate(demoBookingToday)[0]; setCustomCalendarDate(demoBookingToday); setCustomCalendarMonth(monthKey(demoBookingToday)); if (nextTime) { setBookingStart(demoBookingToday + 'T' + nextTime); setCustomCalendarOpen(false); } }}>{say('Hoje', 'Today')}</button></div></div>}</section><button type="button" className="pm-client-primary-action" onClick={chooseBooking}><img className="pm-client-action-car" src={clientIcons.car} alt="" aria-hidden="true"/>{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
+      {!routeReady ? <button type="button" className="pm-client-primary-action" onClick={() => setRouteReady(Boolean(origin.trim() && destination.trim() && routeKnown))} disabled={!origin.trim() || !destination.trim() || !routeKnown}><img className="pm-client-action-route" src="/route-landmark.webp" alt="" aria-hidden="true" />{say('Ver rota e preço', 'See route and price')}<ChevronRight size={19}/></button> : <div className="pm-client-route-quote"><div className="pm-client-route-quote-head"><div><span>{plannerKind === 'tour' ? say('Estimativa do tour', 'Tour estimate') : say('Estimativa do transfer', 'Transfer estimate')}</span><strong>{money(plannerPrice.totalCents)}</strong></div><span className="pm-client-route-badge">{plannerKind === 'tour' ? say('2 dias', '2 days') : say('Transfer', 'Transfer')}</span></div><div className="pm-client-route-stats"><span><strong>{km} km</strong>{say('percurso previsto', 'planned route')}</span><span><strong>{previewRoute.minutes} min</strong>{say('tempo de condução', 'driving time')}</span><span><strong>{money(plannerPrice.depositCents)}</strong>{say('sinal · 25%', 'deposit · 25%')}</span></div><p>{plannerKind === 'tour' ? say('Inclui até 2 pessoas. O preço por pessoa adicional está detalhado no orçamento. A disponibilidade do motorista será confirmada no passo seguinte.', 'Includes up to 2 people. The price for each additional person is shown in the quote. Driver availability is confirmed in the next step.') : say(`Cálculo de demonstração: ${money(tariff.transferCentsPerKm)} por km de rota. Paragens incluídas no percurso; a tarifa real será definida pelo proprietário.`, `Demo calculation: ${money(tariff.transferCentsPerKm)} per route kilometre. Stops are included in the route; the owner will define the live tariff.`)}</p><section className="pm-client-booking-calendar" aria-label={say('Escolher data e hora', 'Choose date and time')}><div className="pm-client-booking-calendar-head"><img className="pm-client-calendar-icon" src={clientIcons.calendar} alt="" aria-hidden="true"/><div><strong>{say('Quando deseja viajar?', 'When would you like to travel?')}</strong><span>{say('Escolha um dia e um horário disponíveis.', 'Choose an available day and time.')}</span></div></div><div className="pm-client-calendar-days" role="listbox" aria-label={say('Dias disponíveis', 'Available days')}>{calendarDates.map(day => <button type="button" role="option" aria-selected={selectedBookingDate === day.value} aria-label={say(day.ariaPt, day.ariaEn)} className={selectedBookingDate === day.value ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${day.value}T${bookingTimesForDate(day.value)[0] ?? '00:00'}`)} key={day.value}>{say(day.pt, day.en)}</button>)}</div><div className="pm-client-calendar-times" role="listbox" aria-label={say('Horários disponíveis', 'Available times')}>{availableBookingTimes.map(time => <button type="button" role="option" aria-selected={bookingStart.slice(11, 16) === time} aria-label={time} className={bookingStart.slice(11, 16) === time ? 'pm-client-calendar-choice pm-client-calendar-choice-active' : 'pm-client-calendar-choice'} onClick={() => setBookingStart(`${bookingStart.slice(0, 10)}T${time}`)} key={time}>{time}</button>)}</div><button type="button" className="pm-client-calendar-more" aria-expanded={customCalendarOpen} aria-controls="pm-client-more-dates" onClick={() => { setCustomCalendarDate(bookingStartDate); setCustomCalendarMonth(monthKey(bookingStartDate)); setCustomCalendarOpen(open => !open); }}><img src={clientIcons.calendar} alt="" aria-hidden="true"/><span>{say('Escolher outra data', 'Choose another date')}</span><ChevronDown size={17} aria-hidden="true"/></button>{customCalendarOpen && <div id="pm-client-more-dates" className="pm-client-more-dates" role="dialog" aria-label={say('Mais datas', 'More dates')}><div className="pm-client-date-picker-head"><button type="button" className="pm-client-date-picker-nav" aria-label={say('Mês anterior', 'Previous month')} disabled={customCalendarMonth <= monthKey(demoBookingToday)} onClick={() => setCustomCalendarMonth(shiftMonth(customCalendarMonth, -1))}><ChevronLeft size={17} aria-hidden="true"/></button><strong>{monthLabel(customCalendarMonth, i18n.language === 'en')}</strong><button type="button" className="pm-client-date-picker-nav" aria-label={say('Mês seguinte', 'Next month')} onClick={() => setCustomCalendarMonth(shiftMonth(customCalendarMonth, 1))}><ChevronRight size={17} aria-hidden="true"/></button></div><div className="pm-client-date-picker-weekdays" aria-hidden="true">{calendarWeekdays[i18n.language === 'en' ? 'en' : 'pt'].map((day, index) => <span key={index}>{day}</span>)}</div><div className="pm-client-date-picker-grid" role="grid" aria-label={say('Dias do mês', 'Days of the month')}>{customCalendarCells.map(cell => <button type="button" role="gridcell" aria-label={cell.inMonth ? customDateLabel(cell.value, i18n.language === 'en') : undefined} aria-selected={cell.isSelected} disabled={!cell.inMonth || !cell.available} className={'pm-client-date-picker-day' + (!cell.inMonth ? ' pm-client-date-picker-day-outside' : '') + (!cell.available ? ' pm-client-date-picker-day-unavailable' : '') + (cell.isToday ? ' is-today' : '') + (cell.isSelected ? ' is-selected' : '')} onClick={() => { const nextTime = bookingTimesForDate(cell.value)[0]; if (!nextTime) return; setCustomCalendarDate(cell.value); setBookingStart(cell.value + 'T' + nextTime); setCustomCalendarOpen(false); }} key={cell.value}>{cell.day}</button>)}</div><div className="pm-client-date-picker-footer"><button type="button" onClick={() => { const nextTime = bookingTimesForDate(demoBookingToday)[0]; setCustomCalendarDate(demoBookingToday); setCustomCalendarMonth(monthKey(demoBookingToday)); if (nextTime) { setBookingStart(demoBookingToday + 'T' + nextTime); setCustomCalendarOpen(false); } }}>{say('Hoje', 'Today')}</button></div></div>}</section><button type="button" className="pm-client-primary-action" onClick={chooseBooking}><img className="pm-client-action-car" src={clientIcons.car} alt="" aria-hidden="true"/>{say('Escolher motorista e carro', 'Choose driver and vehicle')}<ChevronRight size={19}/></button></div>}
     </section> : <>
       <section className="pm-client-categories" aria-labelledby="client-adventure-title">
-        <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Escolhe a tua aventura.', 'Choose your adventure.')}</h1><span className="pm-client-spark"><Sparkles size={18}/></span></div>
+        <div className="pm-client-section-title"><h1 id="client-adventure-title">{say('Planeie a sua viagem.', 'Plan your journey.')}</h1></div>
         <div className="pm-client-category-grid">{tourOptions.map(option => <button type="button" className="pm-client-category" key={option.id} onClick={() => chooseCategory(option.id)}><span className="pm-client-category-art" aria-hidden="true"><img src={option.icon} alt="" /></span><strong>{say(option.pt, option.en)}</strong><span>{say(option.detailPt, option.detailEn)}</span></button>)}</div>
       </section>
       {hasOwnerCatalog ? <section className="pm-client-owner-catalog" aria-labelledby="client-owner-catalog-title">
         <div className="pm-client-section-title"><div><span className="pm-client-eyebrow">{say('Catálogo do proprietário', 'Owner catalogue')}</span><h2 id="client-owner-catalog-title">{say('Tours disponíveis', 'Available tours')}</h2></div><span className="pm-client-catalog-count">{ownerTours.filter(tour => tour.active).length}</span></div>
-        {ownerTours.some(tour => tour.active) ? <div className="pm-client-promo-list">{ownerTours.filter(tour => tour.active).map(tour => <button type="button" className="pm-client-tour-promo pm-client-owner-tour-promo" key={tour.id} onClick={() => openOwnerTour(tour)} aria-label={say(`Abrir tour ${tour.namePt}`, `Open ${tour.nameEn} tour`)}><img src={tour.photoPath} alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>{say(tour.namePt, tour.nameEn)}</strong><span>{say(tour.descriptionPt, tour.descriptionEn)}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say(`2 dias · até 2 pessoas incluídas · ${money(tour.baseCents)}`, `2 days · up to 2 people included · ${money(tour.baseCents)}`)}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>)}</div> : <p className="pm-client-owner-empty">{say('Neste momento não há tours ativos para marcar.', 'There are no active tours available to book right now.')}</p>}
+        {ownerTours.some(tour => tour.active) ? <div className="pm-client-promo-list">{ownerTours.filter(tour => tour.active).map(tour => <button type="button" className="pm-client-tour-promo pm-client-owner-tour-promo" key={tour.id} onClick={() => openOwnerTour(tour)} aria-label={say(`Abrir tour ${tour.namePt}`, `Open ${tour.nameEn} tour`)}><img src={tour.photoPath} alt="" loading="lazy" decoding="async"/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>{say(tour.namePt, tour.nameEn)}</strong><span>{say(tour.descriptionPt, tour.descriptionEn)}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say(`2 dias · até 2 pessoas incluídas · ${money(tour.baseCents)}`, `2 days · up to 2 people included · ${money(tour.baseCents)}`)}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>)}</div> : <p className="pm-client-owner-empty">{say('Neste momento não há tours ativos para marcar.', 'There are no active tours available to book right now.')}</p>}
       </section> : <div className="pm-client-promo-list">
         <button type="button" className="pm-client-tour-promo" onClick={() => openPlanner('Sintra', 'tour')} aria-label={say('Abrir tour Lisboa Sintra', 'Open Lisbon Sintra tour')}><img src="/lisbon-sintra-tour.webp" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Lisboa <span>→</span> Sintra</strong><span>{say('Do centro histórico aos palácios da serra.', 'From the historic centre to the hilltop palaces.')}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>
         <button type="button" className="pm-client-tour-promo pm-client-tour-promo-porto" onClick={() => openPlanner('Porto', 'tour', portoTourStops)} aria-label={say('Abrir tour do Porto com seis paragens', 'Open Porto tour with six stops')}><img src="/porto-tour.webp" alt=""/><span className="pm-client-tour-shade"/><span className="pm-client-tour-copy"><span className="pm-client-kicker"><Ticket size={15}/> {say('Experiência privada', 'Private experience')}</span><strong>Porto <span>·</span> 6 paragens</strong><span>{say('Ribeira, centro histórico e Douro num percurso privado.', 'Ribeira, historic centre and Douro on a private route.')}</span><span className="pm-client-tour-meta pm-client-tour-meta-clock">{say('2 dias · até 2 pessoas incluídas', '2 days · up to 2 people included')}</span><span className="pm-client-tour-action">{say('Ver tour', 'View tour')} <ChevronRight size={18}/></span></span></button>

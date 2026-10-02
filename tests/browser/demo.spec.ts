@@ -11,7 +11,7 @@ test('test data can be searched, translated and removed', async ({ page }) => {
   for (const route of ['owner/home','owner/bookings','owner/customers','owner/tours','owner/finance','driver/services','customer/discover']) {
     await page.goto(`/?demo=1&lang=en#/${route}`);
     if (route === 'customer/discover') {
-      await expect(page.getByRole('heading', { name: 'Choose your adventure.', exact: true })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Plan your journey.', exact: true })).toBeVisible();
       await expect(page.locator('.pm-client-tour-promo img').first()).toBeVisible();
     } else {
       await expect(page.locator('.pm-demo-record').first()).toBeVisible();
@@ -104,14 +104,21 @@ test('owner can create a manual WhatsApp booking after schedule validation', asy
 test('owner keeps the mobile navigation available while creating a booking', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/owner/bookings');
-  await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
+  const openForm = async () => {
+    const toggle = page.locator('.pm-owner-bookings-intro button');
+    await expect(toggle).toBeVisible();
+    if (await toggle.getAttribute('aria-expanded') !== 'true') await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.getByRole('form', { name: 'Marcação manual' })).toBeVisible();
+  };
+  await openForm();
   const nav = page.locator('.pm-bottom-nav');
   await expect(nav).toBeVisible();
   await expect(nav).toHaveCSS('position', 'fixed');
   await nav.getByRole('link', { name: 'Início', exact: true }).click();
   await expect(page).toHaveURL(/#\/owner\/home$/);
   await page.goto('/?demo=1#/owner/bookings');
-  await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
+  await openForm();
   await nav.getByRole('link', { name: 'Agenda', exact: true }).click();
   await expect(page).toHaveURL(/#\/owner\/calendar$/);
 });
@@ -162,12 +169,12 @@ test('owner CRM adds and searches a customer with NIF', async ({ page }) => {
   await form.getByLabel('Nome completo').fill('Rita CRM');
   await form.getByLabel('Email').fill('rita@example.invalid');
   await form.getByLabel('Telefone').fill('+351 910 000 099');
-  await form.getByLabel('NIF').fill('987654321');
+  await form.getByLabel('NIF').fill('987654322');
   await form.getByRole('button', { name: 'Guardar cliente', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('Cliente adicionado');
   await page.getByRole('searchbox').fill('Rita');
   const card = page.locator('.pm-demo-record').filter({ hasText: 'Rita CRM' });
-  await expect(card).toContainText('987654321');
+  await expect(card).toContainText('987654322');
 });
 
 test('owner adds a bilingual two-day tour package', async ({ page }) => {

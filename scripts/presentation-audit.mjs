@@ -4,7 +4,7 @@ const browser = await chromium.launch({ channel: 'msedge' });
 const routes = ['owner/home','owner/calendar','owner/bookings','owner/customers','owner/drivers','owner/vehicles','owner/tours','owner/finance','owner/settlements','owner/settings','owner/more','driver/home','driver/services','driver/availability','driver/earnings','driver/profile','driver/more','customer/discover','customer/booking','customer/lookup'];
 const results = [];
 await mkdir('artifacts/checkup', { recursive:true });
-for (const width of [320,390,1440]) {
+for (const width of [320,375,390,430,768,1024,1440]) {
   for (const lang of ['pt-PT','en']) {
     const context = await browser.newContext({ viewport:{width,height:844} });
     const page = await context.newPage();

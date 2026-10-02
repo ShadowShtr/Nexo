@@ -1,12 +1,28 @@
 # Changelog
 
-## Auditoria — 2026-10-02 (sem alteração de versão)
+## 0.2.92 — 2026-10-02
 
-- checkup de apresentação com falhas reproduzíveis, limites operacionais e recomendações visuais em `docs/24-checkup-apresentacao.md`;
-- revalidação de regras, PostgreSQL, Supabase local, autenticação UI e navegação responsiva;
-- testes browser alinhados com WebP, campos vazios, barra fixa, tarifa por distância e seletor móvel da agenda;
-- scripts de varredura de 120 combinações e probes de preço, localização, dados inválidos e botões sem ação;
-- aplicação não alterada; problemas funcionais encontrados continuam pendentes.
+- pedido do cliente trata motorista sem carro e permite recuperar a seleção;
+- marcação manual mostra falta de capacidade sem lançar erro de renderização; impede guardar até escolher carro compatível;
+- planeador e confirmação respeitam a antecedência do pacote por horas decorridas, incluindo limites de 49 e 168 horas;
+- dados iniciais de Cliente, Marcações e Agenda usam conversão comum Europe/Lisbon, com testes de verão, inverno e mudança de hora;
+- cinco cenários de regressão browser e dois unitários acrescentados; sem push ou publicação nesta tarefa.
+
+## Revisão de 0.2.91 — 2026-10-02
+
+- revisão independente de `18a030b`: quatro falhas reproduzidas e documentadas no checkup; duas causam página em branco, uma ignora antecedência do tour e outra desloca reservas iniciais no inverno;
+- código da aplicação mantido; aprovação da correção condicionada à resolução dessas falhas.
+
+## 0.2.91 — 2026-10-02
+
+- corrigida passagem do pacote escolhido, preço, duração e antecedência entre catálogo, planeador e pedido demo;
+- unificados relógio Europe/Lisbon e catálogo local de motorista/veículo entre agenda e reservas; próximas viagens ordenadas e valor do dia identificado como estimativa;
+- melhoradas sugestões de locais, captura de coordenadas, validação de contactos/NIF e disponibilidade diária de 24 horas;
+- removidas instruções fictícias de pagamento/WhatsApp; o resumo informa que pedidos demo não são enviados nem cobrados;
+- estabilizada atualização do mapa, mantida navegação inferior durante formulários e adicionados estados acessíveis ao controlo de marcação;
+- carregamento de páginas sob demanda; entrada JavaScript caiu para 504 KB (156 KB gzip), ainda acima do limiar de aviso de 500 KB;
+- verificação: 90 testes unitários, 42 browser, build e 280 combinações visuais aprovados; integração PostgreSQL/Supabase continua evidência local anterior, sem teste em iPhone ou produção;
+- relatório atualizado em `docs/24-checkup-apresentacao.md`; backend, pagamentos reais e sincronização continuam pendentes.
 
 ## 0.2.90 — 2026-09-16
 

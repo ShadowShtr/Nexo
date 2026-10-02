@@ -14,7 +14,7 @@ Ler [escopo](../01-escopo.md), [regras](../03-regras.md) e [definição de pront
 
 **Aceitação:** Manual não ignora capacidade/conflito/antecedência; repetir comando não cria duas reservas; override owner fica auditado; rascunho não envia confirmação.
 
-**Evidência:** `src/web/pages/BookingSandbox.tsx` permite origem WhatsApp/telefone e mostra pedidos públicos completos recebidos de `src/web/demo-request-store.ts`, enquanto `checkSchedule` bloqueia conflitos. Teste Playwright cobre criação manual e leitura de contacto, NIF, percurso e valores pelo proprietário. Persistência operacional, dedupe, auditoria e integração com o caso de uso do servidor continuam pendentes.
+**Evidência:** `src/web/pages/BookingSandbox.tsx` permite origem WhatsApp/telefone e mostra pedidos públicos completos recebidos de `src/web/demo-request-store.ts`, enquanto `checkSchedule` bloqueia conflitos. Teste Playwright cobre criação manual e leitura de contacto, NIF, percurso e valores pelo proprietário. Na v0.2.92, `tests/browser/review-regressions.spec.ts` cobre recuperação de recursos indisponíveis, rejeição de capacidade excessiva e antecedência exata do pacote; `tests/demo-trip-allocation.test.ts` cobre verão/inverno. 47 cenários browser e 92 unitários aprovados. Persistência operacional, dedupe, auditoria e integração com o caso de uso do servidor continuam pendentes.
 
 ## BKG-02 — Atribuição ao parceiro e estados da reserva
 

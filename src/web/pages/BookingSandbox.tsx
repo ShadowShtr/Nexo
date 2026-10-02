@@ -1,3 +1,4 @@
+import { demoTripAllocation } from '../demo-trip-allocation';
 import { useEffect, useMemo, useState } from 'react';
 import { Ban, CalendarCheck2, MapPin, Plus, Route, Save, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -13,30 +14,25 @@ import { tourRoute, transferRoutes, type DemoRoute } from '../demo-routes';
 import { demoTrips } from './DemoPage';
 import { readDemoTariff, subscribeToDemoTariff } from '../demo-config';
 import { readDemoCustomerRequests, subscribeToDemoCustomerRequests, type DemoCustomerRequest } from '../demo-request-store';
+import { demoDateTime, demoNowIso } from '../demo-clock';
+import { readDemoCatalog, subscribeToDemoCatalog } from '../demo-catalog';
+import { checkLeadTime } from '../../domain/lead-time';
 
 const zone = ownerCalendarZone;
-const clock = '2026-09-10T00:00:00Z';
-const drivers = ['Miguel Costa', 'Sofia Martins', 'André Ribeiro'];
-const cars = [
-  { name: 'Mercedes-Benz Classe E', driver: 0, capacity: 4 },
-  { name: 'Mercedes-Benz Classe V', driver: 0, capacity: 6 },
-  { name: 'BMW Série 5', driver: 1, capacity: 4 },
-  { name: 'Volvo XC90', driver: 2, capacity: 6 },
-];
 type ServiceKind = 'transfer' | 'tour';
-type ManualBooking = { id: string; allocation: Allocation; customer: string; service: ServiceKind; route: string; from: string; to: string; stops: string[]; total: number; deposit: number; balance: number; cancelled: boolean };
-type RegisteredTour = { id: string; namePt: string; nameEn: string; area: string; baseCents: number; extraPassengerCents: number; active: boolean };
+type ManualBooking = { id: string; allocation: Allocation; customer: string; service: ServiceKind; route: string; from: string; to: string; stops: string[]; total: number; deposit: number; balance: number; cancelled: boolean; driverName?: string; vehicleName?: string };
+type RegisteredTour = { id: string; namePt: string; nameEn: string; area: string; baseCents: number; extraPassengerCents: number; active: boolean; durationDays: number; minimumNoticeHours: number };
 
 const seed: ManualBooking[] = demoTrips.slice(0, 3).map(trip => ({
   id: trip.id,
-  allocation: { id: trip.id, driverId: String(trip.driver), vehicleId: String(trip.car), startsAt: `${trip.day}T${trip.time}:00+01:00`, endsAt: `${trip.day}T${trip.end}:00+01:00`, status: 'confirmed' },
+  allocation: demoTripAllocation(trip),
   customer: trip.customer ? ['Ana Exemplo', 'Daniel Exemplo', 'Emma Example'][trip.customer] : 'Cliente',
   service: 'transfer', route: trip.to, from: trip.from, to: trip.to, stops: [], total: trip.cents, deposit: Math.round(trip.cents * .25), balance: trip.cents - Math.round(trip.cents * .25), cancelled: false,
 }));
 
 const defaultTours: readonly RegisteredTour[] = [
-  { id: 't1', namePt: 'Sintra e Cabo da Roca', nameEn: 'Sintra and Cabo da Roca', area: 'Sintra', baseCents: 20000, extraPassengerCents: 3500, active: true },
-  { id: 't2', namePt: 'Douro Premium', nameEn: 'Premium Douro', area: 'Douro', baseCents: 32000, extraPassengerCents: 4500, active: true },
+  { id: 't1', namePt: 'Sintra e Cabo da Roca', nameEn: 'Sintra and Cabo da Roca', area: 'Sintra', baseCents: 20000, extraPassengerCents: 3500, active: true, durationDays: 2, minimumNoticeHours: 48 },
+  { id: 't2', namePt: 'Douro Premium', nameEn: 'Premium Douro', area: 'Douro', baseCents: 32000, extraPassengerCents: 4500, active: true, durationDays: 2, minimumNoticeHours: 72 },
 ];
 
 const localPlaces: readonly AddressSearchResult[] = [
@@ -64,7 +60,7 @@ function readTours(): RegisteredTour[] {
     const raw = window.localStorage.getItem('pm.demo.tours');
     if (!raw) return [...defaultTours];
     const parsed = JSON.parse(raw) as RegisteredTour[];
-    return Array.isArray(parsed) && parsed.length ? parsed.filter(tour => typeof tour.id === 'string' && typeof tour.namePt === 'string' && typeof tour.area === 'string' && tour.active !== false) : [...defaultTours];
+    return Array.isArray(parsed) && parsed.length ? parsed.filter(tour => typeof tour.id === 'string' && typeof tour.namePt === 'string' && typeof tour.area === 'string' && tour.active !== false).map(tour => ({ ...tour, durationDays: typeof tour.durationDays === 'number' && tour.durationDays > 0 ? tour.durationDays : 2, minimumNoticeHours: typeof tour.minimumNoticeHours === 'number' && tour.minimumNoticeHours >= 48 ? tour.minimumNoticeHours : 48 })) : [...defaultTours];
   } catch { return [...defaultTours]; }
 }
 
@@ -134,6 +130,15 @@ export function BookingSandbox() {
   const language = en ? 'en' : 'pt';
   const say = (pt: string, english: string) => en ? english : pt;
   const money = (cents: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'EUR' }).format(cents / 100);
+  const [catalog, setCatalog] = useState(readDemoCatalog);
+  const driverRows = catalog.drivers;
+  const drivers = driverRows.map(row => row.name);
+  const cars = catalog.vehicles.map(vehicle => ({
+    name: `${vehicle.make} ${vehicle.model}`,
+    driver: driverRows.findIndex(row => vehicle.driverIds.includes(row.id)),
+    capacity: vehicle.capacity,
+    active: vehicle.status === 'active' && driverRows.some(row => vehicle.driverIds.includes(row.id) && row.status === 'active'),
+  }));
   const [rows, setRows] = useState(seed);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
@@ -151,13 +156,23 @@ export function BookingSandbox() {
   const [stopDraft, setStopDraft] = useState('');
   const [resolvedPlaces, setResolvedPlaces] = useState<Record<string, AddressSearchResult>>({});
   const [locationState, setLocationState] = useState<'suggested' | 'requesting' | 'fallback'>('suggested');
-  const [start, setStart] = useState('2026-09-14T10:00');
+  const [start, setStart] = useState(() => demoDateTime(4));
   const [people, setPeople] = useState(2);
   const [tariff, setTariff] = useState(readDemoTariff);
   const [calendarVersion, setCalendarVersion] = useState(0);
   const [incoming, setIncoming] = useState<DemoCustomerRequest[]>(() => readDemoCustomerRequests());
+  const currentCar = cars[car] ?? { name: 'Veículo indisponível', driver, capacity: 0, active: false };
   useEffect(() => { const refresh = () => setIncoming(readDemoCustomerRequests()); return subscribeToDemoCustomerRequests(refresh); }, []);
   useEffect(() => subscribeToDemoTariff(() => setTariff(readDemoTariff())), []);
+  useEffect(() => subscribeToDemoCatalog(() => setCatalog(readDemoCatalog())), []);
+  useEffect(() => {
+    const activeDriver = driverRows[driver]?.status === 'active' ? driver : driverRows.findIndex(row => row.status === 'active');
+    if (activeDriver !== driver && activeDriver >= 0) setDriver(activeDriver);
+    if (!cars[car]?.active || cars[car]?.driver !== activeDriver) {
+      const activeCar = cars.findIndex(item => item.active && item.driver === activeDriver);
+      if (activeCar >= 0) setCar(activeCar);
+    }
+  }, [catalog]);
   useEffect(() => {
     const refresh = () => setCalendarVersion(version => version + 1);
     window.addEventListener('storage', refresh);
@@ -187,9 +202,10 @@ export function BookingSandbox() {
   const selectedTour = activeTours.find(tour => tour.id === selectedTourId) ?? activeTours[0];
   const baseTemplate = service === 'tour' ? tourRoute : transferRoutes[route];
   const previewRoute = dynamicRoute(origin, destination, stops, resolvedPlaces, baseTemplate);
-  const durationMinutes = Math.max(60, previewRoute.minutes || baseTemplate.minutes);
+  const durationMinutes = service === 'tour' ? Math.max(1, selectedTour?.durationDays ?? 2) * 24 * 60 : Math.max(60, previewRoute.minutes || baseTemplate.minutes);
   const km = new Intl.NumberFormat(en ? 'en-GB' : 'pt-PT', { maximumFractionDigits: 1 }).format((previewRoute.meters || baseTemplate.meters) / 1000);
-  const price = quote({ passengers: people, passengerCapacity: cars[car].capacity, service: service === 'tour' ? { kind: 'tour', baseCents: selectedTour?.baseCents ?? tariff.tourBaseCents, extraPassengerCents: selectedTour?.extraPassengerCents ?? tariff.tourExtraPassengerCents } : { kind: 'transfer', distanceMeters: previewRoute.meters || baseTemplate.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps });
+  const capacityValid = currentCar.active && people <= currentCar.capacity;
+  const price = capacityValid ? quote({ passengers: people, passengerCapacity: currentCar.capacity, service: service === 'tour' ? { kind: 'tour', baseCents: selectedTour?.baseCents ?? tariff.tourBaseCents, extraPassengerCents: selectedTour?.extraPassengerCents ?? tariff.tourExtraPassengerCents } : { kind: 'transfer', distanceMeters: previewRoute.meters || baseTemplate.meters, centsPerKm: tariff.transferCentsPerKm }, nightSurchargeBps: tariff.nightSurchargeBps }) : null;
   const ownerCalendar = useMemo(() => readOwnerCalendar(), [calendarVersion]);
   const agendaBookings = useMemo(() => {
     const byId = new Map<string, Allocation>();
@@ -206,14 +222,15 @@ export function BookingSandbox() {
       if (!isCustomerSlotAvailable(bookingDate, time, durationMinutes, agendaBookings, ownerCalendar.settings, [{ driverId: String(driver), vehicleId: String(car) }])) return false;
       const slot = DateTime.fromISO(`${bookingDate}T${time}`, { zone });
       if (!slot.isValid) return false;
+      if (!checkLeadTime(demoNowIso(), slot.toUTC().toISO()!, service, { tourMinutes: service === 'tour' ? (selectedTour?.minimumNoticeHours ?? 48) * 60 : 0 }).eligible) return false;
       try {
         const allocation: Allocation = { id: 'PREVIEW-MANUAL', driverId: String(driver), vehicleId: String(car), startsAt: slot.toUTC().toISO()!, endsAt: slot.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested' };
-        return checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30).available;
+        return checkSchedule(allocation, agendaBookings, demoNowIso(), { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30).available;
       } catch {
         return false;
       }
     });
-  }, [agendaBookings, bookingDate, car, driver, durationMinutes, ownerCalendar.settings]);
+  }, [agendaBookings, bookingDate, car, driver, durationMinutes, ownerCalendar.settings, selectedTour, service]);
   const scheduleAvailable = dateValid && availableTimes.includes(bookingTime);
 
   const rememberPlace = (place: AddressSearchResult) => setResolvedPlaces(current => ({ ...current, [normalizePlace(place.title)]: place }));
@@ -234,19 +251,27 @@ export function BookingSandbox() {
   const useLocation = () => {
     setLocationState('requesting');
     if (!navigator.geolocation) { setOrigin('Lisboa'); setLocationState('fallback'); return; }
-    navigator.geolocation.getCurrentPosition(() => { setOrigin('Lisboa'); setLocationState('suggested'); }, () => { setOrigin('Lisboa'); setLocationState('fallback'); }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 });
+    navigator.geolocation.getCurrentPosition(position => {
+      const coordinates: readonly [number, number] = [position.coords.latitude, position.coords.longitude];
+      const place = { title: `Localização atual (${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)})`, detail: say('Coordenadas do dispositivo · rota ilustrativa', 'Device coordinates · illustrative route'), coordinates, source: 'photon' as const };
+      rememberPlace(place);
+      setOrigin(place.title);
+      setLocationState('suggested');
+    }, () => { setOrigin('Lisboa'); setLocationState('fallback'); }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 });
   };
   const addStop = () => { const value = stopDraft.trim(); if (!value || stops.includes(value)) return; setStops(current => [...current, value]); setStopDraft(''); };
   const rememberAndSetStop = (place: AddressSearchResult) => { rememberPlace(place); setStopDraft(place.title); };
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); setError('');
     if (!customer.trim() || !origin.trim() || !destination.trim() || !dateValid) { setError(say('Preencha cliente, percurso e uma hora de Lisboa válida.', 'Enter customer, route and a valid Lisbon time.')); return; }
-    if (people > cars[car].capacity) { setError(say('O carro escolhido não tem capacidade para todos os passageiros.', 'The selected vehicle cannot carry all passengers.')); return; }
+    if (!driverRows[driver] || driverRows[driver].status !== 'active' || !currentCar.active || currentCar.driver !== driver) { setError(say('Escolha um motorista e um carro ativos e associados.', 'Choose an active, assigned driver and vehicle.')); return; }
+    if (!price || people > currentCar.capacity) { setError(say('O carro escolhido não tem capacidade para todos os passageiros.', 'The selected vehicle cannot carry all passengers.')); return; }
+    if (!checkLeadTime(demoNowIso(), selectedDate.toUTC().toISO()!, service, { tourMinutes: service === 'tour' ? (selectedTour?.minimumNoticeHours ?? 48) * 60 : 0 }).eligible) { setError(say('Este serviço exige mais antecedência. Escolha uma data posterior.', 'This service requires more notice. Choose a later date.')); return; }
     if (!scheduleAvailable) { setError(say('Este horário está indisponível na agenda. Escolha outra data, hora ou recurso.', 'This time is unavailable in the calendar. Choose another date, time or resource.')); return; }
-    const allocation: Allocation & { from: string; to: string; stops: string[] } = { id: `MAN-${crypto.randomUUID().slice(0, 8)}`, driverId: String(driver), vehicleId: String(car), startsAt: selectedDate.toUTC().toISO()!, endsAt: selectedDate.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested', holdExpiresAt: DateTime.fromISO(clock).plus({ minutes: 30 }).toISO()!, from: origin.trim(), to: destination.trim(), stops: [...stops] };
+    const allocation: Allocation & { from: string; to: string; stops: string[] } = { id: `MAN-${crypto.randomUUID().slice(0, 8)}`, driverId: String(driver), vehicleId: String(car), startsAt: selectedDate.toUTC().toISO()!, endsAt: selectedDate.plus({ minutes: durationMinutes }).toUTC().toISO()!, status: 'requested', holdExpiresAt: DateTime.fromISO(demoNowIso()).plus({ minutes: 30 }).toISO()!, from: origin.trim(), to: destination.trim(), stops: [...stops] };
     let availability: ReturnType<typeof checkSchedule>;
     try {
-      availability = checkSchedule(allocation, agendaBookings, clock, { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
+      availability = checkSchedule(allocation, agendaBookings, demoNowIso(), { minimumGapMinutes: 60, delayAllowanceMinutes: 15 }, () => 30);
     } catch {
       setError(say('Verifique a data e hora escolhidas na agenda.', 'Check the selected date and time against the calendar.'));
       return;
@@ -254,26 +279,27 @@ export function BookingSandbox() {
     if (!availability.available) { setError(say('Horário indisponível para o motorista ou carro escolhido.', 'The selected driver or vehicle is unavailable at this time.')); return; }
     const currentCalendar = readOwnerCalendar();
     saveOwnerCalendarBookings([...currentCalendar.bookings.filter(booking => booking.source !== 'customer' && booking.id !== allocation.id), allocation]);
-    setRows(current => [...current, { id: allocation.id, allocation, customer: customer.trim(), service, route: previewRoute.name, from: origin.trim(), to: destination.trim(), stops: [...stops], total: price.totalCents, deposit: price.depositCents, balance: price.balanceCents, cancelled: false }]);
+    setRows(current => [...current, { id: allocation.id, allocation, customer: customer.trim(), service, route: previewRoute.name, from: origin.trim(), to: destination.trim(), stops: [...stops], total: price.totalCents, deposit: price.depositCents, balance: price.balanceCents, cancelled: false, driverName: drivers[driver], vehicleName: currentCar.name }]);
     setShowForm(false); setFeedback(say('Marcação manual criada e adicionada à agenda.', 'Manual booking created and added to the calendar.'));
   };
   const cancel = (id: string) => { setRows(current => current.map(row => row.id === id ? { ...row, cancelled: true, allocation: { ...row.allocation, status: 'cancelled' } } : row)); const currentCalendar = readOwnerCalendar(); saveOwnerCalendarBookings(currentCalendar.bookings.filter(booking => booking.source !== 'customer' && booking.id !== id)); setFeedback(say('Marcação de teste cancelada.', 'Test booking cancelled.')); };
 
   return <div className="pm-owner-bookings-page">
-    <div className="pm-owner-bookings-intro"><div><span className="pm-eyebrow">{say('Operação do proprietário', 'Owner operation')}</span><h2>{say('Criar uma marcação', 'Create a booking')}</h2><p>{say('Registe uma viagem recebida por telefone ou WhatsApp com o percurso completo.', 'Record a trip received by phone or WhatsApp with the complete route.')}</p></div><Button onClick={() => { setShowForm(value => !value); setError(''); }}>{showForm ? <><X size={17} aria-hidden="true" />{say('Fechar formulário', 'Close form')}</> : <><Plus size={17} aria-hidden="true" />{say('Nova marcação manual', 'New manual booking')}</>}</Button></div>
-    {showForm && <form className="pm-card pm-form pm-owner-manual-form" aria-label={say('Marcação manual', 'Manual booking')} onSubmit={submit}>
+    <div className="pm-owner-bookings-intro"><div><span className="pm-eyebrow">{say('Operação do proprietário', 'Owner operation')}</span><h2>{say('Criar uma marcação', 'Create a booking')}</h2><p>{say('Registe uma viagem recebida por telefone ou WhatsApp com o percurso completo.', 'Record a trip received by phone or WhatsApp with the complete route.')}</p></div><Button aria-label={showForm ? say('Fechar formulário', 'Close form') : say('Nova marcação manual', 'New manual booking')} aria-expanded={showForm} aria-controls="pm-owner-manual-form" onClick={() => { setShowForm(value => !value); setError(''); }}>{showForm ? <><X size={17} aria-hidden="true" />{say('Fechar formulário', 'Close form')}</> : <><Plus size={17} aria-hidden="true" />{say('Nova marcação manual', 'New manual booking')}</>}</Button></div>
+    {showForm && <form id="pm-owner-manual-form" className="pm-card pm-form pm-owner-manual-form" aria-label={say('Marcação manual', 'Manual booking')} onSubmit={submit}>
       <div className="pm-owner-form-heading"><div><span className="pm-eyebrow">{say('Nova reserva', 'New booking')}</span><h2>{say('Percurso e detalhes', 'Route and details')}</h2><p>{say('Preencha locais, paragens e horário. O horário é confirmado na agenda.', 'Enter locations, stops and time. The time is checked against the calendar.')}</p></div><span className="pm-owner-form-icon"><Route size={22} /></span></div>
       <label>{say('Cliente', 'Customer')}<input name="customer" required maxLength={120} value={customer} onChange={event => setCustomer(event.target.value)} placeholder={say('Nome completo', 'Full name')} /></label>
       <div className="pm-owner-route-fields"><AddressField label={say('Local de partida', 'Pickup')} value={origin} language={language} onChange={value => { setOrigin(value); setLocationState('suggested'); }} onSelect={place => { rememberPlace(place); setOrigin(place.title); setLocationState('suggested'); }} placeholder={say('Pesquisar morada ou local', 'Search address or place')} /><button type="button" className="pm-owner-location-action" onClick={useLocation}><MapPin size={17} />{locationState === 'requesting' ? say('A localizar…', 'Locating…') : say('Usar localização atual', 'Use current location')}</button><p className="pm-field-help">{locationState === 'fallback' ? say('Localização indisponível; Lisboa foi preenchida como exemplo. Confirme a origem.', 'Location unavailable; Lisbon was filled as an example. Confirm pickup.') : say('Pesquise uma morada nova ou use a localização atual.', 'Search for a new address or use the current location.')}</p><AddressField label={say('Destino', 'Destination')} value={destination} language={language} onChange={changeDestination} onSelect={place => { rememberPlace(place); changeDestination(place.title); }} placeholder={say('Pesquisar destino', 'Search destination')} /><label>{say('Paragem', 'Stop')}<div className="pm-owner-stop-input"><AddressField label="" value={stopDraft} language={language} required={false} onChange={setStopDraft} onSelect={rememberAndSetStop} placeholder={say('Pesquisar e adicionar paragem', 'Search and add a stop')} /><button type="button" aria-label={say('Adicionar paragem', 'Add stop')} onClick={addStop}><Plus size={17} /></button></div></label>{stops.length > 0 && <ul className="pm-owner-stop-list">{stops.map(stop => <li key={stop}><span>{stop}</span><button type="button" aria-label={`${say('Remover paragem', 'Remove stop')} ${stop}`} onClick={() => setStops(current => current.filter(item => item !== stop))}><Trash2 size={15} /></button></li>)}</ul>}</div>
       <RouteMap route={previewRoute} language={language} />
-      <div className="pm-route-metrics"><div><span>{say('Distância', 'Distance')}</span><strong>{km} km</strong></div><div><span>{say('Duração estimada', 'Estimated duration')}</span><strong>{durationMinutes} min</strong></div><div><span>{say('Estimativa', 'Estimate')}</span><strong>{money(price.totalCents)}</strong></div></div>
-      <div className="pm-owner-form-grid"><label>{say('Serviço', 'Service')}<select value={service === 'tour' ? `tour:${selectedTour?.id ?? selectedTourId}` : 'transfer'} onChange={event => chooseService(event.target.value)}><option value="transfer">Transfer</option>{activeTours.map(tour => <option value={`tour:${tour.id}`} key={tour.id}>{say(tour.namePt, tour.nameEn)} · {tour.area}</option>)}</select></label><div className="pm-owner-date-time"><span>{say('Data e hora', 'Date and time')}</span><input className="pm-owner-datetime-compat" aria-label={say('Data e hora', 'Date and time')} type="datetime-local" value={start} onChange={event => setStart(event.target.value)} /><div><label>{say('Data', 'Date')}<input type="date" required value={bookingDate} onChange={event => setStart(`${event.target.value}T${availableTimes.includes(bookingTime) ? bookingTime : availableTimes[0] ?? '00:00'}`)} /></label><label>{say('Hora', 'Time')}<select required value={availableTimes.includes(bookingTime) ? bookingTime : ''} onChange={event => setStart(`${bookingDate}T${event.target.value}`)}><option value="" disabled>{availableTimes.length ? say('Escolher hora', 'Choose time') : say('Sem horários', 'No times')}</option>{availableTimes.map(time => <option key={time} value={time}>{time}</option>)}</select></label></div></div><label>{say('Passageiros', 'Passengers')}<select value={people} onChange={event => setPeople(Number(event.target.value))}>{Array.from({ length: Math.max(...cars.map(item => item.capacity)) }, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}</select></label><label>{say('Motorista', 'Driver')}<select value={driver} onChange={event => { const next = Number(event.target.value); setDriver(next); setCar(cars.findIndex(item => item.driver === next)); }}>{drivers.map((name, index) => <option value={index} key={name}>{name}</option>)}</select></label><label>{say('Carro', 'Vehicle')}<select value={car} onChange={event => setCar(Number(event.target.value))}>{cars.map((item, index) => item.driver === driver && <option value={index} key={item.name}>{item.name} · {item.capacity} {say('lugares', 'seats')}</option>)}</select></label></div>
+      <div className="pm-route-metrics"><div><span>{say('Distância', 'Distance')}</span><strong>{km} km</strong></div><div><span>{say('Duração estimada', 'Estimated duration')}</span><strong>{durationMinutes} min</strong></div><div><span>{say('Estimativa', 'Estimate')}</span><strong>{price ? money(price.totalCents) : '—'}</strong></div></div>
+      {!capacityValid && <p role="status">{say('Escolha um carro com capacidade para todos os passageiros.', 'Choose a vehicle with enough seats for all passengers.')}</p>}
+      <div className="pm-owner-form-grid"><label>{say('Serviço', 'Service')}<select value={service === 'tour' ? `tour:${selectedTour?.id ?? selectedTourId}` : 'transfer'} onChange={event => chooseService(event.target.value)}><option value="transfer">Transfer</option>{activeTours.map(tour => <option value={`tour:${tour.id}`} key={tour.id}>{say(tour.namePt, tour.nameEn)} · {tour.area}</option>)}</select></label><div className="pm-owner-date-time"><span>{say('Data e hora', 'Date and time')}</span><input className="pm-owner-datetime-compat" aria-label={say('Data e hora', 'Date and time')} type="datetime-local" value={start} onChange={event => setStart(event.target.value)} /><div><label>{say('Data', 'Date')}<input type="date" required value={bookingDate} onChange={event => setStart(`${event.target.value}T${availableTimes.includes(bookingTime) ? bookingTime : availableTimes[0] ?? '00:00'}`)} /></label><label>{say('Hora', 'Time')}<select required value={availableTimes.includes(bookingTime) ? bookingTime : ''} onChange={event => setStart(`${bookingDate}T${event.target.value}`)}><option value="" disabled>{availableTimes.length ? say('Escolher hora', 'Choose time') : say('Sem horários', 'No times')}</option>{availableTimes.map(time => <option key={time} value={time}>{time}</option>)}</select></label></div></div><label>{say('Passageiros', 'Passengers')}<select value={people} onChange={event => setPeople(Number(event.target.value))}>{Array.from({ length: Math.max(...cars.map(item => item.capacity)) }, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}</select></label><label>{say('Motorista', 'Driver')}<select value={driver} onChange={event => { const next = Number(event.target.value); setDriver(next); setCar(cars.findIndex(item => item.driver === next)); }}>{drivers.map((name, index) => driverRows[index]?.status === 'active' && <option value={index} key={name}>{name}</option>)}</select></label><label>{say('Carro', 'Vehicle')}<select value={car} onChange={event => setCar(Number(event.target.value))}>{cars.map((item, index) => item.active && item.driver === driver && <option value={index} key={item.name}>{item.name} · {item.capacity} {say('lugares', 'seats')}</option>)}</select></label></div>
       <div className={`pm-owner-calendar-status ${!dateValid ? 'is-invalid' : scheduleAvailable ? 'is-available' : 'is-unavailable'}`}><CalendarCheck2 size={18} /><span>{!dateValid ? say('Escolha uma data e hora válidas.', 'Choose a valid date and time.') : scheduleAvailable ? say('Horário disponível na agenda.', 'Time available in the calendar.') : say('Horário indisponível na agenda.', 'Time unavailable in the calendar.')}</span><a href="#/owner/calendar">{say('Abrir agenda', 'Open calendar')}</a></div>
       <p className="pm-field-help">{say('Tours publicados no catálogo aparecem no serviço. A marcação guardada bloqueia este motorista e carro na agenda, incluindo o intervalo de 1 hora.', 'Published tours appear in the service list. A saved booking blocks this driver and vehicle in the calendar, including the 1-hour buffer.')}</p>
       {error && <p role="alert">{error}</p>}<div className="pm-actions"><Button type="submit"><Save size={17} aria-hidden="true" />{say('Guardar marcação', 'Save booking')}</Button></div>
     </form>}
     {feedback && <p role="status">{feedback}</p>}
-    <Section title={say('Pedidos recebidos do site', 'Requests received from website')}><p className="pm-secondary">{say('Os pedidos enviados no fluxo do cliente aparecem aqui com os dados necessários para contacto, confirmação e execução. Demonstração sincronizada neste navegador.', 'Requests submitted in the customer flow appear here with the details needed for contact, confirmation and fulfilment. Demo syncs in this browser.')}</p>{incoming.length ? <div className="pm-demo-grid">{incoming.map(request => <article className="pm-card pm-demo-record pm-owner-request" key={request.id}><div className="pm-section-heading"><img className="pm-demo-icon-art" src="/calendar.webp" alt="" aria-hidden="true" /><span className="pm-status" data-tone={request.cancelled ? 'neutral' : 'positive'}>{request.cancelled ? say('CANCELADO', 'CANCELLED') : say('NOVO PEDIDO', 'NEW REQUEST')}</span><span className="pm-secondary">{request.id}</span></div><h2>{request.name}</h2><p>{routeSummary(request.origin, request.destination, request.stops)}</p><p className="pm-secondary">{DateTime.fromISO(request.allocation.startsAt).setZone(zone).toFormat('dd/MM/yyyy HH:mm')} · {drivers[request.driver] ?? '—'} · {cars[request.car]?.name ?? '—'}</p><Row label={say('Contacto', 'Contact')} value={`${request.email} · ${request.phone}`} /><Row label="NIF" value={request.nif} /><Row label={say('Passageiros', 'Passengers')} value={request.people} /><Row label={say('Total', 'Total')} value={money(request.total)} /><Row label={say('Sinal · 25%', 'Deposit · 25%')} value={money(request.deposit)} /><Row label={say('Saldo · 75%', 'Balance · 75%')} value={money(request.balance)} /></article>)}</div> : <p>{say('Ainda não há pedidos enviados pelo cliente.', 'No customer requests have been submitted yet.')}</p>}</Section>
-    <Section title={say('Marcações registadas', 'Recorded bookings')}><div className="pm-demo-grid">{rows.map(row => <article className="pm-card pm-demo-record" key={row.id}><div className="pm-section-heading"><img className="pm-demo-icon-art" src="/calendar.webp" alt="" aria-hidden="true" /><span className="pm-status" data-tone={row.cancelled ? 'neutral' : 'positive'}>{row.cancelled ? say('CANCELADA', 'CANCELLED') : say('PEDIDO', 'REQUEST')}</span><span className="pm-secondary">{row.id}</span></div><h2>{row.customer}</h2><p>{routeSummary(row.from, row.to, row.stops)}</p><p className="pm-secondary">{DateTime.fromISO(row.allocation.startsAt).setZone(zone).toFormat('dd/MM/yyyy HH:mm')} · {drivers[Number(row.allocation.driverId)]} · {cars[Number(row.allocation.vehicleId)].name}</p><Row label={say('Origem', 'Source')} value={say('WhatsApp / telefone', 'WhatsApp / phone')} /><Row label={say('Total', 'Total')} value={money(row.total)} /><Row label={say('Sinal · 25%', 'Deposit · 25%')} value={money(row.deposit)} /><Row label={say('Saldo', 'Balance')} value={money(row.balance)} />{!row.cancelled && <Button variant="secondary" onClick={() => cancel(row.id)}><Ban size={17} aria-hidden="true" />{say('Cancelar teste', 'Cancel test')}</Button>}</article>)}</div></Section>
+    <Section title={say('Pedidos recebidos do site', 'Requests received from website')}><p className="pm-secondary">{say('Os pedidos enviados no fluxo do cliente aparecem aqui com os dados necessários para contacto, confirmação e execução. Demonstração sincronizada neste navegador.', 'Requests submitted in the customer flow appear here with the details needed for contact, confirmation and fulfilment. Demo syncs in this browser.')}</p>{incoming.length ? <div className="pm-demo-grid">{incoming.map(request => <article className="pm-card pm-demo-record pm-owner-request" key={request.id}><div className="pm-section-heading"><img className="pm-demo-icon-art" src="/calendar.webp" alt="" aria-hidden="true" /><span className="pm-status" data-tone={request.cancelled ? 'neutral' : 'positive'}>{request.cancelled ? say('CANCELADO', 'CANCELLED') : say('NOVO PEDIDO', 'NEW REQUEST')}</span><span className="pm-secondary">{request.id}</span></div><h2>{request.name}</h2><p>{routeSummary(request.origin, request.destination, request.stops)}</p><p className="pm-secondary">{DateTime.fromISO(request.allocation.startsAt).setZone(zone).toFormat('dd/MM/yyyy HH:mm')} · {request.driverName ?? drivers[request.driver] ?? '—'} · {request.vehicleName ?? cars[request.car]?.name ?? '—'}</p><Row label={say('Contacto', 'Contact')} value={`${request.email} · ${request.phone}`} /><Row label="NIF" value={request.nif} /><Row label={say('Passageiros', 'Passengers')} value={request.people} /><Row label={say('Total', 'Total')} value={money(request.total)} /><Row label={say('Sinal · 25%', 'Deposit · 25%')} value={money(request.deposit)} /><Row label={say('Saldo · 75%', 'Balance · 75%')} value={money(request.balance)} /></article>)}</div> : <p>{say('Ainda não há pedidos enviados pelo cliente.', 'No customer requests have been submitted yet.')}</p>}</Section>
+    <Section title={say('Marcações registadas', 'Recorded bookings')}><div className="pm-demo-grid">{rows.map(row => <article className="pm-card pm-demo-record" key={row.id}><div className="pm-section-heading"><img className="pm-demo-icon-art" src="/calendar.webp" alt="" aria-hidden="true" /><span className="pm-status" data-tone={row.cancelled ? 'neutral' : 'positive'}>{row.cancelled ? say('CANCELADA', 'CANCELLED') : say('PEDIDO', 'REQUEST')}</span><span className="pm-secondary">{row.id}</span></div><h2>{row.customer}</h2><p>{routeSummary(row.from, row.to, row.stops)}</p><p className="pm-secondary">{DateTime.fromISO(row.allocation.startsAt).setZone(zone).toFormat('dd/MM/yyyy HH:mm')} · {row.driverName ?? drivers[Number(row.allocation.driverId)]} · {row.vehicleName ?? cars[Number(row.allocation.vehicleId)]?.name}</p><Row label={say('Origem', 'Source')} value={say('WhatsApp / telefone', 'WhatsApp / phone')} /><Row label={say('Total', 'Total')} value={money(row.total)} /><Row label={say('Sinal · 25%', 'Deposit · 25%')} value={money(row.deposit)} /><Row label={say('Saldo', 'Balance')} value={money(row.balance)} />{!row.cancelled && <Button variant="secondary" onClick={() => cancel(row.id)}><Ban size={17} aria-hidden="true" />{say('Cancelar teste', 'Cancel test')}</Button>}</article>)}</div></Section>
   </div>;
 }

@@ -7,9 +7,9 @@ test.beforeEach(async ({ page }) => {
 test('customer discovery opens the inline planner before booking', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/customer/discover');
-  await expect(page.getByRole('heading', { name: 'Escolhe a tua aventura.', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Planeie a sua viagem.', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pesquisar um tour' })).toBeVisible();
-  await expect(page.locator('.pm-client-category')).toHaveCount(6);
+  await expect(page.locator('.pm-client-category')).toHaveCount(5);
   const mobileGridColumns = await page.locator('.pm-client-category-grid').evaluate(node => getComputedStyle(node).gridTemplateColumns.split(' ').length);
   expect(mobileGridColumns).toBe(3);
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
@@ -19,13 +19,13 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('button', { name: /Tour no Porto/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/luggage.webp');
   await expect(page.getByRole('button', { name: /^Sintra/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.webp');
   const iconSources = await page.locator('.pm-client-category-art img').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
-  expect(new Set(iconSources).size).toBe(6);
+  expect(new Set(iconSources).size).toBe(5);
   const promoCopyBottom = await page.locator('.pm-client-tour-copy').first().evaluate(node => Number.parseFloat(getComputedStyle(node).bottom));
   expect(promoCopyBottom).toBeLessThanOrEqual(24);
   await page.screenshot({ path: 'artifacts/customer-discover-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);
-  await expect(page.getByRole('heading', { name: 'Planear a sua viagem', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Planear a sua viagem/ })).toBeVisible();
   await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Lisboa');
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeVisible();
@@ -34,7 +34,7 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('62 km');
   await expect(page.locator('.pm-client-route-quote')).toContainText('200,00 €');
   await expect(page.getByRole('region', { name: 'Escolher data e hora' })).toBeVisible();
-  await page.getByRole('option', { name: 'Terça-feira, 15 de setembro' }).click();
+  await page.getByRole('option', { name: 'terça, 15/09' }).click();
   await page.getByRole('option', { name: '14:00' }).click();
   await expect(page.getByRole('button', { name: 'Escolher motorista e carro' })).toBeVisible();
   await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
@@ -62,7 +62,7 @@ test('customer bottom navigation omits the duplicate booking entry', async ({ pa
 test('customer discovery keeps tour cards readable and opens Porto', async ({ page }) => {
   await page.setViewportSize({ width: 744, height: 900 });
   await page.goto('/?demo=1#/customer/discover');
-  await expect(page.locator('.pm-client-category')).toHaveCount(6);
+  await expect(page.locator('.pm-client-category')).toHaveCount(5);
   const widths = await page.locator('.pm-client-category').evaluateAll(nodes => nodes.map(node => Math.round(node.getBoundingClientRect().width)));
   expect(widths.every(width => width >= 200)).toBeTruthy();
   await page.getByRole('button', { name: /Tour no Porto/ }).click();
@@ -107,14 +107,23 @@ test('customer planner fills destination from recent places', async ({ page }) =
   await page.goto('/?demo=1#/customer/discover');
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await expect(page).toHaveURL(/#\/customer\/discover$/);
-  await expect(page.getByRole('heading', { name: 'Planear a sua viagem', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Planear a sua viagem/ })).toBeVisible();
   await expect(page.locator('.pm-client-suggestion')).toHaveCount(3);
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Escolha um destino para calcular quilómetros e preço.');
   await page.getByRole('button', { name: /Sintra/ }).click();
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
-  await expect(page.getByRole('listbox', { name: 'Horários disponíveis' }).getByRole('option')).toHaveCount(24);
+  await expect(page.getByRole('listbox', { name: 'Horários disponíveis' }).getByRole('option')).not.toHaveCount(0);
+});
+
+test('customer planner suggests Leiria beaches from a broad location query', async ({ page }) => {
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
+  await page.getByLabel('Destino', { exact: true }).fill('Leiria praia');
+  const suggestions = page.getByRole('listbox', { name: 'Sugestões de morada' });
+  await expect(suggestions.getByRole('option', { name: /Praia do Pedrógão/ })).toBeVisible();
+  await expect(suggestions.getByRole('option', { name: /Praia da Vieira/ })).toBeVisible();
 });
 
 test('customer calendar hides a booked hour and its one-hour buffer', async ({ page }) => {
@@ -129,7 +138,8 @@ test('customer calendar hides a booked hour and its one-hour buffer', async ({ p
   await page.getByRole('button', { name: 'Pesquisar um tour' }).click();
   await page.getByRole('button', { name: /Sintra/ }).click();
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
-  await page.getByRole('option', { name: 'Terça-feira, 15 de setembro' }).click();
+  await page.getByRole('button', { name: 'Escolher outra data' }).click();
+  await page.locator('#pm-client-more-dates').getByRole('gridcell', { name: /15 de setembro de 2026/ }).click();
   const times = page.getByRole('listbox', { name: 'Horários disponíveis' });
   await expect(times.getByRole('option', { name: '15:00' })).toHaveCount(0);
   await expect(times.getByRole('option', { name: '16:00' })).toHaveCount(0);
@@ -353,7 +363,7 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await page.getByLabel('Nome completo').fill('Ana Exemplo');
   await page.getByLabel('Email', { exact: true }).fill('cliente@example.invalid');
   await page.getByLabel('Telefone', { exact: true }).fill('+351 910 000 000');
-  await page.getByLabel('NIF', { exact: true }).fill('123456789');
+  await page.getByLabel('NIF', { exact: true }).fill('987654322');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByRole('button', { name: 'Enviar pedido de teste', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Horário indisponível');
@@ -382,16 +392,17 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.screenshot({ path: 'artifacts/customer-review-mobile.png', fullPage: true });
   await page.getByRole('button', { name: 'Enviar pedido de teste' }).click();
-  await expect(page.getByRole('status')).toContainText('A aguardar aceitação');
-  const payment = page.getByRole('region', { name: 'Pagamento após aceitação' });
+  await expect(page.getByRole('status')).toContainText('Pedido de demonstração local');
+  const payment = page.getByRole('region', { name: 'Estado do pedido de demonstração' });
   await expect(payment).toBeVisible();
-  await expect(payment).toContainText('MB WAY');
-  await expect(payment).toContainText('+351 910 000 000');
-  await expect(payment.getByRole('link', { name: 'Enviar comprovativo' })).toHaveAttribute('href', /wa\.me\/351910000000/);
+  await expect(payment).toContainText('Pedido guardado apenas neste navegador');
+  await expect(payment).toContainText('O motorista não recebeu este pedido');
+  await expect(payment).not.toContainText('MB WAY');
+  await expect(payment.locator('a')).toHaveCount(0);
   await page.goto('/?demo=1#/owner/bookings');
   const received = page.locator('.pm-owner-request').filter({ hasText: 'Ana Exemplo' });
   await expect(received).toContainText('cliente@example.invalid');
-  await expect(received).toContainText('123456789');
+  await expect(received).toContainText('987654322');
   await expect(received).toContainText('Lisboa → Cabo da Roca');
   await page.goto('/?demo=1#/customer/lookup');
   await expect(page.getByRole('heading', { name: /CLIENT-/ })).toBeVisible();
@@ -414,6 +425,46 @@ test('customer English flow restricts cars to selected driver', async ({ page })
   await expect(page.getByLabel('Car', { exact: true }).locator('option')).toHaveCount(1);
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByLabel('Phone')).toBeVisible();
+});
+
+test('customer form blocks invalid name, phone, and Portuguese NIF with field-specific feedback', async ({ page }) => {
+  await page.goto('/?demo=1#/customer/booking');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByLabel('Nome completo').fill('   ');
+  await page.getByLabel('Email').fill('cliente@example.invalid');
+  await page.getByLabel('Telefone').fill('abc');
+  await page.getByLabel('NIF', { exact: true }).fill('000000000');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Indique o seu nome');
+  await page.getByLabel('Nome completo').fill('Ana Cliente');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('telefone');
+  await page.getByLabel('Telefone').fill('+351 910 000 000');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('NIF português válido');
+});
+
+test('customer pickup uses the device coordinates when location access is granted', async ({ page, context }) => {
+  await context.grantPermissions(['geolocation']);
+  await context.setGeolocation({ latitude: 41.1579, longitude: -8.6291 });
+  await page.goto('/?demo=1#/customer/booking');
+  await page.getByRole('button', { name: 'Usar localização atual' }).click();
+  await expect(page.getByLabel('Origem')).toHaveValue(/41\.1579, -8\.6291/);
+});
+
+test('published tour price is preserved from discovery into the booking quote', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('pm.demo.tours', JSON.stringify([{
+    id: 'tour-checkup', namePt: 'Tour Verificação', nameEn: 'Checkup tour', descriptionPt: 'Percurso de teste.', descriptionEn: 'Test route.', durationDays: 2,
+    baseCents: 34500, extraPassengerCents: 4200, minimumNoticeHours: 48, active: true, area: 'Sintra', photoPath: '/lisbon-sintra-tour.webp',
+    location: { title: 'Sintra', detail: 'Sintra, Lisboa', coordinates: [38.8029, -9.3817], source: 'photon' },
+  }] )));
+  await page.goto('/?demo=1#/customer/discover');
+  await page.getByRole('button', { name: 'Abrir tour Tour Verificação' }).click();
+  await page.getByRole('button', { name: 'Ver rota e preço' }).click();
+  await expect(page.locator('.pm-client-route-quote')).toContainText('345,00');
+  await page.getByRole('button', { name: 'Escolher motorista e carro' }).click();
+  await expect(page.locator('.pm-summary')).toContainText('345,00');
 });
 
 test('driver receives an official Waze destination link', async ({ page }) => {

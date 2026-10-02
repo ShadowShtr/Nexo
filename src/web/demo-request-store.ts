@@ -16,6 +16,12 @@ export type DemoCustomerRequest = {
   driver: number;
   car: number;
   service: 'transfer' | 'tour';
+  tourId?: string;
+  tourBaseCents?: number;
+  tourExtraPassengerCents?: number;
+  tourDurationDays?: number;
+  driverName?: string;
+  vehicleName?: string;
   routeIndex: number;
   origin: string;
   destination: string;
@@ -47,6 +53,8 @@ function validRequest(value: unknown): value is DemoCustomerRequest {
     && (item.service === 'transfer' || item.service === 'tour') && typeof item.people === 'number'
     && typeof item.total === 'number' && typeof item.deposit === 'number' && typeof item.balance === 'number'
     && typeof item.cancelled === 'boolean' && typeof item.rescheduled === 'boolean'
+    && (item.tourBaseCents === undefined || Number.isInteger(item.tourBaseCents) && item.tourBaseCents >= 0)
+    && (item.tourExtraPassengerCents === undefined || Number.isInteger(item.tourExtraPassengerCents) && item.tourExtraPassengerCents >= 0)
     && Boolean(allocation) && typeof allocation === 'object'
     && typeof allocation.id === 'string' && typeof allocation.startsAt === 'string' && typeof allocation.endsAt === 'string';
 }
