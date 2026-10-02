@@ -1,5 +1,9 @@
 # 10 — Evidência da versão 0.1.0
 
+## Auditoria atual — 02/10/2026
+
+Ver [checkup para apresentação](24-checkup-apresentacao.md): 90 testes unitários, 11 PostgreSQL, 13 Supabase locais e 38 browser aprovados; autenticação UI aprovada; 120 combinações de rota/idioma/largura inspecionadas. Build aprovado. Probes adicionais reproduziram falhas de preço de tour, geolocalização, dados inválidos e botões sem ação. Não há aprovação operacional nem validação em iPhone físico. Relatos de versões abaixo são históricos.
+
 Data: 2026-09-09. Ambiente local Windows; Node.js v24.16.0. Dados de testes fictícios. Não foram feitos pagamentos, notificações externas nem publicação.
 
 ## Incremento 0.2.90 — 16/09/2026

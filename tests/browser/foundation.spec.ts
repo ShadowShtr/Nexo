@@ -5,11 +5,11 @@ test('preview navigation, English and mobile layout across all areas', async ({ 
   page.on('pageerror', error => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/?demo=1');
-  await expect(page.getByRole('heading', { name: 'Tudo preparado para começar.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Início', exact: true })).toBeVisible();
   await page.screenshot({ path: 'artifacts/home-desktop.png', fullPage: true });
   await page.getByLabel('Idioma', { exact: true }).selectOption('en');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.getByRole('heading', { name: 'Ready for a fresh start.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Home', exact: true })).toBeVisible();
   for (const width of [320, 375, 390, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const route of ['owner/home', 'owner/calendar', 'owner/bookings', 'owner/customers', 'owner/drivers', 'owner/vehicles', 'owner/tours', 'owner/finance', 'owner/settlements', 'owner/settings', 'owner/more', 'driver/services', 'driver/availability', 'driver/earnings', 'driver/profile', 'customer/discover', 'customer/booking', 'customer/lookup']) {
@@ -31,14 +31,14 @@ test('preview navigation, English and mobile layout across all areas', async ({ 
 test('tour uses domain price and deposit; settings simulation does not persist', async ({ page }) => {
   await page.goto('/?demo=1#/owner/tours');
   await page.getByRole('button', {name:'Mais passageiros'}).click();
-  await expect(page.locator('.pm-value')).toContainText('235');
+  await expect(page.locator('.pm-quote-heading>strong')).toContainText('235');
   await expect(page.locator('.pm-summary-split')).toContainText('58,75');
   await expect(page.locator('.pm-summary-split')).toContainText('176,25');
   await page.goto('/?demo=1#/owner/settings');
   const priceSimulator=page.getByRole('form',{name:'Simulador de preço'});
   await priceSimulator.getByRole('button',{name:'Simular preço',exact:true}).click();
-  await expect(priceSimulator.locator('.pm-price-result')).toContainText('80,00');
-  await expect(priceSimulator.locator('.pm-price-result')).toContainText('20,00');
+  await expect(priceSimulator.locator('.pm-price-result')).toContainText('70,00');
+  await expect(priceSimulator.locator('.pm-price-result')).toContainText('17,50');
   await page.getByLabel('Deslocação estimada (min)').fill('90');
   await page.getByRole('button',{name:'Simular margem'}).click();
   await expect(page.locator('.pm-simulation-result')).toHaveText('Margem necessária: 105 min');
@@ -72,7 +72,7 @@ test('owner calendar views remain usable on mobile', async ({ page }) => {
   await page.goto('/?demo=1#/owner/calendar');
   const calendar = page.locator('.pm-agenda-workspace');
   for (const [label, viewClass] of [['Mês', '.fc-dayGridMonth-view'], ['Dia', '.fc-timeGridDay-view'], ['Semana', '.fc-timeGridWeek-view'], ['Agenda', '.fc-list']] as const) {
-    await calendar.getByRole('button', { name: label, exact: true }).click();
+    await calendar.getByRole('combobox', { name: 'Vista da agenda' }).selectOption({ label });
     await expect(calendar.locator(viewClass)).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBeTruthy();
   }

@@ -1,5 +1,13 @@
 # Changelog
 
+## Auditoria — 2026-10-02 (sem alteração de versão)
+
+- checkup de apresentação com falhas reproduzíveis, limites operacionais e recomendações visuais em `docs/24-checkup-apresentacao.md`;
+- revalidação de regras, PostgreSQL, Supabase local, autenticação UI e navegação responsiva;
+- testes browser alinhados com WebP, campos vazios, barra fixa, tarifa por distância e seletor móvel da agenda;
+- scripts de varredura de 120 combinações e probes de preço, localização, dados inválidos e botões sem ação;
+- aplicação não alterada; problemas funcionais encontrados continuam pendentes.
+
 ## 0.2.90 — 2026-09-16
 
 - criação manual de marcações do proprietário estruturada como o fluxo do cliente, com origem, localização atual, destino, paragens, rota completa no mapa, data/hora, passageiros, motorista e carro;

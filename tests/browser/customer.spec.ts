@@ -14,10 +14,10 @@ test('customer discovery opens the inline planner before booking', async ({ page
   expect(mobileGridColumns).toBe(3);
   await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).locator('img')).toHaveAttribute('src', '/lisbon-sintra-tour.png');
-  await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' }).locator('img')).toHaveAttribute('src', '/porto-tour.png');
-  await expect(page.getByRole('button', { name: /Tour no Porto/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/luggage.png');
-  await expect(page.getByRole('button', { name: /^Sintra/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.png');
+  await expect(page.getByRole('button', { name: 'Abrir tour Lisboa Sintra' }).locator('img')).toHaveAttribute('src', '/lisbon-sintra-tour.webp');
+  await expect(page.getByRole('button', { name: 'Abrir tour do Porto com seis paragens' }).locator('img')).toHaveAttribute('src', '/porto-tour.webp');
+  await expect(page.getByRole('button', { name: /Tour no Porto/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/luggage.webp');
+  await expect(page.getByRole('button', { name: /^Sintra/ }).locator('.pm-client-category-art img')).toHaveAttribute('src', '/compass.webp');
   const iconSources = await page.locator('.pm-client-category-art img').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
   expect(new Set(iconSources).size).toBe(6);
   const promoCopyBottom = await page.locator('.pm-client-tour-copy').first().evaluate(node => Number.parseFloat(getComputedStyle(node).bottom));
@@ -29,7 +29,7 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByLabel('Local de partida', { exact: true })).toHaveValue('Lisboa');
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Sintra');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Ver rota e preço' }).locator('.pm-client-action-route')).toHaveAttribute('src', '/route-landmark.png');
+  await expect(page.getByRole('button', { name: 'Ver rota e preço' }).locator('.pm-client-action-route')).toHaveAttribute('src', '/route-landmark.webp');
   await page.getByRole('button', { name: 'Ver rota e preço' }).click();
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('62 km');
   await expect(page.locator('.pm-client-route-quote')).toContainText('200,00 €');
@@ -42,7 +42,7 @@ test('customer discovery opens the inline planner before booking', async ({ page
   await expect(page.getByRole('heading', { name: 'Escolha o motorista e o carro', exact: true })).toBeVisible();
   await expect(page.getByLabel('Data e hora escolhidas')).toContainText('15/09/2026 · 14:00');
   await expect(page.getByRole('region', { name: 'Pré-visualização do percurso' })).toContainText('Cabo da Roca');
-  await expect(page.locator('.pm-vehicle-icon')).toHaveAttribute('src', '/vehicle-sedan.png');
+  await expect(page.locator('.pm-vehicle-icon')).toHaveAttribute('src', '/vehicle-sedan.webp');
   await expect(page.locator('.pm-option-content strong svg')).toHaveCount(0);
 });
 
@@ -79,14 +79,14 @@ test('customer discovery shows a package created in the owner catalogue', async 
     id: 'owner-tour-sync', namePt: 'Tour do proprietário', nameEn: 'Owner tour',
     descriptionPt: 'Experiência criada pelo proprietário.', descriptionEn: 'Experience created by the owner.',
     durationDays: 2, baseCents: 25000, extraPassengerCents: 4000, minimumNoticeHours: 48,
-    active: true, area: 'Cascais', photoPath: '/porto-tour.png',
+    active: true, area: 'Cascais', photoPath: '/porto-tour.webp',
     location: { title: 'Cascais', detail: 'Cascais, Lisboa', coordinates: [38.6979, -9.4215], source: 'photon' },
   });
   await page.goto('/?demo=1#/customer/discover');
   await expect(page.getByRole('heading', { name: 'Tours disponíveis', exact: true })).toBeVisible();
   const tour = page.getByRole('button', { name: 'Abrir tour Tour do proprietário', exact: true });
   await expect(tour).toBeVisible();
-  await expect(tour.locator('img').first()).toHaveAttribute('src', '/porto-tour.png');
+  await expect(tour.locator('img').first()).toHaveAttribute('src', '/porto-tour.webp');
   await tour.click();
   await expect(page.getByLabel('Destino', { exact: true })).toHaveValue('Cascais');
   await expect(page.getByRole('button', { name: 'Ver rota e preço' })).toBeEnabled();
@@ -348,6 +348,12 @@ test('customer chooses route, car, checks conflicts and submits and cancels a te
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByLabel('Carro', { exact: true }).selectOption('1');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await expect(page.getByLabel('Nome completo')).toHaveValue('');
+  await expect(page.getByLabel('Nome completo')).toHaveAttribute('placeholder', 'Ana Exemplo');
+  await page.getByLabel('Nome completo').fill('Ana Exemplo');
+  await page.getByLabel('Email', { exact: true }).fill('cliente@example.invalid');
+  await page.getByLabel('Telefone', { exact: true }).fill('+351 910 000 000');
+  await page.getByLabel('NIF', { exact: true }).fill('123456789');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByRole('button', { name: 'Enviar pedido de teste', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Horário indisponível');

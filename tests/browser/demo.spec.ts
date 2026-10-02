@@ -107,7 +107,7 @@ test('owner keeps the mobile navigation available while creating a booking', asy
   await page.getByRole('button', { name: 'Nova marcação manual', exact: true }).click();
   const nav = page.locator('.pm-bottom-nav');
   await expect(nav).toBeVisible();
-  await expect(nav).toHaveCSS('position', 'static');
+  await expect(nav).toHaveCSS('position', 'fixed');
   await nav.getByRole('link', { name: 'Início', exact: true }).click();
   await expect(page).toHaveURL(/#\/owner\/home$/);
   await page.goto('/?demo=1#/owner/bookings');
@@ -116,13 +116,13 @@ test('owner keeps the mobile navigation available while creating a booking', asy
   await expect(page).toHaveURL(/#\/owner\/calendar$/);
 });
 
-test('owner more menu keeps the mobile navigation in the page flow', async ({ page }) => {
+test('owner more menu keeps the mobile navigation fixed', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?demo=1#/owner/home');
   await page.getByRole('link', { name: 'Mais', exact: true }).click();
   const nav = page.locator('.pm-bottom-nav');
   await expect(nav).toBeVisible();
-  await expect(nav).toHaveCSS('position', 'static');
+  await expect(nav).toHaveCSS('position', 'fixed');
   await expect(nav.getByRole('link', { name: 'Mais', exact: true })).toHaveAttribute('aria-current', 'page');
   await nav.getByRole('link', { name: 'Início', exact: true }).click();
   await expect(page).toHaveURL(/#\/owner\/home$/);
@@ -179,14 +179,14 @@ test('owner adds a bilingual two-day tour package', async ({ page }) => {
   await form.getByLabel('Descrição em português').fill('Vinhos e paisagens.');
   await form.getByLabel('Descrição em inglês').fill('Wine and landscapes.');
   await form.getByLabel('Área/local do tour').fill('Douro');
-  await form.getByLabel('Foto principal').selectOption('/porto-tour.png');
+  await form.getByLabel('Foto principal').selectOption('/porto-tour.webp');
   await form.getByLabel('Antecedência mínima (horas)').fill('48');
   await form.getByRole('button', { name: 'Guardar pacote', exact: true }).click();
   const card = page.locator('.pm-demo-record').filter({ hasText: 'Douro Premium' }).last();
   await expect(card).toContainText('2 dias');
   await expect(card).toContainText('200,00');
   await expect(card).toContainText('Douro');
-  await expect(card.locator('img.pm-tour-cover')).toHaveAttribute('src', '/porto-tour.png');
+  await expect(card.locator('img.pm-tour-cover')).toHaveAttribute('src', '/porto-tour.webp');
 });
 
 test('owner can save a per-kilometre transfer tariff from settings', async ({ page }) => {
